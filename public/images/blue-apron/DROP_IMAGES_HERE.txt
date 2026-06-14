@@ -1,0 +1,40 @@
+Drop your Blue Apron case study images in this folder.
+
+The Blue Apron case study now follows the Figma layout at node 587:1277.
+Upload assets with these filenames so the markup picks them up:
+
+  Hero
+  ────
+  blueapron-logo.png             — already added (white wordmark)
+  /public/videos/blue-apron-landing.mp4   — already added
+
+  A-la-carte phone row (4 large screens, 420x803 source aspect)
+  ──────────────────────────────────────────────────
+  alacarte-screen-1.webp
+  alacarte-screen-2.webp
+  alacarte-screen-3.webp
+  alacarte-screen-4.webp
+
+  PDP cards row (3 phones with tab labels above each)
+  ──────────────────────────────────────────────────
+  pdp-mealkit.webp        — Meal Kits
+  pdp-pnr.webp            — Prepared & Ready Meals
+  pdp-addon.webp          — Add-On's
+
+  Subscription phone row (4 screens, staggered vertically)
+  ──────────────────────────────────────────────────
+  subscription-screen-1.webp
+  subscription-screen-2.webp
+  subscription-screen-3.webp
+  subscription-screen-4.webp
+
+  Subscription content (the big 1687x960 image block)
+  ──────────────────────────────────────────────────
+  subscription-content.webp
+
+  Closing tagline image (food shot on the left of the "100+ meals" copy)
+  ──────────────────────────────────────────────────
+  closing-food.webp
+
+You can delete this file once all images are added. The page will
+gracefully render missing files as broken images until uploaded.

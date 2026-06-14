@@ -1,0 +1,21 @@
+Drop your Noom case study images in this folder.
+
+Filenames the case study is wired to look for:
+
+  Hero
+  ────
+  hero-noom.png         — Whole Person Health billboard
+
+  Mosaic grid cards
+  ─────────────────
+  noom-talks.png        — NOOM Talks: Science of Behavior Change w/ Charles Duhigg
+  track-progress.png    — Track your progress card
+  microdose.png         — Microdose GLP-1 product mockup
+  metabolic.png         — Metabolic vitamin product
+  progress-beyond.png   — Progress beyond prescription small card
+  food-noise.png        — "Food noise now comes with a mute button" red pill
+  access-medication.png — Access to high-quality medications dark panel (48%)
+  build-behaviors.png   — Build better behaviors panel
+  lake.png              — Lake / Live better longer photo
+
+You can delete this file once you've added the images.

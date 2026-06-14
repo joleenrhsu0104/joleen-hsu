@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────────
+   Design tokens — sourced from Figma file 5a9JgTtB73VBU5W1n4bXaH
+   ─────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-cream: #fff9ec;
+  --color-cream-bright: #fffdf7;
+  --color-burgundy: #260303;
+  --color-ink: #231f20;
+  --color-near-black: #030303;
+  --color-forest: #071b02;
+  --color-neuday-navy: #1F2B36;
+
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* Fluid scaling: desktop design canvas is 1920px wide, mobile is
+   390px wide. `--u` (desktop) and `--u-m` (mobile) scale design
+   pixels proportionally to viewport width. */
+:root {
+  --design-w: 1920;
+  --u: calc(100vw / 1920);
+  --u-m: calc(100vw / 390);
+
+  /* Global content-to-edge padding. Every section that wants its
+     content kept off the viewport edges should use these tokens for
+     paddingLeft / paddingRight so the breathing room is consistent
+     across every page of the site. Full-bleed sections (heroes,
+     edge-to-edge composited images) opt out by setting padding to 0. */
+  --side-pad: calc(var(--u) * 96);
+  --side-pad-m: calc(var(--u-m) * 24);
+}
+
+html,
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-serif), serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+/* Note: `scroll-behavior: smooth` is intentionally NOT set on html
+   here. When it was set, every Next.js route change triggered the
+   browser to animate from the old scroll position to the top of
+   the new page (the auto scroll-to-top on navigation gets caught by
+   the smooth rule). Result: tapping into a case study from the
+   bottom of one page would visibly scroll all the way up.
+
+   Components that genuinely need smooth scrolling already pass
+   `behavior: "smooth"` explicitly to scrollIntoView/scrollTo (see
+   CyclingHero's about-section transition, and ScrollJacker's hand-
+   rolled easing), so no animation behavior is lost by removing the
+   global rule. */
+
+/* Scrolljacking and snap paneling were removed — all sections now
+   flow naturally. The hero still pins to 100vh via its own
+   `h-screen` className because its in-hero shutter cycling needs
+   a full-viewport stage. */
+
+/* ───────── Animations (sourced from Dev Mode annotations) ─────────
+   • "image in letters is slightly moving, to mimic the movement of water"
+   • "images have a subtle bounce" */
+
+@keyframes water-drift {
+  0%,
+  100% {
+    background-position: 49.72% 60.19%;
+  }
+  25% {
+    background-position: 47% 58%;
+  }
+  50% {
+    background-position: 51% 62%;
+  }
+  75% {
+    background-position: 50% 59%;
+  }
+}
+
+@keyframes float-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Horizontal marquee — used by Work page services row.
+   Track contains two duplicate sets of content. Translating
+   by -50% brings the second copy into the first's slot,
+   creating a seamless infinite loop. */
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee-left 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-water-drift {
+  animation: water-drift 14s ease-in-out infinite;
+}
+
+.animate-bounce-soft {
+  animation: float-bounce 6s ease-in-out infinite;
+}
+
+/* Bg-clip-text helper that respects -webkit prefix */
+.text-fill-image {
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

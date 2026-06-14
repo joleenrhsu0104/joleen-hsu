@@ -1,0 +1,40 @@
+Drop your Wonder case study images in this folder.
+
+Filenames the case study is already wired to look for:
+
+  Hero
+  ────
+  wonder-logo.png        — script Wonder wordmark over the hero video
+
+  App screens row (5 phones)
+  ─────────────────────────
+  app-screen-1.png  through  app-screen-5.png
+
+  Restaurant cards marquee (9 cards, auto-scroll)
+  ───────────────────────────────────────────────
+  RestaurantCarousel-1.png  through  RestaurantCarousel-9.png
+
+  Post-purchase comparison (4 original-state phones)
+  ──────────────────────────────────────────────────
+  original-order-received.png
+  original-preparing.png
+  original-on-the-way.png
+  original-delivered.png
+
+  Redesigned order flow (4 iPhone mockups)
+  ────────────────────────────────────────
+  iphone-order-received.png
+  iphone-preparing.png
+  iphone-on-the-way.png
+  iphone-delivered.png
+
+  Membership Program
+  ──────────────────
+  Membership.png          — full-bleed composited 4-phone image
+  wonder-plus-logo.svg    — Wonder+ wordmark overlay
+
+  Web Ordering
+  ────────────
+  web-ordering.png
+
+You can delete this file once you've added the images.

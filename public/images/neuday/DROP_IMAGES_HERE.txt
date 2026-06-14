@@ -1,0 +1,16 @@
+Drop your Neuday case study images in this folder.
+
+Expected filenames (the case study page is already wired to look for these):
+
+  app-screen-1.png    — 1st phone screen
+  app-screen-2.png    — 2nd phone screen
+  app-screen-3.png    — 3rd phone screen
+  app-screen-4.png    — 4th phone screen
+  business-card.png   — business card mockup
+  billboard.png       — billboard mockup
+
+For the brand book section: the page is intentionally blank
+for now, with a dark navy background. When you're ready, share
+the brand book screenshots and I'll wire them up.
+
+You can delete this file once you've added the images.
