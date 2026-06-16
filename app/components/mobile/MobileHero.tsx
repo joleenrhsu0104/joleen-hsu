@@ -45,11 +45,12 @@ const IMG_HALF_H = IMG_H / 2;
 const HEADER_OFFSET = 31;
 
 // Project-name font size for the giant overlay, in design units.
-// Single value used for every name — short names ("Wonder", "Noom",
-// "Neuday") render as one big line that spills past both edges of
-// the 320u card; multi-word names ("Blue Apron") wrap onto two lines
-// at the space so the same font size doesn't blow past the viewport.
-const NAME_FONT_SIZE = 200;
+// Single value used for every name. At 80u-m every name — including
+// the widest "Blue Apron" — fits cleanly within the viewport width
+// at any common mobile size, so nothing clips at the edges. Multi-
+// word names still wrap to two lines via the pre-line / replace(" "
+// → "\n") trick below so the same font reads as a stacked title.
+const NAME_FONT_SIZE = 80;
 // Letter spacing as a fraction of font size — matches the desktop
 // hero's ratio (-7u / 350u ≈ -0.02) so the tracking still reads tight.
 const NAME_LETTER_SPACING = NAME_FONT_SIZE * -0.02;

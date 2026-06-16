@@ -522,7 +522,15 @@ function ProjectCardMobile({ project }: { project: Project }) {
         className="relative overflow-hidden"
         style={{
           width: "100%",
-          aspectRatio: `813 / ${project.imageHeight}`,
+          // Unified aspect across all four cards so the mobile stack
+          // reads as a consistent grid instead of Wonder being
+          // noticeably shorter than the others. 813:730 is the same
+          // ratio 3 of 4 cards already use on desktop (Blue Apron /
+          // Noom / Neuday), so this also keeps the mobile row visually
+          // in sync with the desktop proportions. object-cover handles
+          // any minor crop on the Wonder source (which has imageHeight
+          // 647 on desktop) without distorting the image.
+          aspectRatio: "813 / 730",
           // Matches desktop's radius-to-card-width ratio (40 / 813 ≈
           // 4.92% on desktop; 18 / 358 ≈ 5.0% on mobile after the 16u
           // side padding). Keeps the corner softness visually
