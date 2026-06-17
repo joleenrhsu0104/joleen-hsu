@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { HERO_PROJECTS } from "@/app/lib/assets";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * CyclingHero
@@ -197,9 +198,10 @@ export default function CyclingHero() {
               href="https://www.linkedin.com/in/joleenhsu/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:opacity-70 transition-opacity"
+              className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
             >
               LINKEDIN
+              <ArrowUpRight />
             </a>
           </div>
         </nav>

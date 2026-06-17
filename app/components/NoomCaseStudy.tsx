@@ -12,6 +12,7 @@ import { useIsMobile } from "@/app/hooks/useIsMobile";
 import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * useFadeInOnScroll — IntersectionObserver-based one-shot fade-in.
@@ -151,9 +152,10 @@ function HeroDesktop() {
             href="https://www.linkedin.com/in/joleenhsu/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
           >
             LINKEDIN
+            <ArrowUpRight />
           </a>
         </div>
       </nav>
@@ -528,7 +530,7 @@ function NoomMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
           }}

@@ -3,28 +3,31 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 /**
- * MobileHorizontalPin — wraps a horizontal row of items so that, as the
- * user scrolls VERTICALLY, the row pins to the top of the viewport and
- * its content slides HORIZONTALLY at a rate proportional to scroll
- * progress. Once the row has scrolled through all its content, the pin
- * releases and the page continues to scroll normally into the next
- * section.
+ * MobileHorizontalPin — vertical-to-horizontal scroll-pin row.
+ *
+ * Wraps a horizontal row of items so that, as the user scrolls
+ * vertically past this section, a sticky inner stage holds the row
+ * pinned to the top of the viewport and translates its content
+ * horizontally at a rate of 1px per 1px of vertical scroll. Once
+ * the entire horizontal overflow has been traversed, the pin
+ * releases and the page resumes normal vertical scrolling into the
+ * next section. Gives the cinematic "scroll down to advance
+ * sideways" feel used across the Wonder / Blue Apron / Neuday
+ * phone-mock rows.
  *
  * Mechanics:
- *   • Outer wrapper has explicit height = 100vh + overflowWidth, where
- *     overflowWidth is how many px the inner content extends past the
- *     viewport. That total height is the scroll distance the user must
- *     traverse before the pin releases.
- *   • Inner sticky container sits at top: 0 with height 100vh — pinning
- *     the row in place while the outer wrapper scrolls past it.
- *   • A scroll listener computes "progress" (0..1) through the outer
- *     wrapper's scroll range and applies `translate3d(-progress * overflowWidth, 0, 0)`
- *     to the row's content, so each px of vertical scroll = 1 px of
- *     horizontal motion.
+ *   • Outer wrapper height = 100vh + overflowWidth (the extra px
+ *     the row extends past the viewport). That extra height is
+ *     exactly how much vertical scroll the user spends pinned.
+ *   • Sticky inner stage is 100vh tall with overflow:hidden, so
+ *     content outside the viewport while translated stays hidden.
+ *   • Row content is vertically centered inside the 100vh stage so
+ *     short items (e.g., phone mocks) read as anchored mid-viewport.
+ *   • Scroll handler maps wrapper.top from 0 → -overflowWidth onto
+ *     a transform of translate3d(0, 0, 0) → translate3d(-overflowWidth, 0, 0).
  *
- * Drop-in replacement for `<div className="flex overflow-x-auto" ...>`
- * patterns — pass children directly as the row items. The component
- * handles the wrapper + sticky stage + transform internally.
+ * Drop-in replacement for `<div className="flex overflow-x-auto">`
+ * — pass row items directly as children.
  */
 export default function MobileHorizontalPin({
   children,
@@ -32,9 +35,9 @@ export default function MobileHorizontalPin({
   paddingX = "calc(var(--u-m) * 16)",
 }: {
   children: ReactNode;
-  /** Gap between row items (CSS length). Defaults to 12u. */
+  /** Gap between row items (CSS length). Defaults to 12u-m. */
   gap?: string;
-  /** Side padding around the row (CSS length). Defaults to 16u. */
+  /** Side padding around the row (CSS length). Defaults to 16u-m. */
   paddingX?: string;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -51,10 +54,10 @@ export default function MobileHorizontalPin({
       const viewport = window.innerWidth;
       const overflow = Math.max(0, total - viewport);
       overflowRef.current = overflow;
-      // Wrapper's total height = 100vh (one viewport for the pin) plus
-      // however many px of horizontal motion are needed. So if the row
-      // overflows by 600px, the user must scroll 600px vertically past
-      // the wrapper's top before the pin releases.
+      // Wrapper total height = 100vh (one viewport for the sticky pin)
+      // + however many px of horizontal scroll need to elapse. So if
+      // the row overflows by 600px, the user must scroll 600px
+      // vertically past the wrapper top before the pin releases.
       wrapper.style.height = `calc(100vh + ${overflow}px)`;
     };
 
@@ -75,10 +78,10 @@ export default function MobileHorizontalPin({
           return;
         }
         const rect = wrapper.getBoundingClientRect();
+        // 1px of vertical scroll past wrapper top = 1px of horizontal
+        // translate. Clamped at overflow so the row never goes past
+        // its right edge.
         const scrolled = Math.max(0, Math.min(overflow, -rect.top));
-        // 1 px of vertical scroll past the wrapper's top = 1 px of
-        // horizontal motion. Clamps at the full overflow so the row
-        // can never translate further than its content's right edge.
         inner.style.transform = `translate3d(${-scrolled}px, 0, 0)`;
       });
     };

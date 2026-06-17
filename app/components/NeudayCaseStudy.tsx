@@ -13,6 +13,7 @@ import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
 import MobileHorizontalPin from "./mobile/MobileHorizontalPin";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * useFadeInOnScroll — IntersectionObserver-based one-shot fade-in.
@@ -198,9 +199,10 @@ function HeroDesktop() {
             href="https://www.linkedin.com/in/joleenhsu/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
           >
             LINKEDIN
+            <ArrowUpRight />
           </a>
         </div>
       </nav>
@@ -310,12 +312,13 @@ function MetaRow({ label, value }: { label: string; value: string }) {
 
 /* Row of 4 phone screenshots — each phone gets its own Figma width
    so the row visually matches node 652:4808 (451 / 416 / 419 / 438).
-   When the row scrolls into view the four phones lift up + fade in
-   with a left-to-right cascade (i × 140ms stagger) so the row reads
-   as one orchestrated reveal instead of four independent images. */
+   When the row scrolls into view all four phones lift up + fade in
+   together as a single unit (no per-phone stagger), matching the
+   reveal pattern used by the BrandBookGridDesktop + the billboard
+   sections elsewhere in this case study. */
 function AppScreensRowDesktop() {
   const rowRef = useRef<HTMLDivElement | null>(null);
-  // 0.12 threshold = start the cascade as soon as ~12% of the row is
+  // 0.12 threshold = trigger the reveal as soon as ~12% of the row is
   // in view (top of phones just cresting), so the slide-up resolves
   // by the time the row is comfortably centered on screen.
   const visible = useFadeInOnScroll(rowRef, 0.12);
@@ -333,7 +336,13 @@ function AppScreensRowDesktop() {
       <div
         ref={rowRef}
         className="flex items-end justify-between"
-        style={{ gap: "calc(var(--u) * 16)" }}
+        style={{
+          gap: "calc(var(--u) * 16)",
+          // Single shared fadeInStyle drives the whole row, so all
+          // four phones rise + fade in lockstep instead of one at a
+          // time. Matches the rest of the page's animation language.
+          ...fadeInStyle(visible),
+        }}
       >
         {APP_SCREENS.map(({ src, w, h }, i) => (
           <div
@@ -342,16 +351,6 @@ function AppScreensRowDesktop() {
             style={{
               width: `calc(var(--u) * ${w})`,
               height: `calc(var(--u) * ${h})`,
-              // Per-phone stagger: each phone waits i × 140ms before
-              // its entry transition fires. Combined with the 0.9s
-              // duration this gives the row a ~1.32s wave from the
-              // first phone landing to the last phone landing.
-              opacity: visible ? 1 : 0,
-              transform: visible
-                ? "translate3d(0, 0, 0)"
-                : "translate3d(0, calc(var(--u) * 48), 0)",
-              transition: `opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) ${i * 0.14}s, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) ${i * 0.14}s`,
-              willChange: "opacity, transform",
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -580,7 +579,7 @@ function NeudayMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
           }}
@@ -612,11 +611,11 @@ function NeudayMobile() {
           paddingLeft: "calc(var(--u-m) * 16)",
           paddingRight: "calc(var(--u-m) * 16)",
           paddingTop: "calc(var(--u-m) * 24)",
-          // Tight handoff to the MobileHorizontalPin below. The pin
-          // already vertically centers its phones inside 100vh, so
-          // adding a chunky bottom padding here just bloats the
-          // cream gap between "neuday.io" and the first phone.
-          paddingBottom: "calc(var(--u-m) * 8)",
+          // No bottom padding — the App Screens row below provides
+          // its own 44u-m top padding via MobileHorizontalPin, so the
+          // gap between "neuday.io" and the first phone is exactly
+          // 44u-m.
+          paddingBottom: 0,
           gap: "calc(var(--u-m) * 28)",
         }}
       >

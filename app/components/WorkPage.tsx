@@ -7,6 +7,7 @@ import { HERO_PROJECTS } from "@/app/lib/assets";
 import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * WorkPage — Figma node 579:1046.
@@ -23,7 +24,12 @@ import MobileSignature from "./mobile/MobileSignature";
  * Mobile collapses to a single column with full-width cards.
  */
 
-const FOREST = "#000000";
+// Work page background. Despite the file's "FOREST" naming history,
+// the page actually renders the near-black surface (the `--color-forest`
+// token is dark green and is only used for cases that need a greener
+// tint). Aliasing to the near-black token keeps the value in lock-step
+// with the rest of the dark surfaces (Ethos, ContactPage, hero panels).
+const BG = "var(--color-near-black)";
 
 const SERVICES = [
   "Product Strategy",
@@ -93,10 +99,10 @@ export default function WorkPage() {
 
 function WorkDesktop() {
   return (
-    <main className="relative" style={{ backgroundColor: FOREST }}>
+    <main className="relative" style={{ backgroundColor: BG }}>
       <section
         className="relative text-white"
-        style={{ backgroundColor: FOREST }}
+        style={{ backgroundColor: BG }}
       >
         <WorkTopNav variant="desktop" />
         <ServicesRowDesktop />
@@ -160,9 +166,10 @@ function WorkTopNav({ variant }: { variant: "desktop" | "mobile" }) {
           href="https://www.linkedin.com/in/joleenhsu/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:opacity-70 transition-opacity"
+          className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
         >
           LINKEDIN
+          <ArrowUpRight />
         </a>
       </div>
     </nav>
@@ -412,11 +419,11 @@ function ProjectCardDesktop({ project }: { project: Project }) {
 
 function WorkMobile() {
   return (
-    <main className="relative" style={{ backgroundColor: FOREST }}>
+    <main className="relative" style={{ backgroundColor: BG }}>
       <section
         className="relative text-white"
         style={{
-          backgroundColor: FOREST,
+          backgroundColor: BG,
           paddingBottom: "calc(var(--u-m) * 64)",
         }}
       >
@@ -493,8 +500,14 @@ function ServicesRowMobile() {
       style={{
         paddingTop: "calc(var(--u-m) * 140)",
         paddingBottom: "calc(var(--u-m) * 16)",
-        fontSize: "calc(var(--u-m) * 56)",
-        letterSpacing: "calc(var(--u-m) * -1.12)",
+        // 36u-m matches MobileTopNav's wordmark size — a known
+        // "display" token in the mobile scale. At this size the
+        // longest service ("Agentic Development", 19 chars) renders
+        // around 342u-m which fits comfortably inside the 390u-m
+        // mobile viewport with ~24u-m of breathing room on each side.
+        // letterSpacing stays at -2% of the font (= -0.72u-m).
+        fontSize: "calc(var(--u-m) * 36)",
+        letterSpacing: "calc(var(--u-m) * -0.72)",
         lineHeight: 1.1,
       }}
     >

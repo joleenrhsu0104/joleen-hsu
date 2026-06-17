@@ -12,6 +12,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import { INK_RGB } from "@/app/lib/tokens";
 
 /**
  * ScrollCharFill — character-by-character left → right fill driven by
@@ -141,8 +142,10 @@ const useIsoLayoutEffect =
 
 export default function ScrollCharFill({
   children,
-  fromColor = "rgba(35, 31, 32, 0.22)",
-  toColor = "rgb(35, 31, 32)",
+  // Ink-token RGB defaults — see INK_RGB comment in app/lib/tokens.ts
+  // for why we compose the tuple here instead of referencing a CSS var.
+  fromColor = `rgba(${INK_RGB}, 0.22)`,
+  toColor = `rgb(${INK_RGB})`,
   className,
   style,
   as = "p",

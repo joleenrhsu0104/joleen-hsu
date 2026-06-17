@@ -99,16 +99,22 @@ export default function WhatIDoSection() {
           A vertical mask gradient feathers the top and bottom edges
           of this whole layer so the image bleeds into the page bg
           smoothly instead of stopping at a hard horizontal line at
-          the section boundaries. */}
+          the section boundaries.
+
+          Top + bottom fade extended from 14% → 30% so the blurred
+          ambient image fades in/out gradually across nearly a third
+          of the section, instead of resolving in the first 14%.
+          Makes the cream → dark handoff feel like a continuous
+          gradient rather than a banded transition. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 overflow-hidden pointer-events-none"
         style={{
           zIndex: 0,
           WebkitMaskImage:
-            "linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)",
+            "linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%)",
           maskImage:
-            "linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)",
+            "linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%)",
         }}
       >
         {SERVICES.map((service, i) => (
@@ -203,7 +209,7 @@ export default function WhatIDoSection() {
                   width: "calc(var(--u) * 320)",
                   fontSize: "calc(var(--u) * 18)",
                   letterSpacing: "calc(var(--u) * -0.36)",
-                  lineHeight: 1.45,
+                  lineHeight: 1.4,
                   margin: 0,
                   opacity: isDimmed ? 0.35 : 0.85,
                   transition: "opacity 0.4s ease",

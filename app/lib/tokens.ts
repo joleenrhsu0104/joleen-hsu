@@ -29,6 +29,7 @@ export const colors = {
                             // variants into a single near-black token
   forest: "#071b02",        // Work page background — dark forest green
   neudayNavy: "#1F2B36",    // Neuday brand primary navy (brand book)
+  periwinkle: "#D2DDFC",    // Blue Apron PDP card surface
 
   // Hero palette — one per featured project
   heroWonder: "#260303",    // dark burgundy
@@ -38,6 +39,18 @@ export const colors = {
 } as const;
 
 export type ColorToken = keyof typeof colors;
+
+/**
+ * Raw RGB tuple of the ink color ("35, 31, 32"), used by the
+ * scroll-driven char fill components (ScrollCharFill, ScrollFillText,
+ * AboutSentences, MobileAboutSentences). Those modules interpolate
+ * between a semi-transparent and fully-opaque ink in JS via a `blend()`
+ * helper that parses numeric channels — CSS variables can't satisfy
+ * that math, so we expose the tuple as a string they can compose into
+ * `rgba(${INK_RGB}, 0.3)` and `rgb(${INK_RGB})` while keeping a single
+ * source of truth alongside the cream/ink color tokens.
+ */
+export const INK_RGB = "35, 31, 32";
 
 // ──────────────────────────────────────────────────────────────
 // TYPOGRAPHY

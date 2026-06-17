@@ -33,12 +33,17 @@ app/
 
 Tokens live in `app/globals.css` under `@theme inline`:
 
-| Token            | Value     | Use                            |
-| ---------------- | --------- | ------------------------------ |
-| `--color-cream`  | `#fff9ec` | Page background                |
-| `--color-burgundy` | `#260303` | Hero section                  |
-| `--color-near-black` | `#030303` | Ethos section              |
-| `--color-ink`    | `#231f20` | Body copy                      |
+| Token                  | Value     | Use                                                    |
+| ---------------------- | --------- | ------------------------------------------------------ |
+| `--color-cream`        | `#fff9ec` | Page background, case-study surfaces                   |
+| `--color-cream-bright` | `#fffdf7` | Largest white type                                     |
+| `--color-burgundy`     | `#260303` | Hero section (Wonder)                                  |
+| `--color-near-black`   | `#030303` | Ethos / Work / Contact backgrounds, case-study heroes  |
+| `--color-ink`          | `#231f20` | Body copy on cream                                     |
+| `--color-forest`       | `#071b02` | Dark forest green (reserved, no current consumer)      |
+| `--color-neuday-navy`  | `#1F2B36` | Neuday brand primary navy (brand book)                 |
+
+For the full token table including hero palettes and the `INK_RGB` tuple for scroll-driven char fills, see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md).
 
 Fonts are loaded via `next/font/google`: Instrument Serif (display), Instrument Sans (body), B612 Mono (labels).
 

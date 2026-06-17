@@ -50,10 +50,11 @@ function smoothstep(t: number) {
 
 // Shared timing window — applied identically to both phases so the
 // dark→cream fade out of WhatIDoSection mirrors the cream→dark fade
-// into it.
+// into it. Window tightened to 10% of viewport (was 15%) for a
+// faster, snappier crossfade between cream and dark sections.
 function phaseProgress(rectTop: number, vh: number) {
-  const START = 0.25 * vh;
-  const END = 0.1 * vh;
+  const START = 0.18 * vh;
+  const END = 0.08 * vh;
   const raw = (START - rectTop) / (START - END);
   return smoothstep(Math.max(0, Math.min(1, raw)));
 }

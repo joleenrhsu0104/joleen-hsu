@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { INK_RGB } from "@/app/lib/tokens";
 
 /**
  * ScrollFillText — renders text whose fill color "fills in" from top
@@ -44,8 +45,10 @@ function smoothstep(t: number) {
 
 export default function ScrollFillText({
   children,
-  fromColor = "rgba(35, 31, 32, 0.18)",
-  toColor = "rgb(35, 31, 32)",
+  // Ink-token RGB defaults — see INK_RGB comment in app/lib/tokens.ts
+  // for why we compose the tuple here instead of referencing a CSS var.
+  fromColor = `rgba(${INK_RGB}, 0.18)`,
+  toColor = `rgb(${INK_RGB})`,
   className,
   style,
   as = "p",

@@ -2,6 +2,7 @@
 
 import {
   CSSProperties,
+  type ReactNode,
   RefObject,
   useEffect,
   useRef,
@@ -14,6 +15,7 @@ import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
 import MobileHorizontalPin from "./mobile/MobileHorizontalPin";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * useFadeInOnScroll — IntersectionObserver-based one-shot fade-in.
@@ -78,8 +80,12 @@ function fadeInStyle(visible: boolean): CSSProperties {
  * at /videos/wonder-landing.mp4.
  */
 
-const WONDER_BG = "#FCF7ED";           // case study page bg (warm cream)
-const HERO_BG = "#0a0a0a";              // hero panel under the landing video
+// Both page surfaces reference design-token CSS vars instead of
+// hardcoded hex so the cream/near-black ladder stays consistent with
+// every other section on the site. (Prior literals were #FCF7ED and
+// #0a0a0a — within 3–7 RGB units of the canonical tokens.)
+const WONDER_BG = "var(--color-cream)";  // case study page bg (warm cream)
+const HERO_BG = "var(--color-near-black)"; // hero panel under the landing video
 const TASTE_GREEN = "#00271A";          // "A full taste of Wonder" + carousel
 const WONDER_YELLOW = "#FBE59F";        // Membership section ground (matches Membership-Mobile.png's baked-in yellow)
 const INK = "var(--color-ink)";         // dark body text on the cream bg
@@ -158,8 +164,8 @@ function WonderDesktop() {
       <IphoneRedesignRow />
       <MembershipSection />
       <WebOrderingSection />
+      <MobileWebSection />
       <ClosingSection />
-      <CoverSection />
       <SignatureSection />
     </main>
   );
@@ -240,9 +246,10 @@ function HeroDesktop() {
             href="https://www.linkedin.com/in/joleenhsu/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
           >
             LINKEDIN
+            <ArrowUpRight />
           </a>
         </div>
       </nav>
@@ -390,7 +397,10 @@ function NarrativeSection({
 }: {
   eyebrow?: string;
   heading: string;
-  body: string;
+  // ReactNode (not string) so callers can pass JSX with <br /> for
+  // multi-paragraph copy, e.g. the Web Ordering body splits a stat
+  // callout onto its own line.
+  body: ReactNode;
   align?: "left" | "center";
   width?: number;
   tone?: "dark" | "light";
@@ -692,10 +702,10 @@ function PostPurchaseSection() {
           <span
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 12)",
-              letterSpacing: "calc(var(--u) * -0.24)",
+              fontSize: "calc(var(--u) * 14)",
+              letterSpacing: "calc(var(--u) * -0.28)",
               color: INK,
-              opacity: 0.6,
+              opacity: 0.7,
               textAlign: "center",
               width: "100%",
             }}
@@ -855,8 +865,11 @@ function MembershipSection() {
             Our membership program launched in 2023, aimed at increasing
             customer loyalty and order frequency. I designed the
             end-to-end experience and partnered with our Creative team to
-            craft the visual identity. Within the first 6 months of
-            launch, Wonder+ generated over ~$250K in weekly ARR.
+            craft the visual identity.
+            <br />
+            <br />
+            Within the first 6 months of launch, Wonder+ generated
+            over ~$250K in weekly ARR.
           </p>
         </div>
       </div>
@@ -871,34 +884,46 @@ function WebOrderingSection() {
     <section
       className="relative"
       style={{
-        // Dark green section (matches the "A full taste of Wonder"
-        // carousel section). paddingBottom is 0 so the laptop mockup
-        // sits flush with the bottom edge of the section.
-        backgroundColor: TASTE_GREEN,
+        // Warm cream section (matches the case study page bg). The
+        // laptop mockup floats centered between the body copy above
+        // and the section bottom, with matching 48u gaps on either
+        // side so the cream frame reads as a single balanced panel.
+        backgroundColor: WONDER_BG,
         paddingTop: "calc(var(--u) * 120)",
-        paddingBottom: 0,
+        paddingBottom: "calc(var(--u) * 48)",
       }}
     >
       <NarrativeSection
-        tone="light"
+        tone="dark"
         heading="Web Ordering"
-        body="I designed our web ordering site in under 2 months to drive new user acquisition, and allow users to try Wonder without the friction of downloading the app. Our web ordering platform now accounts for 70% of new customer orders."
+        body={
+          <>
+            I designed our web ordering site in under 2 months to
+            drive new user acquisition, and allow users to try
+            Wonder without the friction of downloading the app.
+            <br />
+            <br />
+            Our web ordering platform now accounts for 70% of new
+            customer orders.
+          </>
+        }
         width={861}
       />
 
-      {/* Laptop mockup — bottom-anchored to the section bottom edge. */}
+      {/* Laptop mockup — floats centered with equal 48u gaps above
+          (text → image) and below (image → section bottom). */}
       <div
         ref={ref}
         className="mx-auto"
         style={{
-          marginTop: "calc(var(--u) * 96)",
+          marginTop: "calc(var(--u) * 48)",
           width: "calc(var(--u) * 1280)",
           ...fadeInStyle(visible),
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/WebOrdering.webp`}
+          src={`${IMG}/WebOrdering.png`}
           alt="Wonder web ordering"
           style={{
             width: "100%",
@@ -911,89 +936,326 @@ function WebOrderingSection() {
   );
 }
 
-function ClosingSection() {
+/* ───────────────────────────────────────────────────────────────
+   Mobile Web — companion section to Web Ordering. Cream WONDER_BG
+   ground (deliberately distinct from the green Web Ordering panel
+   above so the reader feels a chapter break). Left column carries
+   the "Mobile Web" heading and the two stat paragraphs; right side
+   scatters 6 phone mockups across 3 loose columns × 2 rows with the
+   center column phone sitting between the top and bottom rows for
+   a triangle/zigzag feel that matches the reference screenshot.
+   All assets live in /public/images/wonder/Web Ordering/.
+   ─────────────────────────────────────────────────────────────── */
+
+// Phone positions (x, y) inside the 1700u-wide stage. Three strict
+// columns at x=665 / 1005 / 1345 (60u horizontal gaps between
+// columns, 280u phone width). The cluster is centered in the space
+// between the text column's right edge (inner-div x=480) and the
+// viewport's right edge (inner-div x=1810 after accounting for the
+// section's 110u side padding) — gives ~185u of cream breathing
+// room on both sides of the cluster.
+//
+//   col 1 (x=665):  phone 1 (top) + 2 (bottom)
+//   col 2 (x=1005): phone 3 (peeks above) + 4 (mid) + 5 (peeks below)
+//   col 3 (x=1345): phone 6 (top) + 7 (bottom)
+//
+// Vertical gaps within each column:
+//   col 1 / col 3: 75u between the two phones (matching reference)
+//   col 2: 30u between phones — tighter so all three fit without
+//          overlap, while 3.png still peeks above (~50u) and 5.png
+//          still peeks below (~170u visible after stage clip).
+// Mobile Web phone columns — each column is a vertical strip that
+// runs an infinite upward marquee on hover. When paused (default),
+// the visible phones in each column align with their static y
+// positions. When hovered, phones scroll upward continuously; ones
+// that exit the top wrap around from the bottom because each strip
+// contains two duplicated sets of phones and animates by exactly
+// -50% (= one set's height).
+//
+// startY is where the column's first phone sits when the marquee is
+// at 0%. Matches the prior static layout so the paused state looks
+// identical to before.
+//
+// gap is the vertical gap between phones inside the strip. Same as
+// the prior layout's y deltas (phone height 565 + gap = y delta).
+//
+// duration tunes per-column animation length so phones in all
+// columns appear to move at roughly the same speed regardless of
+// how many phones the column has.
+const MOBILE_WEB_COLUMNS: Array<{
+  x: number;
+  startY: number;
+  phones: string[];
+  gap: number;
+  duration: number;
+  /** Distance the strip translates per loop, in design units.
+   *  Computed as `phones.length × (phoneHeight + gap)`, where
+   *  phoneHeight = 565u for these mockups. The strip contains
+   *  TWO duplicate sets, so the cycle distance equals one set's
+   *  height — translating by this much brings set B exactly into
+   *  set A's slot. */
+  cycle: number;
+}> = [
+  // Column 1 — 2 phones, sit aligned with column 3
+  // cycle = 2 × (565 + 75) = 1280
+  { x: 665, startY: -150, phones: ["1.png", "2.png"], gap: 75, duration: 60, cycle: 1280 },
+  // Column 2 — 3 phones, peeks above + below; longer strip → longer
+  // duration so per-phone perceived speed matches columns 1 and 3
+  // (cycle 1785u vs 1280u → 1.39× longer → 84s vs 60s).
+  // cycle = 3 × (565 + 30) = 1785
+  { x: 1005, startY: -375, phones: ["3.png", "4.png", "5.png"], gap: 30, duration: 84, cycle: 1785 },
+  // Column 3 — 2 phones, mirrors column 1
+  { x: 1345, startY: -150, phones: ["6.png", "7.png"], gap: 75, duration: 60, cycle: 1280 },
+];
+
+const MOBILE_WEB_PHONE_W = 280;
+
+function MobileWebSection() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const visible = useFadeInOnScroll(ref);
   return (
     <section
-      className="relative"
+      className="relative overflow-hidden"
       style={{
-        backgroundColor: WONDER_BG,
-        // Symmetric vertical cream around the closing paragraph:
-        // 160u above (between green Web Ordering and text) and
-        // 160u below (this 80u + CoverSection's 80u top = 160u total
-        // from text bottom to the closing food image).
-        paddingTop: "calc(var(--u) * 160)",
-        paddingBottom: "calc(var(--u) * 80)",
+        backgroundColor: TASTE_GREEN,
+        // No paddingTop so the top-row phones with negative y values
+        // get clipped by the section's overflow:hidden — that's what
+        // produces the partial-cut effect visible in the reference.
+        // No paddingBottom either, so column 2's clipped phone 5
+        // touches the next section (ClosingSection's food image)
+        // with no green gap between.
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingLeft: "calc(var(--u) * 110)",
+        paddingRight: "calc(var(--u) * 110)",
       }}
     >
-      <p
-        className="font-serif text-center"
+      <div
+        ref={ref}
+        className="relative mx-auto overflow-hidden"
         style={{
-          color: INK,
-          // marginTop/Bottom kept at 0 explicitly; left/right are auto
-          // so the maxWidth block actually centers within the section.
-          // Previous bug: `margin: 0` (shorthand) was last in the style
-          // object and clobbered the auto margins above it.
-          marginTop: 0,
-          marginBottom: 0,
-          marginLeft: "auto",
-          marginRight: "auto",
-          // Widened to ~1700u so the full sentence breaks naturally
-          // into 2 lines at 44px instead of wrapping into 3 lines at
-          // typical desktop viewports (1440–1920 wide).
-          maxWidth: "calc(var(--u) * 1700)",
-          fontSize: "calc(var(--u) * 44)",
-          letterSpacing: "calc(var(--u) * -0.88)",
-          lineHeight: 1.25,
+          width: "calc(var(--u) * 1700)",
+          // Cap stage at the smaller of the design-unit target
+          // (1310u — tall enough to fit column 3's bottom phone) and
+          // 100vh (so the entire section always fits in one viewport
+          // scroll). At 1920×1080 the 100vh limit kicks in and the
+          // bottom-peek-through phones get clipped a bit tighter; at
+          // taller aspect ratios the full 1310u stage is used.
+          height: "min(calc(var(--u) * 1310), 100vh)",
+          ...fadeInStyle(visible),
         }}
       >
-        From 2021&ndash;2024, I was 1 of 2 product designers, and touched
-        almost every screen of the entire product suite. To see more of
-        my work, check out{" "}
-        <a
-          href="https://wonder.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:opacity-70 transition-opacity"
+        {/* Left column — heading + 2 paragraphs in white on green.
+            Anchored ~200u from the top of the stage so the title sits
+            comfortably below the top-row phone tops. */}
+        <div
+          className="absolute text-white"
           style={{
-            // Default underline at 44u text is ~3-4px which reads as a
-            // slab. Slim to 1px with a 6px offset for a more
-            // typographic feel.
-            textDecorationThickness: "1px",
-            textUnderlineOffset: "6px",
+            left: 0,
+            top: "calc(var(--u) * 200)",
+            width: "calc(var(--u) * 480)",
           }}
         >
-          wonder.com
-        </a>{" "}
-        or download the Wonder app.
-      </p>
+          <h2
+            className="font-serif"
+            style={{
+              fontSize: "calc(var(--u) * 68)",
+              letterSpacing: "calc(var(--u) * -1.36)",
+              lineHeight: 1.1,
+              margin: 0,
+              marginBottom: "calc(var(--u) * 32)",
+            }}
+          >
+            Mobile Web
+          </h2>
+          <p
+            className="font-sans"
+            style={{
+              fontSize: "calc(var(--u) * 24)",
+              letterSpacing: "calc(var(--u) * -0.72)",
+              lineHeight: 1.4,
+              margin: 0,
+              marginBottom: "calc(var(--u) * 24)",
+              opacity: 0.85,
+            }}
+          >
+            After launch, we found that customers ordered 26% more
+            from our app compared to web.
+          </p>
+          <p
+            className="font-sans"
+            style={{
+              fontSize: "calc(var(--u) * 24)",
+              letterSpacing: "calc(var(--u) * -0.72)",
+              lineHeight: 1.4,
+              margin: 0,
+              opacity: 0.85,
+            }}
+          >
+            We conducted a series of A/B tests to drive users to
+            download the app, emphasizing the benefit of receiving
+            live updates (i.e. push notifications) for their orders.
+          </p>
+        </div>
+
+        {/* Right area — 3 phone columns, each rendering as a
+            vertical marquee strip. Paused by default so the layout
+            is identical to the prior static design; runs on stage
+            hover so phones scroll up continuously and wrap from
+            bottom-to-top via the duplicated set / -50% trick. */}
+        {MOBILE_WEB_COLUMNS.map(({ x, startY, phones, gap, duration, cycle }) => (
+          <div
+            key={x}
+            className="absolute"
+            style={{
+              left: `calc(var(--u) * ${x})`,
+              top: `calc(var(--u) * ${startY})`,
+              width: `calc(var(--u) * ${MOBILE_WEB_PHONE_W})`,
+            }}
+          >
+            {/* Marquee strip — duplicated set of phones, each with
+                marginBottom = gap. The strip's animation translates
+                by `--marquee-cycle` (= one set's height in u units),
+                which slides the duplicate set exactly into the
+                original's slot for a seamless loop. */}
+            <div
+              style={
+                {
+                  animation: `marquee-up ${duration}s linear infinite`,
+                  willChange: "transform",
+                  ["--marquee-cycle" as string]: `calc(var(--u) * ${cycle})`,
+                } as React.CSSProperties
+              }
+            >
+              {[0, 1].map((setIdx) =>
+                phones.map((src, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={`${setIdx}-${i}`}
+                    src={`${IMG}/Web Ordering/${src}`}
+                    alt={
+                      setIdx === 0
+                        ? `Wonder mobile web screen ${i + 1}`
+                        : ""
+                    }
+                    aria-hidden={setIdx === 1 ? "true" : undefined}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      display: "block",
+                      marginBottom: `calc(var(--u) * ${gap})`,
+                    }}
+                    draggable={false}
+                  />
+                )),
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
 
-function CoverSection() {
-  const ref = useRef<HTMLImageElement | null>(null);
+/* ───────────────────────────────────────────────────────────────
+   Closing — full-bleed food image with the closing paragraph
+   centered in a cream container card overlaid on top of it. Per
+   Figma node 806:7953: image is the background, a 1438u-wide
+   rounded card holds the text, and the text inside has ~80u of
+   inner padding all around. Replaces the previous two-section
+   pattern (ClosingSection text panel + CoverSection image panel)
+   with a single combined closing.
+   ─────────────────────────────────────────────────────────────── */
+function ClosingSection() {
+  const ref = useRef<HTMLDivElement | null>(null);
   const visible = useFadeInOnScroll(ref);
   return (
     <section
       className="relative overflow-hidden"
       style={{
         backgroundColor: WONDER_BG,
-        // 80u above the food image, paired with ClosingSection's
-        // 80u below the text, totals 160u — matching the 160u cream
-        // above the closing paragraph for a visually symmetric gap.
-        paddingTop: "calc(var(--u) * 80)",
+        // No paddingTop so the food image sits flush against the
+        // Mobile Web section above — the user wanted no cream gap
+        // between the clipped phone column and the closing image.
+        paddingTop: 0,
         paddingBottom: "calc(var(--u) * 80)",
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <div
         ref={ref}
-        src={`${IMG}/wonderclosingimage.webp`}
-        alt=""
-        aria-hidden="true"
-        className="w-full"
-        style={{ height: "auto", display: "block", ...fadeInStyle(visible) }}
-      />
+        className="relative"
+        style={fadeInStyle(visible)}
+      >
+        {/* Background image — full-bleed inside the section. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${IMG}/WonderClosingImage.png`}
+          alt=""
+          aria-hidden="true"
+          className="w-full"
+          style={{
+            height: "auto",
+            display: "block",
+          }}
+        />
+
+        {/* Overlaid cream container card holding the closing
+            paragraph. Centered in the image both ways. */}
+        <div
+          className="absolute"
+          style={{
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: WONDER_BG,
+            // Card shrunk to 1500u so the centered text fills more
+            // of the inner area — the previous 1800u width left
+            // visible cream on either side of the text even with
+            // 80u padding (text-align: center + a too-wide card
+            // means leftover space pools on both sides of the
+            // text). At 1500u the 80u side padding is the only
+            // cream visible between the text and the card edges.
+            width: "calc(var(--u) * 1500)",
+            // Uniform 80u padding on all four sides — text sits with
+            // exactly 80u from the card's inner edge in every
+            // direction.
+            paddingTop: "calc(var(--u) * 80)",
+            paddingBottom: "calc(var(--u) * 80)",
+            paddingLeft: "calc(var(--u) * 80)",
+            paddingRight: "calc(var(--u) * 80)",
+            borderRadius: "calc(var(--u) * 16)",
+          }}
+        >
+          <p
+            className="font-serif text-center"
+            style={{
+              color: INK,
+              margin: 0,
+              fontSize: "calc(var(--u) * 36)",
+              letterSpacing: "calc(var(--u) * -0.72)",
+              lineHeight: 1.25,
+            }}
+          >
+            From 2021&ndash;2024, I was 1 of 2 product designers, and
+            touched almost every screen of the entire product suite.
+            <br />
+            To see more of my work, check out{" "}
+            <a
+              href="https://wonder.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:opacity-70 transition-opacity"
+              style={{
+                textDecorationThickness: "1px",
+                textUnderlineOffset: "6px",
+              }}
+            >
+              wonder.com
+            </a>{" "}
+            or download the Wonder app.
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
@@ -1176,7 +1438,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
           }}
@@ -1209,7 +1471,11 @@ function WonderMobile() {
           paddingLeft: "calc(var(--u-m) * 16)",
           paddingRight: "calc(var(--u-m) * 16)",
           paddingTop: "calc(var(--u-m) * 24)",
-          paddingBottom: "calc(var(--u-m) * 64)",
+          // No bottom padding — the App Screens row below provides
+          // its own 44u-m top padding via MobileHorizontalPin, so the
+          // gap between "wonder.com" and the first phone is exactly
+          // 44u-m. Stacking another 64u-m on top doubled the cream.
+          paddingBottom: 0,
           gap: "calc(var(--u-m) * 32)",
         }}
       >
@@ -1317,7 +1583,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
             marginBottom: "calc(var(--u-m) * 8)",
@@ -1411,7 +1677,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
             whiteSpace: "pre-line",
@@ -1463,9 +1729,9 @@ function WonderMobile() {
           <span
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u-m) * 11)",
-              letterSpacing: "calc(var(--u-m) * -0.22)",
-              opacity: 0.6,
+              fontSize: "calc(var(--u-m) * 12)",
+              letterSpacing: "calc(var(--u-m) * -0.36)",
+              opacity: 0.7,
               textAlign: "center",
               width: "100%",
             }}
@@ -1553,7 +1819,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
             whiteSpace: "pre-line",
@@ -1564,8 +1830,11 @@ function WonderMobile() {
           Our membership program launched in 2023, aimed at increasing
           customer loyalty and order frequency. I designed the end-to-end
           experience and partnered with our Creative team to craft the
-          visual identity. Within the first 6 months of launch, Wonder+
-          generated over ~$250K in weekly ARR.
+          visual identity.
+          <br />
+          <br />
+          Within the first 6 months of launch, Wonder+ generated over
+          ~$250K in weekly ARR.
         </p>
         <div style={{ marginTop: "calc(var(--u-m) * 16)" }}>
           {/* Mobile-specific composite image (no empty right-half yellow
@@ -1595,18 +1864,21 @@ function WonderMobile() {
         </div>
       </section>
 
-      {/* Web Ordering — dedicated dark green section, mirroring the
-          desktop WebOrderingSection. Text reads light on the deep
-          green ground, and the laptop mockup sits flush with the
-          section's bottom edge (paddingBottom: 0). */}
+      {/* Web Ordering — dedicated cream section, mirroring the
+          desktop WebOrderingSection. Text reads INK on cream, and
+          the laptop mockup floats centered between the text above
+          and the section's bottom edge with matching 32u-m gaps on
+          either side (marginTop on the image div above + paddingBottom
+          on the section below). */}
       <section
-        className="flex flex-col text-white"
+        className="flex flex-col"
         style={{
-          backgroundColor: TASTE_GREEN,
+          backgroundColor: WONDER_BG,
+          color: INK,
           paddingTop: "calc(var(--u-m) * 64)",
           paddingLeft: "calc(var(--u-m) * 16)",
           paddingRight: "calc(var(--u-m) * 16)",
-          paddingBottom: 0,
+          paddingBottom: "calc(var(--u-m) * 32)",
           gap: "calc(var(--u-m) * 16)",
         }}
       >
@@ -1626,7 +1898,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
             whiteSpace: "pre-line",
@@ -1634,19 +1906,107 @@ function WonderMobile() {
         >
           I designed our web ordering site in under 2 months to drive new
           user acquisition, and allow users to try Wonder without the
-          friction of downloading the app. Our web ordering platform now
-          accounts for 70% of new customer orders.
+          friction of downloading the app.
+          <br />
+          <br />
+          Our web ordering platform now accounts for 70% of new
+          customer orders.
         </p>
         <div style={{ marginTop: "calc(var(--u-m) * 32)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`${IMG}/WebOrdering.webp`}
+            src={`${IMG}/WebOrdering.png`}
             alt=""
             aria-hidden="true"
             style={{ width: "100%", height: "auto", display: "block" }}
           />
         </div>
       </section>
+
+      {/* Mobile Web — dark green section matching desktop's
+          TASTE_GREEN ground so it reads as a chapter break from the
+          Web Ordering cream above. Heading + two stat paragraphs on
+          top, then a horizontal swipe row of the 6 mobile web
+          mockups so the user can flip through each screen. */}
+      <section
+        className="flex flex-col text-white"
+        style={{
+          backgroundColor: TASTE_GREEN,
+          paddingTop: "calc(var(--u-m) * 64)",
+          paddingLeft: "calc(var(--u-m) * 16)",
+          paddingRight: "calc(var(--u-m) * 16)",
+          paddingBottom: "calc(var(--u-m) * 32)",
+          gap: "calc(var(--u-m) * 16)",
+        }}
+      >
+        <h2
+          className="font-serif"
+          style={{
+            fontSize: "calc(var(--u-m) * 32)",
+            letterSpacing: "calc(var(--u-m) * -0.64)",
+            lineHeight: 1.15,
+            margin: 0,
+          }}
+        >
+          Mobile Web
+        </h2>
+        <p
+          className="font-sans"
+          style={{
+            fontSize: "calc(var(--u-m) * 14)",
+            letterSpacing: "calc(var(--u-m) * -0.42)",
+            lineHeight: 1.4,
+            margin: 0,
+            opacity: 0.85,
+          }}
+        >
+          After launch, we found that customers ordered 26% more from
+          our app compared to web.
+          <br />
+          <br />
+          We conducted a series of A/B tests to drive users to download
+          the app, emphasizing the benefit of receiving live updates
+          (i.e. push notifications) for their orders.
+        </p>
+      </section>
+      <div
+        style={{
+          backgroundColor: TASTE_GREEN,
+          paddingBottom: "calc(var(--u-m) * 32)",
+        }}
+      >
+        <MobileHorizontalPin>
+          {/* Flatten the 3 desktop columns back into a single ordered
+              list (1, 2, 3, 4, 5, 6, 7) for the horizontal swipe.
+              Desktop uses hover-driven vertical marquees per column,
+              which doesn't translate to touch; mobile lets the user
+              swipe through all 7 phones one at a time, achieving the
+              same "cycle through every screen" goal in a touch-native
+              way. */}
+          {MOBILE_WEB_COLUMNS.flatMap((col) => col.phones).map(
+            (src, i) => (
+              <div
+                key={src}
+                className="shrink-0"
+                style={{
+                  width: "calc(var(--u-m) * 220)",
+                  aspectRatio: "1929 / 3896",
+                  borderRadius: "calc(var(--u-m) * 16)",
+                  overflow: "hidden",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`${IMG}/Web Ordering/${src}`}
+                  alt={`Wonder mobile web screen ${i + 1}`}
+                  className="block w-full h-full object-cover"
+                  draggable={false}
+                />
+              </div>
+            ),
+          )}
+        </MobileHorizontalPin>
+      </div>
 
       {/* Closing */}
       <section
@@ -1668,8 +2028,9 @@ function WonderMobile() {
           }}
         >
           From 2021&ndash;2024, I was 1 of 2 product designers, and
-          touched almost every screen of the entire product suite. To see
-          more of my work, check out{" "}
+          touched almost every screen of the entire product suite.
+          <br />
+          To see more of my work, check out{" "}
           <a
             href="https://wonder.com"
             className="underline"
@@ -1689,7 +2050,7 @@ function WonderMobile() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/wonderclosingimage.webp`}
+          src={`${IMG}/WonderClosingImage.png`}
           alt=""
           aria-hidden="true"
           style={{ width: "100%", height: "auto", display: "block" }}

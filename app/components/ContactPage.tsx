@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
 import { ETHOS_IMAGES } from "@/app/lib/assets";
 import MobileTopNav from "./mobile/MobileTopNav";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * ContactPage
@@ -25,7 +26,9 @@ import MobileTopNav from "./mobile/MobileTopNav";
  * so the email reading experience stays clean.
  */
 
-const BG = "#030303";
+// Near-black surface — same token used by Ethos + WorkPage so all
+// dark-surface pages stay in lock-step.
+const BG = "var(--color-near-black)";
 const EMAIL = "hi@joleen.design";
 // Caption back-face overlay — 70% black sits on top of the same image so
 // the photo still reads through behind the Instrument Sans caption.
@@ -89,9 +92,10 @@ function ContactTopNav({ variant }: { variant: "desktop" | "mobile" }) {
           href="https://www.linkedin.com/in/joleenhsu/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:opacity-70 transition-opacity"
+          className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
         >
           LINKEDIN
+          <ArrowUpRight />
         </a>
       </div>
     </nav>
@@ -504,12 +508,25 @@ function ContactMobile() {
     rightPct?: number;
     y: number;
   }> = [
-    { srcIndex: 1, leftPct: 3, y: 110 },   // doublerainbow — far-left, upper
-    { srcIndex: 0, leftPct: 38, y: 20 },   // dinnerparties — mid, highest
-    { srcIndex: 3, rightPct: 3, y: 180 },  // casagilardi — flush right, mid-top
-    { srcIndex: 4, leftPct: 4, y: 510 },   // reading — far-left, upper-bottom
-    { srcIndex: 5, rightPct: 8, y: 440 },  // tennis — near-right, higher
-    { srcIndex: 2, leftPct: 36, y: 610 },  // dolomites — mid, lowest
+    // Cards ring around the email + tagline at the center, like a
+    // clock face: 12 / 10 / 2 / 4 / 8 / 6 o'clock positions. Each
+    // clock-face y is offset by a different amount so adjacent cards
+    // never share a height — the "ring" reads as a soft ellipse with
+    // varied heights rather than a perfect symmetric circle. The
+    // wide 2→4 / 10→8 gaps form the horizontal center band where
+    // the email + tagline live.
+    // Top trio shifted down 45u and bottom trio shifted up 25u so
+    // the inner ring of cards sits closer to the email + tagline at
+    // center, while leaving ~20u-m of clearance around the email
+    // zone (no overlap with the text). Tennis (6 o'clock) stays at
+    // its anchor position so the bottom of the layout doesn't pull
+    // up alongside the others.
+    { srcIndex: 0, leftPct: 45, y: 65 },   // dinnerparties — 1 o'clock (top, mid-right)
+    { srcIndex: 1, leftPct: 0, y: 175 },   // doublerainbow — 10 o'clock (top, far-left)
+    { srcIndex: 3, rightPct: 0, y: 235 },  // casagilardi — 2 o'clock (top, flush-right) — bottom edge 385 ≈ 20u above email top
+    { srcIndex: 2, rightPct: 0, y: 505 },  // dolomites — 4 o'clock (bottom, flush-right) — top edge 505 ≈ 20u below email bottom
+    { srcIndex: 4, leftPct: 0, y: 545 },   // reading — 8 o'clock (bottom, far-left)
+    { srcIndex: 5, leftPct: 32, y: 720 },  // tennis — 6 o'clock (bottom, mid) — unchanged anchor
   ];
 
   return (
@@ -532,8 +549,13 @@ function ContactMobile() {
         style={
           {
             minHeight: "100vh",
+            // 890u-m vertical budget covers tennis (6 o'clock at
+            // y=720) + 150u-m card height + 20u-m bottom buffer. The
+            // ring layout stretches farther vertically than the
+            // earlier scatter because the 12/6 o'clock cards sit at
+            // the extremes.
             ["--u-m" as string]:
-              "min(calc(100vw / 390), calc(100vh / 760))",
+              "min(calc(100vw / 390), calc(100vh / 890))",
           } as React.CSSProperties
         }
       >

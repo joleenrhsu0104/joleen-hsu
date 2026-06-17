@@ -110,6 +110,23 @@ body {
   will-change: transform;
 }
 
+/* Vertical marquee — used by Wonder Mobile Web phone columns.
+   Same pattern as marquee-left but along the Y axis. Strip
+   contains two duplicate sets of phones stacked vertically;
+   translating by --marquee-cycle slides the second set into the
+   first's position for a seamless infinite loop. Pixel-based
+   translation (via the CSS var) instead of -50% so it works
+   reliably even when the strip lives inside an
+   absolutely-positioned wrapper with overflow:hidden clipping. */
+@keyframes marquee-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, calc(-1 * var(--marquee-cycle, 1280px)), 0);
+  }
+}
+
 .animate-water-drift {
   animation: water-drift 14s ease-in-out infinite;
 }

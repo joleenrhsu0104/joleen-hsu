@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { INK_RGB } from "@/app/lib/tokens";
 import ScrollCharFill from "../ScrollCharFill";
 
 /**
@@ -6,8 +7,10 @@ import ScrollCharFill from "../ScrollCharFill";
  * Three cream panels with dark scroll-driven char fill.
  */
 
-const FROM = "rgba(35, 31, 32, 0.3)";
-const TO = "rgb(35, 31, 32)";
+// Same single-source ink tuple as AboutSentences — see token comment in
+// app/lib/tokens.ts for why this is a raw RGB tuple instead of a CSS var.
+const FROM = `rgba(${INK_RGB}, 0.3)`;
+const TO = `rgb(${INK_RGB})`;
 
 export default function MobileAboutSentences() {
   return (

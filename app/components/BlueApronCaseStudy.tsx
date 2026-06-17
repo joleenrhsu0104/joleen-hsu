@@ -14,6 +14,7 @@ import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
 import MobileHorizontalPin from "./mobile/MobileHorizontalPin";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * useFadeInOnScroll — IntersectionObserver-based one-shot fade-in.
@@ -78,9 +79,17 @@ function fadeInStyle(visible: boolean): CSSProperties {
  * at /videos/blue-apron-landing.mp4.
  */
 
-const BLUEAPRON_BG = "#FCF7ED";           // case study page bg (warm cream)
-const HERO_BG = "#0a0a0a";              // hero panel under the landing video
+// Both page surfaces reference design-token CSS vars instead of
+// hardcoded hex so the cream/near-black ladder stays consistent with
+// every other section on the site. (Prior literals were #FCF7ED and
+// #0a0a0a — within 3–7 RGB units of the canonical tokens.)
+const BLUEAPRON_BG = "var(--color-cream)"; // case study page bg (warm cream)
+const HERO_BG = "var(--color-near-black)"; // hero panel under the landing video
 const TASTE_GREEN = "#00271A";          // "A full taste of Blue Apron" + carousel
+// PDP card surface — periwinkle. Used 4× across the file for the
+// AlaCarte intro panel, PDP scroll-pin frames, and the closing CTA.
+// Single constant means the brand color changes once and everywhere.
+const PERIWINKLE = "#D2DDFC";
 const INK = "var(--color-ink)";         // dark body text on the cream bg
 const IMG = "/images/blue-apron";
 const LANDING_VIDEO = "/videos/blue-apron-landing.mp4";
@@ -367,7 +376,7 @@ function AlaCarteIntro() {
     <section
       className="relative"
       style={{
-        backgroundColor: "#D2DDFC",
+        backgroundColor: PERIWINKLE,
         paddingTop: "calc(var(--u) * 100)",
         // Tightened: the gap between this subtext and the PDP cards
         // below was previously dominated by 80u of padding here plus
@@ -504,7 +513,7 @@ function PdpCardsRow() {
       style={{
         // Periwinkle to match the AlaCarteIntro above; the two sections
         // visually read as a single colored block.
-        backgroundColor: "#D2DDFC",
+        backgroundColor: PERIWINKLE,
         height: wrapperHeight,
       }}
     >
@@ -908,9 +917,10 @@ function HeroDesktop() {
             href="https://www.linkedin.com/in/joleenhsu/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
           >
             LINKEDIN
+            <ArrowUpRight />
           </a>
         </div>
       </nav>
@@ -1362,7 +1372,7 @@ function PostPurchaseSection() {
               fontSize: "calc(var(--u) * 12)",
               letterSpacing: "calc(var(--u) * -0.24)",
               color: INK,
-              opacity: 0.6,
+              opacity: 0.7,
               textAlign: "center",
               width: "100%",
             }}
@@ -1977,7 +1987,7 @@ function BlueApronMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
           }}
@@ -2008,7 +2018,10 @@ function BlueApronMobile() {
           paddingLeft: "calc(var(--u-m) * 16)",
           paddingRight: "calc(var(--u-m) * 16)",
           paddingTop: "calc(var(--u-m) * 24)",
-          paddingBottom: "calc(var(--u-m) * 24)",
+          // No bottom padding — AlaCarte row below provides 44u-m of
+          // top padding via MobileHorizontalPin, so the gap between
+          // "blueapron.com" and the first phone is exactly 44u-m.
+          paddingBottom: 0,
           gap: "calc(var(--u-m) * 32)",
         }}
       >
@@ -2080,7 +2093,7 @@ function BlueApronMobile() {
       <section
         className="flex flex-col text-center"
         style={{
-          backgroundColor: "#D2DDFC",
+          backgroundColor: PERIWINKLE,
           paddingLeft: "calc(var(--u-m) * 16)",
           paddingRight: "calc(var(--u-m) * 16)",
           paddingTop: "calc(var(--u-m) * 64)",
@@ -2105,7 +2118,7 @@ function BlueApronMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
           }}
@@ -2129,7 +2142,7 @@ function BlueApronMobile() {
           combined intro+PDP block. */}
       <div
         style={{
-          backgroundColor: "#D2DDFC",
+          backgroundColor: PERIWINKLE,
           paddingBottom: "calc(var(--u-m) * 64)",
         }}
       >
@@ -2137,12 +2150,21 @@ function BlueApronMobile() {
           { label: "Meal Kit", src: PDP_MEAL_KIT_SRC },
           { label: "Prepared & Ready", src: PDP_PNR_SRC },
           { label: "Add-On", src: PDP_ADDON_SRC },
-        ].map((pdp) => (
-          <MobilePdpScrollPin
-            key={pdp.label}
-            label={pdp.label}
-            src={pdp.src}
-          />
+        ].map((pdp, i, arr) => (
+          <div key={pdp.label}>
+            <MobilePdpScrollPin label={pdp.label} src={pdp.src} />
+            {/* 40u-m periwinkle gap between PDP cards — enough to
+                signal a visual break between scroll-pinned mocks
+                without dominating the vertical rhythm. Skipped after
+                the last card so the outer wrapper's paddingBottom
+                (64u-m) doesn't stack on top. */}
+            {i < arr.length - 1 && (
+              <div
+                aria-hidden="true"
+                style={{ height: "calc(var(--u-m) * 40)" }}
+              />
+            )}
+          </div>
         ))}
       </div>
 
@@ -2175,7 +2197,7 @@ function BlueApronMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 14)",
             letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
+            lineHeight: 1.4,
             margin: 0,
             opacity: 0.85,
             paddingLeft: "calc(var(--u-m) * 16)",
@@ -2232,50 +2254,60 @@ function BlueApronMobile() {
         style={{
           backgroundColor: "#FFFFFF",
           color: INK,
-          paddingLeft: "calc(var(--u-m) * 16)",
-          paddingRight: "calc(var(--u-m) * 16)",
-          paddingTop: "calc(var(--u-m) * 64)",
+          // No horizontal padding on the section itself — the food
+          // image sits flush at the top edge-to-edge. The text block
+          // below it has its own 16u-m horizontal padding so the
+          // copy stays in the standard content rail.
+          paddingTop: 0,
           paddingBottom: "calc(var(--u-m) * 48)",
-          gap: "calc(var(--u-m) * 24)",
         }}
       >
-        <h2
-          className="font-serif"
-          style={{
-            fontSize: "calc(var(--u-m) * 32)",
-            letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
-            margin: 0,
-          }}
-        >
-          Blue Apron has delivered over 600 million meals, and helped
-          millions of people discover the <em>joy</em> of cooking.
-        </h2>
-        <p
-          className="font-sans"
-          style={{
-            fontSize: "calc(var(--u-m) * 14)",
-            letterSpacing: "calc(var(--u-m) * -0.42)",
-            lineHeight: 1.55,
-            margin: 0,
-            opacity: 0.85,
-          }}
-        >
-          Additional work available upon request.
-        </p>
+        {/* Full-bleed food image — first thing the user sees in the
+            closing section. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${IMG}/BlueApronClosing.png`}
+          alt="Blue Apron meals"
+          style={{ width: "100%", height: "auto", display: "block" }}
+        />
+
+        {/* Closing copy block — heading + tagline sit below the
+            image with the standard 16u-m horizontal rail and a
+            generous 48u-m top gap before the heading so the image
+            handoff breathes. */}
         <div
-          className="overflow-hidden"
+          className="flex flex-col"
           style={{
-            marginTop: "calc(var(--u-m) * 8)",
-            borderRadius: "calc(var(--u-m) * 16)",
+            paddingLeft: "calc(var(--u-m) * 16)",
+            paddingRight: "calc(var(--u-m) * 16)",
+            paddingTop: "calc(var(--u-m) * 48)",
+            gap: "calc(var(--u-m) * 24)",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`${IMG}/BlueApronClosing.png`}
-            alt="Blue Apron meals"
-            style={{ width: "100%", height: "auto", display: "block" }}
-          />
+          <h2
+            className="font-serif"
+            style={{
+              fontSize: "calc(var(--u-m) * 32)",
+              letterSpacing: "calc(var(--u-m) * -0.64)",
+              lineHeight: 1.15,
+              margin: 0,
+            }}
+          >
+            Blue Apron has delivered over 600 million meals, and helped
+            millions of people discover the <em>joy</em> of cooking.
+          </h2>
+          <p
+            className="font-sans"
+            style={{
+              fontSize: "calc(var(--u-m) * 14)",
+              letterSpacing: "calc(var(--u-m) * -0.42)",
+              lineHeight: 1.4,
+              margin: 0,
+              opacity: 0.85,
+            }}
+          >
+            Additional work available upon request.
+          </p>
         </div>
       </section>
 

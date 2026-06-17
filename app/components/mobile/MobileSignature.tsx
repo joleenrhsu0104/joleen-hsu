@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BW_PORTRAIT, HEADLINE_TEXTURE } from "@/app/lib/assets";
+import ArrowUpRight from "../ArrowUpRight";
 
 /**
  * MobileSignature — cream closing band on mobile
@@ -44,9 +45,13 @@ export default function MobileSignature() {
           href="https://www.linkedin.com/in/joleenhsu/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:opacity-60 transition-opacity"
+          className="flex items-baseline justify-center gap-[4px] hover:opacity-60 transition-opacity"
         >
           LINKEDIN
+          {/* Default ArrowUpRight (0.85em SVG, viewBox "3 3 10 10"
+              → ~0.68em of visible arrow content) which lands at
+              roughly cap-height of the LINKEDIN text. */}
+          <ArrowUpRight />
         </a>
       </nav>
 

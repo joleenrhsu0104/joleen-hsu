@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { HERO_PROJECTS } from "@/app/lib/assets";
 import MobileTopNav from "./MobileTopNav";
 
@@ -261,8 +262,16 @@ export default function MobileHero() {
         {/* Cycling image — vertically centered at 50vh.
             Same shutter-reveal clip-path stack as desktop: each new
             project image opens horizontally from a vertical seam at the
-            center, layering on top of all previously-revealed projects. */}
-        <div
+            center, layering on top of all previously-revealed projects.
+            The card is wrapped in a Link so tapping it navigates to
+            the active project's case study. pointerEvents: "auto"
+            restores clickability that the parent wrapper's
+            pointer-events:none disables (the wrapper has to stay
+            non-interactive so vertical swipes pass through to the
+            scroll-snap container that drives the project cycle). */}
+        <Link
+          href={HERO_PROJECTS[activeIndex].href}
+          aria-label={`View ${HERO_PROJECTS[activeIndex].name} case study`}
           className="absolute overflow-hidden"
           style={{
             left: `calc(50% - var(--u-m) * ${IMG_W / 2})`,
@@ -271,6 +280,7 @@ export default function MobileHero() {
             height: `calc(var(--u-m) * ${IMG_H})`,
             borderRadius: "calc(var(--u-m) * 16)",
             zIndex: 1,
+            pointerEvents: "auto",
           }}
         >
           {HERO_PROJECTS.map((project, i) => (
@@ -304,7 +314,7 @@ export default function MobileHero() {
               />
             </div>
           ))}
-        </div>
+        </Link>
 
         {/* Counter — 8px below the image, right-aligned against the
             image's right edge. */}
@@ -330,12 +340,11 @@ export default function MobileHero() {
             cycling, exactly like desktop. The overlay spans the full
             viewport width so the centered text has full canvas room.
 
-            Every name renders at the same big font (200u). Single-word
-            names ("Wonder", "Noom", "Neuday") render as one line that
-            visibly spills past the 320u card on both sides. Multi-word
-            names ("Blue Apron") wrap onto two lines at the space — see
-            the white-space: pre-line + name.replace(" ", "\n") trick
-            below — so the same big font fits inside the viewport. */}
+            Every name renders at the same font (80u-m). At this size
+            even the widest name ("Blue Apron") fits cleanly on a
+            single line within the viewport — no wrap, no two-line
+            stack — so the title reads as a single horizontal label
+            across all four projects. */}
         <div
           className="absolute pointer-events-none flex items-center justify-center"
           style={{
@@ -357,11 +366,11 @@ export default function MobileHero() {
                 lineHeight: NAME_LINE_HEIGHT,
                 textShadow:
                   "0 calc(var(--u-m) * 4) calc(var(--u-m) * 15) rgba(0,0,0,0.25)",
-                opacity: i === activeIndex ? 0.75 : 0,
-                whiteSpace: "pre-line",
+                opacity: i === activeIndex ? 1 : 0,
+                whiteSpace: "nowrap",
               }}
             >
-              {project.name.replace(/ /g, "\n")}
+              {project.name}
             </span>
           ))}
         </div>

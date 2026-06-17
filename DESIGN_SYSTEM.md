@@ -13,13 +13,20 @@ Live tokens are in `app/lib/tokens.ts`. CSS variables live in `app/globals.css`.
 | `cream`            | `#fff9ec` | Page background; primary light section background       |
 | `creamBright`      | `#fffdf7` | Largest white type (hero project name, wordmark)        |
 | `ink`              | `#231f20` | Body & heading text on cream surfaces                   |
-| `nearBlack`        | `#030303` | Ethos section background (Rick Rubin quote)             |
+| `nearBlack`        | `#030303` | Ethos / Work / Contact backgrounds, case-study hero panels |
+| `forest`           | `#071b02` | Dark forest green (reserved — currently no consumer)    |
+| `neudayNavy`       | `#1F2B36` | Neuday brand primary navy (brand book)                  |
+| `periwinkle`       | `#D2DDFC` | Blue Apron PDP card surface                             |
 | `heroWonder`       | `#260303` | Hero panel — Wonder (burgundy)                          |
 | `heroBlueApron`    | `#0f1b3c` | Hero panel — Blue Apron (navy)                          |
 | `heroNoom`         | `#272a15` | Hero panel — Noom (olive)                               |
-| `heroNeuday`       | `#0f0f0f` | Hero panel — Neuday (near-black)                        |
+| `heroNeuday`       | `#030303` | Hero panel — Neuday (near-black, same value as `nearBlack`) |
 
 The four `hero*` palettes are paired 1:1 with featured projects in `app/lib/assets.ts` (`HERO_PROJECTS[i].bg`). If a new project gets added, its hex goes there, not as a new top-level color token.
+
+### Ink RGB tuple
+
+`INK_RGB = "35, 31, 32"` is exported from `tokens.ts` alongside the color tokens. The four scroll-driven fill components (`AboutSentences`, `MobileAboutSentences`, `ScrollCharFill`, `ScrollFillText`) interpolate between a semi-transparent and fully-opaque ink in JS via a `blend()` helper that parses numeric channels — CSS variables can't satisfy that math. The tuple keeps the value in lock-step with the `ink` token while staying composable inside `rgba(${INK_RGB}, 0.3)` / `rgb(${INK_RGB})` expressions.
 
 ---
 
@@ -82,6 +89,25 @@ Originally the system included a `menuItem` token (desktop 48 / −0.96, mobile 
 ### Hero project name and signature wordmark stayed separate
 
 Both are huge editorial display, but the *signature* wordmark has its own texture-fill animation and a different role (closing flourish, not active hero). Keeping them as `heroDisplay` and `signatureWordmark` makes the intent explicit even though the family is the same.
+
+### Second-pass cleanup (cream / near-black / ink consolidation)
+
+Three near-duplicate hex literals had drifted into the case-study and contact files and were collapsed back onto canonical tokens:
+
+- `#FCF7ED` (Wonder + Blue Apron `*_BG` page background) → `var(--color-cream)` (`#fff9ec`).
+- `#0a0a0a` (Wonder + Blue Apron `HERO_BG` landing-video panel) → `var(--color-near-black)` (`#030303`).
+- `#030303` literal in `ContactPage` `BG` → `var(--color-near-black)` (no value change, just abstraction).
+- `FOREST = "#000000"` constant in `WorkPage` → renamed `BG = "var(--color-near-black)"`. The constant's old name implied a green tint that the value didn't carry; the page is just a dark surface like Ethos/Contact and now uses the same token.
+- `rgb(35, 31, 32)` ink literals in `AboutSentences`, `MobileAboutSentences`, `ScrollCharFill`, `ScrollFillText` → imported `INK_RGB` from `tokens.ts` (see the "Ink RGB tuple" subsection above for why a CSS var isn't usable here).
+- `#D2DDFC` periwinkle literal (used 4× in `BlueApronCaseStudy`) → promoted to a single `PERIWINKLE` constant in the same file and the `periwinkle` color token.
+
+### Body line-height standardized to 1.4
+
+Twelve `lineHeight: 1.55` and one `lineHeight: 1.45` in body paragraphs across the four case studies and `WhatIDoSection` were drifted from the dominant `1.4` body rhythm. All collapsed back to `1.4` so the reading cadence is uniform across every page.
+
+### Caption opacity normalized to 0.7
+
+Three "Original designs" captions sat at `opacity: 0.6` while every other dimmed caption (MetaRow eyebrows, etc.) uses `0.7`. Bumped to `0.7` to match the dimmed-text ladder of `0.7 / 0.75 / 0.85`.
 
 ---
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BW_PORTRAIT, HEADLINE_TEXTURE } from "@/app/lib/assets";
+import ArrowUpRight from "./ArrowUpRight";
 
 /**
  * SignatureSection — closing on cream.
@@ -76,9 +77,10 @@ export default function SignatureSection() {
           href="https://www.linkedin.com/in/joleenhsu/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:opacity-60 transition-opacity"
+          className="inline-flex items-baseline gap-[4px] hover:opacity-60 transition-opacity"
         >
           LINKEDIN
+          <ArrowUpRight />
         </a>
       </nav>
 
