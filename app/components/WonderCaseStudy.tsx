@@ -87,7 +87,7 @@ function fadeInStyle(visible: boolean): CSSProperties {
 const WONDER_BG = "var(--color-cream)";  // case study page bg (warm cream)
 const HERO_BG = "var(--color-near-black)"; // hero panel under the landing video
 const TASTE_GREEN = "#00271A";          // "A full taste of Wonder" + carousel
-const WONDER_YELLOW = "#FBE59F";        // Membership section ground (matches Membership-Mobile.png's baked-in yellow)
+const WONDER_YELLOW = "#FBE59F";        // Membership section ground (matches Membership-Mobile.webp's baked-in yellow)
 const INK = "var(--color-ink)";         // dark body text on the cream bg
 const IMG = "/images/wonder";
 const LANDING_VIDEO = "/videos/wonder-landing.mp4";
@@ -931,7 +931,7 @@ function WebOrderingSection() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/WebOrdering.png`}
+          src={`${IMG}/WebOrdering.webp`}
           alt="Wonder web ordering"
           style={{
             width: "100%",
@@ -1860,7 +1860,7 @@ function WonderMobile() {
               ramps from 0 to 1, blending into the surrounding section. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`${IMG}/Membership-Mobile.png`}
+            src={`${IMG}/Membership-Mobile.webp`}
             alt=""
             aria-hidden="true"
             style={{
@@ -1927,7 +1927,7 @@ function WonderMobile() {
         <div style={{ marginTop: "calc(var(--u-m) * 32)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`${IMG}/WebOrdering.png`}
+            src={`${IMG}/WebOrdering.webp`}
             alt=""
             aria-hidden="true"
             style={{ width: "100%", height: "auto", display: "block" }}

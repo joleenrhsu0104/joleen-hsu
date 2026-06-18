@@ -13,7 +13,7 @@ export const HERO_PROJECTS = [
     role: "Product Designer",
     years: "2021-2025",
     counter: "[1 OF 4]",
-    image: "/images/hero-wonder.png",
+    image: "/images/hero-wonder.webp",
     bg: "#260303", // dark burgundy
     href: "/work/wonder",
   },
@@ -22,7 +22,7 @@ export const HERO_PROJECTS = [
     role: "Product Design Lead",
     years: "2024-2025",
     counter: "[2 OF 4]",
-    image: "/images/hero-blue-apron.png",
+    image: "/images/hero-blue-apron.webp",
     bg: "#0f1b3c", // dark navy
     href: "/work/blue-apron",
   },
@@ -31,7 +31,7 @@ export const HERO_PROJECTS = [
     role: "Staff Product Designer",
     years: "2025-2026",
     counter: "[3 OF 4]",
-    image: "/images/hero-noom.png",
+    image: "/images/hero-noom.webp",
     bg: "#272a15", // dark olive
     href: "/work/noom",
   },
@@ -91,7 +91,7 @@ export const ETHOS_IMAGES = [
 ] as const;
 
 // Signature / closing
-export const BW_PORTRAIT = "/images/portrait-bw.png";
+export const BW_PORTRAIT = "/images/portrait-bw.webp";
 export const HEADLINE_TEXTURE = "/images/headline-texture.jpg";
 export const LOGO_HEADLINE = "/images/logo-headline.png";
 

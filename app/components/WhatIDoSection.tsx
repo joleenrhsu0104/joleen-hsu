@@ -34,25 +34,25 @@ export const SERVICES: Service[] = [
     title: "Product Strategy",
     description:
       "I joined Wonder as the 2nd designer on the consumer team and helped shape the vision and strategy for the product.",
-    image: "/images/ProductStrategy.png",
+    image: "/images/ProductStrategy.webp",
   },
   {
     title: "Brand Identity",
     description:
       "I've worked closely with founders to craft brand identities and also collaborated with agencies to execute on 3 different rebrands in my career.",
-    image: "/images/BrandIdentity.png",
+    image: "/images/BrandIdentity.webp",
   },
   {
     title: "App & Web Design",
     description:
       "I specialize in the 0 → 1 space, and love to build from a blank slate. I've worked for startups in health & wellness, food-tech, social, and more.",
-    image: "/images/AppWebDesign.png",
+    image: "/images/AppWebDesign.webp",
   },
   {
     title: "Agentic Development",
     description:
       "At Noom, I helped build their art therapy feature through AI, and shipped a few personal projects agentically (including this website!)",
-    image: "/images/AgenticDevelopment.png",
+    image: "/images/AgenticDevelopment.webp",
   },
 ];
 

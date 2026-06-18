@@ -78,7 +78,7 @@ const MOSAIC_BG = "#D9D6CF"; // warm taupe behind the brand-card mosaic
 // design — adjust if Noom has an exact brand swatch.
 const NOOM_BLUE = "#D2E0EB";
 const IMG = "/images/noom";
-const NOOM_HERO = `${IMG}/hero-noom.png`;
+const NOOM_HERO = `${IMG}/hero-noom.webp`;
 
 /**
  * Phone-screen images for the new product-work sections.
@@ -101,28 +101,28 @@ const NOOM_HERO = `${IMG}/hero-noom.png`;
 const SCREEN_IMAGES = {
   // Onboarding row (NoomHero1-4) — bezeled exports, cream backdrops
   onboarding: {
-    src: `${IMG}/NoomHero1.png`,
+    src: `${IMG}/NoomHero1.webp`,
     alt: "Noom — player onboarding with avatar ring",
   },
   welcome: {
-    src: `${IMG}/NoomHero2.png`,
+    src: `${IMG}/NoomHero2.webp`,
     alt: "Noom — Welcome to Noom, Laura",
   },
   focusAreas: {
-    src: `${IMG}/NoomHero3.png`,
+    src: `${IMG}/NoomHero3.webp`,
     alt: "Noom — review your focus areas",
   },
   treatmentProgram: {
-    src: `${IMG}/NoomHero4.png`,
+    src: `${IMG}/NoomHero4.webp`,
     alt: "Noom — treatment program with Microdose + Biomarkers",
   },
   // Habit loops right-side pair (Challenges1/2) — bezeled exports
   challenges: {
-    src: `${IMG}/Challenges/Challenges1.png`,
+    src: `${IMG}/Challenges/Challenges1.webp`,
     alt: "Noom — challenges list",
   },
   energyCategory: {
-    src: `${IMG}/Challenges/Challenges2.png`,
+    src: `${IMG}/Challenges/Challenges2.webp`,
     alt: "Noom — Energy challenge category",
   },
   // Labeled 3-phone row — unbezeled exports (raw screen content)
@@ -731,7 +731,7 @@ const COLLAGE = `${IMG}/rebrand-collage`;
 // fills its container edge-to-edge with no crop AND no whitespace.
 const CARDS = {
   noomTalks: {
-    src: `${COLLAGE}/YouTube-CoverImage-Option1.png`,
+    src: `${COLLAGE}/YouTube-CoverImage-Option1.webp`,
     alt: "NOOM Talks: The Science of Behavior Change with Charles Duhigg",
     aspect: "1764 / 993", // 16:9
   },
@@ -747,7 +747,7 @@ const CARDS = {
     aspect: "4 / 5",
   },
   metabolic: {
-    src: `${COLLAGE}/MetabolicHealth.png`,
+    src: `${COLLAGE}/MetabolicHealth.webp`,
     alt: "Noom Metabolic vitamin",
     aspect: "1818 / 2073",
   },
@@ -767,12 +767,12 @@ const CARDS = {
     aspect: "2220 / 786",
   },
   buildBehaviors: {
-    src: `${COLLAGE}/Buildbetterbehaviors.png`,
+    src: `${COLLAGE}/Buildbetterbehaviors.webp`,
     alt: "Build better behaviors",
     aspect: "2025 / 1080",
   },
   lake: {
-    src: `${COLLAGE}/Progressmakesperfection.png`,
+    src: `${COLLAGE}/Progressmakesperfection.webp`,
     alt: "Progress makes perfection — live better longer",
     aspect: "2220 / 1080",
   },
