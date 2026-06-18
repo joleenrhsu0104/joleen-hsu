@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type RefObject,
 } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
 import SignatureSection from "./SignatureSection";
@@ -140,12 +141,12 @@ function HeroDesktop() {
       }}
     >
       {/* Hero image — Neuday landing scene */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
+        fill
         src={NEUDAY_HERO}
         alt="Neuday"
-        className="absolute inset-0 size-full object-cover"
-        style={{ zIndex: 0 }}
+        sizes="100vw"
+        style={{ objectFit: "cover", zIndex: 0 }}
       />
 
       {/* Subtle top gradient so the nav stays readable */}
@@ -358,11 +359,12 @@ function AppScreensRowDesktop() {
               height: `calc(var(--u) * ${h})`,
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              fill
               src={src}
               alt={`Neuday app screen ${i + 1}`}
-              className="size-full object-contain"
+              sizes="(max-width: 768px) 50vw, 25vw"
+              style={{ objectFit: "contain" }}
               draggable={false}
             />
           </div>
@@ -423,11 +425,12 @@ function BrandBookGridDesktop() {
               aspectRatio: "883 / 497",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              fill
               src={src}
               alt={`Brand book page ${i + 1}`}
-              className="absolute inset-0 size-full object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              style={{ objectFit: "cover" }}
               draggable={false}
             />
           </div>
@@ -451,13 +454,13 @@ function BrowserMockupSection() {
         className="w-full overflow-hidden"
         style={{ height: "calc(var(--u) * 1034)" }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           ref={ref}
+          fill
           src={`${IMG}/billboard1.png`}
           alt="Neuday browser mockup"
-          className="size-full object-cover"
-          style={fadeInStyle(visible)}
+          sizes="100vw"
+          style={{ objectFit: "cover", ...fadeInStyle(visible) }}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
@@ -480,13 +483,13 @@ function BusinessCardSection() {
         className="w-full overflow-hidden"
         style={{ height: "calc(var(--u) * 1019)" }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           ref={ref}
+          fill
           src={`${IMG}/billboard2.webp`}
           alt="Neuday business card mockup"
-          className="size-full object-cover"
-          style={fadeInStyle(visible)}
+          sizes="100vw"
+          style={{ objectFit: "cover", ...fadeInStyle(visible) }}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
@@ -556,11 +559,12 @@ function NeudayMobile() {
           aspectRatio: "1920 / 1065",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
+          fill
           src={NEUDAY_HERO}
           alt="Neuday"
-          className="absolute inset-0 size-full object-cover"
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
         />
       </section>
 
@@ -666,11 +670,12 @@ function NeudayMobile() {
                 aspectRatio: "420 / 803",
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
                 src={src}
                 alt={`Neuday app screen ${i + 1}`}
-                className="block w-full h-full object-contain"
+                sizes="(max-width: 768px) 50vw, 25vw"
+                style={{ objectFit: "contain", display: "block" }}
                 draggable={false}
               />
             </div>
@@ -777,13 +782,13 @@ function MobileFadeInMockup({
         className="w-full overflow-hidden"
         style={{ aspectRatio: aspect }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           ref={ref}
+          fill
           src={src}
           alt={alt}
-          className="size-full object-cover"
-          style={fadeInStyle(visible)}
+          sizes="100vw"
+          style={{ objectFit: "cover", ...fadeInStyle(visible) }}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
