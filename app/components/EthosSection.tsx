@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ETHOS_IMAGES } from "@/app/lib/assets";
 
 /**
@@ -55,12 +56,13 @@ export default function EthosSection() {
                 animationDuration: `${5 + (i % 3)}s`,
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
                 src={img.src}
                 alt=""
                 aria-hidden="true"
-                className="size-full object-cover"
+                sizes="16vw"
+                style={{ objectFit: "cover" }}
               />
             </div>
           ))}

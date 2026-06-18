@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 
 /**
  * WhatIDoSection — dark "What I Do" services list.
@@ -118,13 +119,14 @@ export default function WhatIDoSection() {
         }}
       >
         {SERVICES.map((service, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             key={`bg-${service.title}`}
+            fill
             src={service.image}
             alt=""
-            className="absolute inset-0 size-full object-cover"
+            sizes="100vw"
             style={{
+              objectFit: "cover",
               opacity: hovered === i ? 0.6 : 0,
               transform: "scale(1.5)",
               filter: "blur(48px) saturate(1.15)",
@@ -244,16 +246,17 @@ export default function WhatIDoSection() {
           }}
         >
           {SERVICES.map((service, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               key={`preview-${service.title}`}
+              fill
               src={service.image}
               alt=""
-              className="absolute inset-0 size-full object-cover"
+              sizes="(max-width: 768px) 50vw, 25vw"
               style={{
+                objectFit: "cover",
+                objectPosition: "top center",
                 opacity: hovered === i ? 1 : 0,
                 transition: "opacity 0.3s ease",
-                objectPosition: "top center",
               }}
             />
           ))}

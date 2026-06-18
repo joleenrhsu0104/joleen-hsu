@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FLOWER_IMAGE, JOB_HISTORY } from "@/app/lib/assets";
 import ScrollFillText from "./ScrollFillText";
 
@@ -63,12 +64,13 @@ export default function AboutSection() {
               "radial-gradient(ellipse 60% 60% at 50% 45%, black 25%, transparent 90%)",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
+            fill
             src={FLOWER_IMAGE}
             alt=""
             aria-hidden="true"
-            className="size-full object-cover"
+            sizes="32vw"
+            style={{ objectFit: "cover" }}
           />
         </div>
 

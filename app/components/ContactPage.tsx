@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
@@ -254,8 +255,14 @@ function CardFaces({
           : null),
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" aria-hidden="true" className="size-full object-cover" />
+      <Image
+        fill
+        src={src}
+        alt=""
+        aria-hidden="true"
+        sizes="(max-width: 768px) 40vw, 18vw"
+        style={{ objectFit: "cover" }}
+      />
     </div>
   );
 
@@ -279,12 +286,13 @@ function CardFaces({
             }),
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
+        fill
         src={src}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 size-full object-cover"
+        sizes="(max-width: 768px) 40vw, 18vw"
+        style={{ objectFit: "cover" }}
       />
       <div
         className="absolute inset-0"

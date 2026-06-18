@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ETHOS_IMAGES } from "@/app/lib/assets";
 
 /**
@@ -37,12 +38,13 @@ export default function MobileEthos() {
             animationDuration: `${5 + (i % 3)}s`,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
+            fill
             src={img.src}
             alt=""
             aria-hidden="true"
-            className="size-full object-cover"
+            sizes="26vw"
+            style={{ objectFit: "cover" }}
           />
         </div>
       ))}

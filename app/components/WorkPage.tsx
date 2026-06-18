@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
@@ -350,12 +351,16 @@ function ProjectCardDesktop({ project }: { project: Project }) {
           borderRadius: "calc(var(--u) * 40)",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
+          fill
           src={project.image}
           alt={`${project.name} cover`}
-          className="size-full object-cover transition-transform duration-700 ease-out"
-          style={{ transform: hovered ? "scale(1.03)" : "scale(1)" }}
+          sizes="(max-width: 768px) 100vw, 813px"
+          className="transition-transform duration-700 ease-out"
+          style={{
+            objectFit: "cover",
+            transform: hovered ? "scale(1.03)" : "scale(1)",
+          }}
         />
         <div
           className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none"
@@ -551,11 +556,12 @@ function ProjectCardMobile({ project }: { project: Project }) {
           borderRadius: "calc(var(--u-m) * 18)",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
+          fill
           src={project.image}
           alt={`${project.name} cover`}
-          className="size-full object-cover"
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
         />
       </div>
       <div
