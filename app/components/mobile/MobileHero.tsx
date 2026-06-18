@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { HERO_PROJECTS } from "@/app/lib/assets";
 import MobileTopNav from "./MobileTopNav";
@@ -196,13 +197,15 @@ export default function MobileHero() {
           aria-hidden="true"
         >
           {HERO_PROJECTS.map((project, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               key={`bg-${project.name}`}
+              fill
               src={project.image}
               alt=""
-              className="absolute inset-0 size-full object-cover"
+              sizes="100vw"
+              priority={i === 0}
               style={{
+                objectFit: "cover",
                 opacity: i === activeIndex ? 1 : 0,
                 transform: "scale(1.35)",
                 // Match the card's darker treatment for light-on-light
@@ -296,12 +299,13 @@ export default function MobileHero() {
                 transition: `clip-path ${TRANSITION_MS}ms cubic-bezier(0.77, 0, 0.175, 1)`,
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
                 src={project.image}
                 alt={`${project.name} project`}
-                className="size-full object-cover"
+                sizes="100vw"
                 style={{
+                  objectFit: "cover",
                   // Darken light-on-light hero photos (warm food shot,
                   // pale rebrand mosaic) so the cream-white project
                   // name reads with stronger contrast on top. The other

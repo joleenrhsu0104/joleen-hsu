@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BW_PORTRAIT, HEADLINE_TEXTURE } from "@/app/lib/assets";
 import ArrowUpRight from "../ArrowUpRight";
@@ -67,11 +68,12 @@ export default function MobileSignature() {
           borderTopRightRadius: "calc(var(--u-m) * 16)",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
+          fill
           src={BW_PORTRAIT}
           alt="Joleen Hsu"
-          className="size-full object-cover"
+          sizes="60vw"
+          style={{ objectFit: "cover" }}
         />
       </div>
 

@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
 import { HERO_PROJECTS } from "@/app/lib/assets";
@@ -234,11 +235,12 @@ function AlaCarteScreensRow() {
               aspectRatio: "420 / 803",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              fill
               src={src}
               alt={`Blue Apron a la carte screen ${i + 1}`}
-              className="block w-full h-full object-cover"
+              sizes="(max-width: 768px) 50vw, 25vw"
+              style={{ objectFit: "cover", display: "block" }}
             />
           </div>
         ))}
@@ -588,11 +590,12 @@ function PdpCardsRow() {
               className="shrink-0"
               style={cardWindowSize}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
                 src={PDP_PNR_SRC}
                 alt="Blue Apron Prepared & Ready Meals PDP"
-                className="block w-full h-full object-contain"
+                sizes="(max-width: 768px) 80vw, 25vw"
+                style={{ objectFit: "contain", display: "block" }}
               />
             </div>
           </div>
@@ -609,11 +612,12 @@ function PdpCardsRow() {
               className="shrink-0"
               style={cardWindowSize}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
                 src={PDP_ADDON_SRC}
                 alt="Blue Apron Add-On's PDP"
-                className="block w-full h-full object-contain"
+                sizes="(max-width: 768px) 80vw, 25vw"
+                style={{ objectFit: "contain", display: "block" }}
               />
             </div>
           </div>
@@ -660,11 +664,12 @@ function SubscriptionScreensRow() {
               marginTop: `calc(var(--u) * ${OFFSETS[i]})`,
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              fill
               src={src}
               alt={`Blue Apron subscription screen ${i + 1}`}
-              className="block w-full h-full object-cover"
+              sizes="(max-width: 768px) 50vw, 25vw"
+              style={{ objectFit: "cover", display: "block" }}
             />
           </div>
         ))}
@@ -753,11 +758,12 @@ function SubscriptionContent() {
           ...fadeInStyle(visible),
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
+          fill
           src={`${IMG}/subscription-content.webp`}
           alt="Blue Apron subscription experience"
-          className="block w-full h-full object-cover"
+          sizes="100vw"
+          style={{ objectFit: "cover", display: "block" }}
         />
       </div>
     </section>
@@ -795,11 +801,12 @@ function BlueApronClosingSection() {
             overflow: "hidden",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
+            fill
             src={`${IMG}/BlueApronClosing.webp`}
             alt="Blue Apron meals"
-            className="block w-full h-full object-cover"
+            sizes="50vw"
+            style={{ objectFit: "cover", display: "block" }}
           />
         </div>
 
@@ -1181,12 +1188,13 @@ function AppScreensRowDesktop() {
               overflow: "hidden",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              fill
               src={src}
               alt={`Blue Apron app screen ${i + 1}`}
-              className="size-full object-contain"
+              sizes="(max-width: 768px) 50vw, 25vw"
               style={{
+                objectFit: "contain",
                 display: "block",
                 objectPosition: "center bottom",
               }}
@@ -1364,12 +1372,12 @@ function PostPurchaseSection() {
                   aspectRatio: "208 / 450",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
+                  fill
                   src={src}
                   alt={`Original ${label} screen`}
-                  className="size-full object-contain"
-                  style={{ display: "block" }}
+                  sizes="(max-width: 768px) 50vw, 15vw"
+                  style={{ objectFit: "contain", display: "block" }}
                 />
               </div>
             ))}
@@ -1452,11 +1460,12 @@ function IphoneRedesignRow() {
                   aria-label={`Redesigned order state ${i + 1}`}
                 />
               ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
+                  fill
                   src={src}
                   alt={`Redesigned order state ${i + 1}`}
-                  className="block w-full h-full object-cover"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  style={{ objectFit: "cover", display: "block" }}
                 />
               )}
             </div>
@@ -1726,11 +1735,13 @@ function OtherCaseStudies() {
                   borderRadius: "calc(var(--u) * 16)",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
+                  fill
                   src={p.image}
                   alt={`${p.name} cover`}
-                  className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="transition-transform duration-700 ease-out group-hover:scale-105"
+                  style={{ objectFit: "cover" }}
                 />
               </div>
               <div
@@ -2098,11 +2109,12 @@ function BlueApronMobile() {
               aspectRatio: "420 / 803",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              fill
               src={src}
               alt={`Blue Apron a la carte screen ${i + 1}`}
-              className="block w-full h-full object-cover"
+              sizes="(max-width: 768px) 50vw, 25vw"
+              style={{ objectFit: "cover", display: "block" }}
             />
           </div>
         ))}

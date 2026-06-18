@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
 import { HERO_PROJECTS } from "@/app/lib/assets";
@@ -514,12 +515,13 @@ function AppScreensRowDesktop() {
               overflow: "hidden",
             }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              fill
               src={src}
               alt={`Wonder app screen ${i + 1}`}
-              className="size-full object-contain"
+              sizes="(max-width: 768px) 50vw, 25vw"
               style={{
+                objectFit: "contain",
                 display: "block",
                 objectPosition: "center bottom",
               }}
@@ -697,12 +699,12 @@ function PostPurchaseSection() {
                   aspectRatio: "208 / 450",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
+                  fill
                   src={src}
                   alt={`Original ${label} screen`}
-                  className="size-full object-contain"
-                  style={{ display: "block" }}
+                  sizes="(max-width: 768px) 50vw, 15vw"
+                  style={{ objectFit: "contain", display: "block" }}
                 />
               </div>
             ))}
@@ -785,11 +787,12 @@ function IphoneRedesignRow() {
                   aria-label={`Redesigned order state ${i + 1}`}
                 />
               ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
+                  fill
                   src={src}
                   alt={`Redesigned order state ${i + 1}`}
-                  className="block w-full h-full object-cover"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  style={{ objectFit: "cover", display: "block" }}
                 />
               )}
             </div>
@@ -1318,11 +1321,13 @@ function OtherCaseStudies() {
                   borderRadius: "calc(var(--u) * 16)",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
+                  fill
                   src={p.image}
                   alt={`${p.name} cover`}
-                  className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="transition-transform duration-700 ease-out group-hover:scale-105"
+                  style={{ objectFit: "cover" }}
                 />
               </div>
               <div
@@ -1549,12 +1554,13 @@ function WonderMobile() {
                 overflow: "hidden",
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
                 src={src}
                 alt={`Wonder app screen ${i + 1}`}
-                className="size-full object-contain"
+                sizes="(max-width: 768px) 50vw, 25vw"
                 style={{
+                  objectFit: "contain",
                   display: "block",
                   objectPosition: "center bottom",
                 }}
@@ -1728,12 +1734,12 @@ function WonderMobile() {
                   aspectRatio: "208 / 450",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
+                  fill
                   src={src}
                   alt={`Original ${label} screen`}
-                  className="size-full object-contain"
-                  style={{ display: "block" }}
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  style={{ objectFit: "contain", display: "block" }}
                 />
               </div>
             ))}
@@ -2007,11 +2013,12 @@ function WonderMobile() {
                   overflow: "hidden",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
+                  fill
                   src={`${IMG}/Web Ordering/${src}`}
                   alt={`Wonder mobile web screen ${i + 1}`}
-                  className="block w-full h-full object-cover"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  style={{ objectFit: "cover", display: "block" }}
                   draggable={false}
                 />
               </div>

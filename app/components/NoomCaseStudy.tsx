@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type RefObject,
 } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
 import SignatureSection from "./SignatureSection";
@@ -233,12 +234,12 @@ function HeroDesktop() {
       {/* Hero image — Whole Person Health billboard.
           Full-bleed cover so the baked-in sky fills the entire
           section width regardless of viewport size. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
+        fill
         src={NOOM_HERO}
         alt="Noom — Whole Person Health"
-        className="absolute inset-0 size-full object-cover"
-        style={{ zIndex: 0 }}
+        sizes="100vw"
+        style={{ objectFit: "cover", zIndex: 0 }}
         onError={(e) => {
           (e.currentTarget as HTMLImageElement).style.display = "none";
         }}
@@ -794,13 +795,14 @@ function MosaicCard({ which }: { which: CardKey }) {
         ...fadeInStyle(visible),
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
+        fill
         src={card.src}
         alt={card.alt}
+        sizes="(max-width: 768px) 100vw, 33vw"
         // object-cover with cell aspect-ratio matched to the image
         // aspect-ratio = perfect fill, no cropping, no whitespace.
-        className="size-full object-cover"
+        style={{ objectFit: "cover" }}
         onError={(e) => {
           (e.currentTarget as HTMLImageElement).style.display = "none";
         }}
@@ -934,11 +936,12 @@ function NoomMobile() {
           aspectRatio: "16 / 9",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
+          fill
           src={NOOM_HERO}
           alt="Noom — Whole Person Health"
-          className="absolute inset-0 size-full object-cover"
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
@@ -1363,11 +1366,12 @@ function MobileMosaicCard({ which }: { which: CardKey }) {
         ...fadeInStyle(visible),
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
+        fill
         src={card.src}
         alt={card.alt}
-        className="size-full object-cover"
+        sizes="100vw"
+        style={{ objectFit: "cover" }}
         onError={(e) => {
           (e.currentTarget as HTMLImageElement).style.display = "none";
         }}
