@@ -78,7 +78,12 @@ const NEUDAY_NAVY = "var(--color-neuday-navy)";
 const NEAR_BLACK = "var(--color-near-black)";
 const INK = "var(--color-ink)";
 const IMG = "/images/neuday";
-const NEUDAY_HERO = `${IMG}/hero-neuday.png`;
+// Case-study hero — subway-environment billboard featuring the
+// runner photo + NEUDAY wordmark. Decoupled from the home page hero
+// card image (which uses hero-neuday.webp via HERO_PROJECTS in
+// assets.ts) so the card and case-study page can show different
+// imagery without colliding on the same file path.
+const NEUDAY_HERO = `${IMG}/case-study-hero.webp`;
 
 // Each phone in the Figma row has its own (width, height) — the four
 // devices are not identical crops. Source assets were exported at the
@@ -119,7 +124,7 @@ function NeudayDesktop() {
       <BrandBookGridDesktop />
       <BrowserMockupSection />
       <BusinessCardSection />
-      <BillboardSection />
+      <AdditionalWorkSection />
       <SignatureSection />
     </main>
   );
@@ -478,7 +483,7 @@ function BusinessCardSection() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={ref}
-          src={`${IMG}/billboard2.png`}
+          src={`${IMG}/billboard2.webp`}
           alt="Neuday business card mockup"
           className="size-full object-cover"
           style={fadeInStyle(visible)}
@@ -491,31 +496,39 @@ function BusinessCardSection() {
   );
 }
 
-/* Outdoor billboard — fades in on scroll, sits on cream bg */
-function BillboardSection() {
-  const ref = useRef<HTMLImageElement | null>(null);
+/* Additional work CTA — centered serif paragraph that closes the
+   case study before the signature footer. Replaces the previous
+   outdoor-billboard image; sits on cream bg, matches the editorial
+   typographic rhythm of the Intro section above. */
+function AdditionalWorkSection() {
+  const ref = useRef<HTMLDivElement | null>(null);
   const visible = useFadeInOnScroll(ref);
   return (
     <section
-      className="relative"
-      style={{ backgroundColor: CREAM }}
+      className="relative flex items-center justify-center"
+      style={{
+        backgroundColor: CREAM,
+        color: INK,
+        paddingTop: "calc(var(--u) * 120)",
+        paddingBottom: "calc(var(--u) * 120)",
+        paddingLeft: "calc(var(--u) * 96)",
+        paddingRight: "calc(var(--u) * 96)",
+      }}
     >
-      <div
-        className="w-full overflow-hidden"
-        style={{ height: "calc(var(--u) * 1100)" }}
+      <p
+        ref={ref}
+        className="font-serif text-center"
+        style={{
+          fontSize: "calc(var(--u) * 40)",
+          letterSpacing: "calc(var(--u) * -0.8)",
+          lineHeight: 1.25,
+          margin: 0,
+          maxWidth: "calc(var(--u) * 1200)",
+          ...fadeInStyle(visible),
+        }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          ref={ref}
-          src={`${IMG}/billboard3.png`}
-          alt="Neuday billboard mockup"
-          className="size-full object-cover"
-          style={fadeInStyle(visible)}
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = "none";
-          }}
-        />
-      </div>
+        Additional work available upon request.
+      </p>
     </section>
   );
 }
@@ -705,18 +718,40 @@ function NeudayMobile() {
         aspect="1920 / 1034"
         bg={NEUDAY_NAVY}
       />
+      {/* Business card was the last image asset; the outdoor
+          billboard that previously closed the case study has been
+          replaced with the "Additional work available upon request."
+          text section below — mirrors the desktop AdditionalWorkSection. */}
       <MobileFadeInMockup
-        src={`${IMG}/billboard2.png`}
+        src={`${IMG}/billboard2.webp`}
         alt="Neuday business card mockup"
         aspect="1920 / 1019"
         bg={NEUDAY_NAVY}
       />
-      <MobileFadeInMockup
-        src={`${IMG}/billboard3.png`}
-        alt="Neuday billboard mockup"
-        aspect="1920 / 1100"
-        bg={CREAM}
-      />
+
+      <section
+        className="flex items-center justify-center"
+        style={{
+          backgroundColor: CREAM,
+          color: INK,
+          paddingTop: "calc(var(--u-m) * 80)",
+          paddingBottom: "calc(var(--u-m) * 80)",
+          paddingLeft: "calc(var(--u-m) * 16)",
+          paddingRight: "calc(var(--u-m) * 16)",
+        }}
+      >
+        <p
+          className="font-serif text-center"
+          style={{
+            fontSize: "calc(var(--u-m) * 24)",
+            letterSpacing: "calc(var(--u-m) * -0.48)",
+            lineHeight: 1.25,
+            margin: 0,
+          }}
+        >
+          Additional work available upon request.
+        </p>
+      </section>
 
       <MobileSignature />
     </main>

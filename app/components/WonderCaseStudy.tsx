@@ -187,6 +187,14 @@ function HeroDesktop() {
         loop
         muted
         playsInline
+        // preload="metadata" — only fetch the header (duration,
+        // dimensions, first frame) on initial page load instead of
+        // aggressively buffering the whole ~12 MB MP4 ahead of
+        // playback. Autoplay still kicks in immediately because the
+        // browser will load enough bytes to start; this just stops
+        // the over-eager background fetch that competed with critical
+        // image bytes for bandwidth on slow connections.
+        preload="metadata"
         className="absolute inset-0 size-full object-cover"
         style={{ zIndex: 0 }}
       />
@@ -1189,7 +1197,7 @@ function ClosingSection() {
         {/* Background image — full-bleed inside the section. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/WonderClosingImage.png`}
+          src={`${IMG}/WonderClosingImage.webp`}
           alt=""
           aria-hidden="true"
           className="w-full"
@@ -1383,6 +1391,10 @@ function WonderMobile() {
           loop
           muted
           playsInline
+          // preload="metadata" — see the desktop landing video above
+          // for the rationale. Same trick on mobile, where Slow 4G
+          // makes the over-eager full-video fetch especially painful.
+          preload="metadata"
           className="absolute inset-0 size-full object-cover"
           style={{ zIndex: 0 }}
         />
@@ -2050,7 +2062,7 @@ function WonderMobile() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/WonderClosingImage.png`}
+          src={`${IMG}/WonderClosingImage.webp`}
           alt=""
           aria-hidden="true"
           style={{ width: "100%", height: "auto", display: "block" }}

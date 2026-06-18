@@ -3,62 +3,81 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 /**
- * MobileHorizontalPin — vertical-to-horizontal scroll-pin row.
+ * MobileHorizontalPin — vertical-to-horizontal scroll-pin row with a
+ * compact stage.
  *
- * Wraps a horizontal row of items so that, as the user scrolls
- * vertically past this section, a sticky inner stage holds the row
- * pinned to the top of the viewport and translates its content
- * horizontally at a rate of 1px per 1px of vertical scroll. Once
- * the entire horizontal overflow has been traversed, the pin
- * releases and the page resumes normal vertical scrolling into the
- * next section. Gives the cinematic "scroll down to advance
- * sideways" feel used across the Wonder / Blue Apron / Neuday
- * phone-mock rows.
+ * Used across the case studies (Wonder Mobile Web, Blue Apron
+ * AlaCarte/PDPs/Funnel, Neuday phone row) to give the cinematic
+ * "scroll down to advance sideways through phone mocks" feel.
  *
- * Mechanics:
- *   • Outer wrapper height = 100vh + overflowWidth (the extra px
- *     the row extends past the viewport). That extra height is
- *     exactly how much vertical scroll the user spends pinned.
- *   • Sticky inner stage is 100vh tall with overflow:hidden, so
- *     content outside the viewport while translated stays hidden.
- *   • Row content is vertically centered inside the 100vh stage so
- *     short items (e.g., phone mocks) read as anchored mid-viewport.
- *   • Scroll handler maps wrapper.top from 0 → -overflowWidth onto
- *     a transform of translate3d(0, 0, 0) → translate3d(-overflowWidth, 0, 0).
+ * History:
+ *   v1 — sticky-pinned scroll-jack with a 100vh stage. Cinematic feel
+ *        was right, but the 100vh stage centered the (much shorter)
+ *        phone-mock row inside it, leaving ~½ viewport of empty cream
+ *        above and below.
+ *   v2 — replaced the pin with native horizontal swipe + scroll-snap.
+ *        Killed the empty space but also killed the vertical-scroll-
+ *        drives-the-row behavior.
+ *   v3 (current) — restore the sticky-pin behavior, but size the
+ *        sticky stage to the row's natural height + a configurable
+ *        vertical padding (default 44u-m), so:
+ *          • Vertical scroll still advances the row horizontally
+ *            (cinematic feel preserved).
+ *          • The stage is only as tall as the row needs — no more
+ *            ½-viewport of dead air on either side.
+ *          • Wrapper height is stageHeight + horizontalOverflow, so
+ *            the user spends `overflow` pixels of vertical scroll
+ *            inside the pin before it releases.
  *
- * Drop-in replacement for `<div className="flex overflow-x-auto">`
- * — pass row items directly as children.
+ * Drop-in replacement for v1 — same children, same `gap` and
+ * `paddingX` API; `paddingY` is new (default 44u-m) for the
+ * top/bottom breathing room.
  */
 export default function MobileHorizontalPin({
   children,
   gap = "calc(var(--u-m) * 12)",
   paddingX = "calc(var(--u-m) * 16)",
+  paddingY = "calc(var(--u-m) * 44)",
 }: {
   children: ReactNode;
   /** Gap between row items (CSS length). Defaults to 12u-m. */
   gap?: string;
   /** Side padding around the row (CSS length). Defaults to 16u-m. */
   paddingX?: string;
+  /** Top/bottom padding around the row (CSS length). Defaults to
+   *  44u-m — comfortable breathing room without a 100vh stage. */
+  paddingY?: string;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const overflowRef = useRef(0);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
+    const sticky = stickyRef.current;
     const inner = innerRef.current;
-    if (!wrapper || !inner) return;
+    if (!wrapper || !sticky || !inner) return;
 
     const measure = () => {
+      // Horizontal overflow — how far past the viewport the inner row
+      // extends. This is the pixel budget the user has to scroll
+      // vertically while pinned to traverse the row.
       const total = inner.scrollWidth;
       const viewport = window.innerWidth;
       const overflow = Math.max(0, total - viewport);
       overflowRef.current = overflow;
-      // Wrapper total height = 100vh (one viewport for the sticky pin)
-      // + however many px of horizontal scroll need to elapse. So if
-      // the row overflows by 600px, the user must scroll 600px
-      // vertically past the wrapper top before the pin releases.
-      wrapper.style.height = `calc(100vh + ${overflow}px)`;
+
+      // Stage height = inner row's natural height (with padding baked
+      // in via inner's paddingY). The sticky element inherits this
+      // because it has no explicit height of its own.
+      const stageHeight = inner.offsetHeight;
+
+      // Wrapper total height = stageHeight + overflow. While the
+      // wrapper scrolls past, the sticky stage stays pinned at top:0
+      // for exactly `overflow` pixels — the user's vertical scroll
+      // during that window drives the horizontal translate 1:1.
+      wrapper.style.height = `${stageHeight + overflow}px`;
     };
 
     measure();
@@ -79,8 +98,8 @@ export default function MobileHorizontalPin({
         }
         const rect = wrapper.getBoundingClientRect();
         // 1px of vertical scroll past wrapper top = 1px of horizontal
-        // translate. Clamped at overflow so the row never goes past
-        // its right edge.
+        // translate. Clamped to [0, overflow] so the row never goes
+        // past its edges.
         const scrolled = Math.max(0, Math.min(overflow, -rect.top));
         inner.style.transform = `translate3d(${-scrolled}px, 0, 0)`;
       });
@@ -99,23 +118,21 @@ export default function MobileHorizontalPin({
 
   return (
     <div ref={wrapperRef} className="relative">
-      <div
-        className="sticky top-0 overflow-hidden"
-        style={{ height: "100vh" }}
-      >
-        <div className="flex items-center h-full">
-          <div
-            ref={innerRef}
-            className="flex items-center shrink-0"
-            style={{
-              gap,
-              paddingLeft: paddingX,
-              paddingRight: paddingX,
-              willChange: "transform",
-            }}
-          >
-            {children}
-          </div>
+      <div ref={stickyRef} className="sticky top-0 overflow-hidden">
+        <div
+          ref={innerRef}
+          className="flex items-center"
+          style={{
+            gap,
+            paddingLeft: paddingX,
+            paddingRight: paddingX,
+            paddingTop: paddingY,
+            paddingBottom: paddingY,
+            width: "max-content",
+            willChange: "transform",
+          }}
+        >
+          {children}
         </div>
       </div>
     </div>

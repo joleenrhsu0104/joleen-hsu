@@ -25,6 +25,28 @@ export const metadata: Metadata = {
   title: "Joleen Hsu — Staff Product Designer",
   description:
     "Joleen Hsu is a Staff Product Designer building consumer products in health & wellness.",
+  // metadataBase is what Next.js uses to resolve relative URLs in the
+  // openGraph + twitter blocks (so `/opengraph-image` becomes an
+  // absolute https://joleen.design/opengraph-image when crawled).
+  metadataBase: new URL("https://joleen.design"),
+  openGraph: {
+    title: "Joleen Hsu — Staff Product Designer",
+    description:
+      "Joleen Hsu is a Staff Product Designer building consumer products in health & wellness.",
+    url: "https://joleen.design",
+    siteName: "Joleen Hsu",
+    type: "website",
+    // The image URL itself is auto-injected by Next.js from
+    // app/opengraph-image.tsx — no explicit `images` field needed here.
+  },
+  twitter: {
+    // summary_large_image is the layout that renders the OG image as
+    // the big preview card (not the small thumbnail).
+    card: "summary_large_image",
+    title: "Joleen Hsu — Staff Product Designer",
+    description:
+      "Joleen Hsu is a Staff Product Designer building consumer products in health & wellness.",
+  },
 };
 
 export default function RootLayout({

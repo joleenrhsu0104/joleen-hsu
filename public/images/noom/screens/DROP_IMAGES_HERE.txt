@@ -1,0 +1,25 @@
+Drop the 9 phone-screen PNG exports from Figma (node 717-1276) here.
+
+Expected filenames (must match exactly — case-sensitive):
+
+  Onboarding.png          — player onboarding with avatar ring ("Setting up your program")
+  Welcome.png             — "Welcome to Noom, Laura" greeting screen
+  FocusAreas.png          — "Review your focus areas" with health categories
+  TreatmentProgram.png    — treatment program with Microdose GLP-1 + Biomarkers Test Kit
+  Challenges.png          — Challenges list view ("Start each day with 15 minutes of reading")
+  EnergyCategory.png      — Energy category page with stacked habit chips
+  ChallengeCategory.png   — Challenge Category page (yellow header, "Energy" section)
+  ChallengeDetail.png     — Challenge Detail page ("Start each day with a meditation")
+  HabitStack.png          — Habit Stack page ("I want to become a good sleeper")
+
+Export tips:
+  • Export at 2x scale (matches Wonder/Blue Apron/Neuday phone mocks).
+  • Use PNG (transparent background) so the phone bezel reads against
+    cream/blue section backgrounds without a halo.
+  • Don't bake in vertical padding — the wrapping div applies the
+    9:19.5 aspect-ratio frame; padding shows as awkward whitespace.
+
+Until these files are in place, the phone slots render as empty
+boxes at the right size (broken-image fallback is hidden via onError).
+The rest of each section — backgrounds, copy, captions, mobile pin
+behavior — works without the assets.

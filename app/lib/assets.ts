@@ -40,7 +40,7 @@ export const HERO_PROJECTS = [
     role: "Founding Designer",
     years: "2025-2026",
     counter: "[4 OF 4]",
-    image: "/images/hero-neuday.png",
+    image: "/images/neuday/hero-neuday.webp",
     bg: "#030303", // near-black (matches --color-near-black token)
     href: "/work/neuday",
   },

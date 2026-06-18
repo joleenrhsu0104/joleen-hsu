@@ -797,7 +797,7 @@ function BlueApronClosingSection() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`${IMG}/BlueApronClosing.png`}
+            src={`${IMG}/BlueApronClosing.webp`}
             alt="Blue Apron meals"
             className="block w-full h-full object-cover"
           />
@@ -858,6 +858,14 @@ function HeroDesktop() {
         loop
         muted
         playsInline
+        // preload="metadata" — only fetch the header (duration,
+        // dimensions, first frame) on initial page load instead of
+        // aggressively buffering the whole ~10 MB MP4 ahead of
+        // playback. Autoplay still kicks in immediately because the
+        // browser will load enough bytes to start; this just stops
+        // the over-eager background fetch that competed with critical
+        // image bytes for bandwidth on slow connections.
+        preload="metadata"
         className="absolute inset-0 size-full object-cover"
         style={{ zIndex: 0 }}
       />
@@ -1791,14 +1799,16 @@ function MobilePdpScrollPin({
   src: string;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
+    const sticky = stickyRef.current;
     const win = windowRef.current;
     const img = imgRef.current;
-    if (!wrapper || !win || !img) return;
+    if (!wrapper || !sticky || !win || !img) return;
 
     let scrollDistance = 0;
 
@@ -1807,7 +1817,18 @@ function MobilePdpScrollPin({
       const winH = win.getBoundingClientRect().height;
       const distance = Math.max(0, imgH - winH);
       scrollDistance = distance;
-      wrapper.style.height = `calc(100vh + ${distance}px)`;
+      // Wrapper height = sticky stage's natural height + horizontal
+      // overflow. Previously this used a hardcoded `100vh + distance`,
+      // which meant the shorter PDPs (Prepared & Ready, Add-On) had
+      // a 100vh stage with the mock floating in the upper portion —
+      // the empty cream below the mock inside the stage made the gap
+      // before the next PDP read as visibly larger than between Meal
+      // Kit and Prepared & Ready. Reading the actual stage height
+      // means the wrapper is just the natural content + scroll budget
+      // (zero for the shorter PDPs), so the cream gap between mocks
+      // is the same 40u-m periwinkle spacer in every position.
+      const stageH = sticky.offsetHeight;
+      wrapper.style.height = `${stageH + distance}px`;
     };
 
     measure();
@@ -1816,6 +1837,7 @@ function MobilePdpScrollPin({
     const ro = new ResizeObserver(measure);
     ro.observe(img);
     ro.observe(win);
+    ro.observe(sticky);
     window.addEventListener("resize", measure);
 
     let raf = 0;
@@ -1845,10 +1867,7 @@ function MobilePdpScrollPin({
 
   return (
     <div ref={wrapperRef} className="relative">
-      <div
-        className="sticky top-0 overflow-hidden"
-        style={{ height: "100vh" }}
-      >
+      <div ref={stickyRef} className="sticky top-0 overflow-hidden">
         <div
           className="flex flex-col items-center"
           style={{
@@ -1872,23 +1891,21 @@ function MobilePdpScrollPin({
           >
             {label}
           </span>
-          {/* Mock window — fixed width (240u) AND explicit height
-              (100vh − ~50u of chrome above/below) so all three PDPs
-              render in identical-sized frames. At this width the
-              shorter PDPs (Prepared & Ready, Add-On) still have
-              intrinsic heights that fit inside the window with no
-              overflow, so MobilePdpScrollPin's measure() computes
-              scrollDistance=0 for them and the section pin releases
-              without requiring scroll. Meal Kit's taller PDP exceeds
-              the window height, so MobilePdpScrollPin enlarges the
-              wrapper by the excess and the user scrolls through that
-              PDP's full content. */}
+          {/* Mock window — fixed width (240u), max-height capped at
+              (100vh − ~50u of chrome above/below) but auto-sized to
+              the image's natural height when shorter. Meal Kit's
+              image is taller than the cap → window clips at cap and
+              MobilePdpScrollPin scroll-pins through the excess.
+              Prepared & Ready / Add-On images are shorter than the
+              cap → window shrinks to match, so the sticky stage has
+              no empty cream below the image and the 40u-m gap before
+              the next PDP reads identically between every pair. */}
           <div
             ref={windowRef}
             className="overflow-hidden"
             style={{
               width: "calc(var(--u-m) * 240)",
-              height: "calc(100vh - var(--u-m) * 50)",
+              maxHeight: "calc(100vh - var(--u-m) * 50)",
               borderRadius: "calc(var(--u-m) * 16)",
             }}
           >
@@ -1932,6 +1949,10 @@ function BlueApronMobile() {
           loop
           muted
           playsInline
+          // preload="metadata" — see the desktop landing video above
+          // for the rationale. Same trick on mobile, where Slow 4G
+          // makes the over-eager full-video fetch especially painful.
+          preload="metadata"
           className="absolute inset-0 size-full object-cover"
           style={{ zIndex: 0 }}
         />
@@ -2266,7 +2287,7 @@ function BlueApronMobile() {
             closing section. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/BlueApronClosing.png`}
+          src={`${IMG}/BlueApronClosing.webp`}
           alt="Blue Apron meals"
           style={{ width: "100%", height: "auto", display: "block" }}
         />

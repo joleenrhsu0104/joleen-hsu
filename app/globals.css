@@ -141,3 +141,15 @@ body {
   background-clip: text;
   color: transparent;
 }
+
+/* Hide the scrollbar rail across browsers — used on horizontal swipe
+   rows (MobileHorizontalPin) where the swipe gesture itself is
+   visible enough without a rail eating into the row's vertical
+   space. */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE / old Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari + Chrome */
+}
