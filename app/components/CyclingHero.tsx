@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { HERO_PROJECTS } from "@/app/lib/assets";
 import ArrowUpRight from "./ArrowUpRight";
@@ -129,13 +130,19 @@ export default function CyclingHero() {
         aria-hidden="true"
       >
         {HERO_PROJECTS.map((project, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             key={`bg-${project.name}`}
+            fill
             src={project.image}
             alt=""
-            className="absolute inset-0 size-full object-cover"
+            sizes="100vw"
+            // priority on the FIRST project's background image so it
+            // preloads — this is the LCP image on the home page.
+            // PageSpeed flagged "LCP request discovery" as red before
+            // this prop was added.
+            priority={i === 0}
             style={{
+              objectFit: "cover",
               opacity: i === activeIndex ? 1 : 0,
               transform: "scale(1.35)",
               filter: "blur(36px) saturate(1.15)",
@@ -253,11 +260,19 @@ export default function CyclingHero() {
                 transition: `clip-path ${TRANSITION_MS}ms cubic-bezier(0.65, 0, 0.35, 1)`,
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
                 src={project.image}
                 alt={`${project.name} project`}
-                className="size-full object-cover"
+                sizes="(max-width: 768px) 100vw, 535px"
+                // priority on the FIRST project's foreground card
+                // image too — same LCP-preload rationale as the
+                // background layer above. The crossfade animation
+                // still works because the priority prop just
+                // controls whether the loader treats this as a
+                // critical resource.
+                priority={i === 0}
+                style={{ objectFit: "cover" }}
               />
             </div>
           ));
