@@ -91,6 +91,12 @@ const WONDER_YELLOW = "#FBE59F";        // Membership section ground (matches Me
 const INK = "var(--color-ink)";         // dark body text on the cream bg
 const IMG = "/images/wonder";
 const LANDING_VIDEO = "/videos/wonder-landing.mp4";
+// Poster frame — first ~0.5s of the landing video exported as a
+// WebP so the hero paints instantly while the MP4 streams in.
+// Eliminates the blank-cream gap on slow connections where users
+// otherwise stare at an empty background until enough video bytes
+// arrive for the first frame to render.
+const LANDING_VIDEO_POSTER = "/videos/wonder-landing-poster.webp";
 
 // All 5 phones render at their natural size with no CSS scaling.
 // Mocks 4 and 5 will look slightly smaller than 1-3 because their
@@ -183,17 +189,20 @@ function HeroDesktop() {
       {/* Full-bleed landing video as the hero background */}
       <video
         src={LANDING_VIDEO}
+        poster={LANDING_VIDEO_POSTER}
         autoPlay
         loop
         muted
         playsInline
         // preload="metadata" — only fetch the header (duration,
         // dimensions, first frame) on initial page load instead of
-        // aggressively buffering the whole ~12 MB MP4 ahead of
+        // aggressively buffering the whole ~4 MB MP4 ahead of
         // playback. Autoplay still kicks in immediately because the
         // browser will load enough bytes to start; this just stops
         // the over-eager background fetch that competed with critical
-        // image bytes for bandwidth on slow connections.
+        // image bytes for bandwidth on slow connections. The poster
+        // attribute renders the WebP first frame instantly so the
+        // hero is never visually empty while the MP4 streams in.
         preload="metadata"
         className="absolute inset-0 size-full object-cover"
         style={{ zIndex: 0 }}
@@ -1387,6 +1396,7 @@ function WonderMobile() {
       >
         <video
           src={LANDING_VIDEO}
+          poster={LANDING_VIDEO_POSTER}
           autoPlay
           loop
           muted
@@ -1394,6 +1404,8 @@ function WonderMobile() {
           // preload="metadata" — see the desktop landing video above
           // for the rationale. Same trick on mobile, where Slow 4G
           // makes the over-eager full-video fetch especially painful.
+          // The poster image renders instantly so the mobile hero
+          // never reads as blank-cream while the MP4 buffers.
           preload="metadata"
           className="absolute inset-0 size-full object-cover"
           style={{ zIndex: 0 }}
