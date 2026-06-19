@@ -1006,14 +1006,14 @@ const MOBILE_WEB_COLUMNS: Array<{
 }> = [
   // Column 1 — 2 phones, sit aligned with column 3
   // cycle = 2 × (565 + 75) = 1280
-  { x: 665, startY: -150, phones: ["1.png", "2.png"], gap: 75, duration: 60, cycle: 1280 },
+  { x: 665, startY: -150, phones: ["1.webp", "2.webp"], gap: 75, duration: 60, cycle: 1280 },
   // Column 2 — 3 phones, peeks above + below; longer strip → longer
   // duration so per-phone perceived speed matches columns 1 and 3
   // (cycle 1785u vs 1280u → 1.39× longer → 84s vs 60s).
   // cycle = 3 × (565 + 30) = 1785
-  { x: 1005, startY: -375, phones: ["3.png", "4.png", "5.png"], gap: 30, duration: 84, cycle: 1785 },
+  { x: 1005, startY: -375, phones: ["3.webp", "4.webp", "5.webp"], gap: 30, duration: 84, cycle: 1785 },
   // Column 3 — 2 phones, mirrors column 1
-  { x: 1345, startY: -150, phones: ["6.png", "7.png"], gap: 75, duration: 60, cycle: 1280 },
+  { x: 1345, startY: -150, phones: ["6.webp", "7.webp"], gap: 75, duration: 60, cycle: 1280 },
 ];
 
 const MOBILE_WEB_PHONE_W = 280;
