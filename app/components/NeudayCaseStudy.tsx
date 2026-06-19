@@ -91,10 +91,10 @@ const NEUDAY_HERO = `${IMG}/case-study-hero.webp`;
 // so the row can lay them out at their natural Figma sizes without
 // any cropping or distortion.
 const APP_SCREENS: Array<{ src: string; w: number; h: number }> = [
-  { src: `${IMG}/NeudayMock1.png`, w: 451, h: 821 },
-  { src: `${IMG}/NeudayMock2.png`, w: 416, h: 821 },
-  { src: `${IMG}/NeudayMock3.png`, w: 419, h: 824 },
-  { src: `${IMG}/NeudayMock4.png`, w: 438, h: 821 },
+  { src: `${IMG}/NeudayMock1.webp`, w: 451, h: 821 },
+  { src: `${IMG}/NeudayMock2.webp`, w: 416, h: 821 },
+  { src: `${IMG}/NeudayMock3.webp`, w: 419, h: 824 },
+  { src: `${IMG}/NeudayMock4.webp`, w: 438, h: 821 },
 ];
 
 const BRAND_BOOK_PAGES = [

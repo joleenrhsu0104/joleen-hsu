@@ -53,37 +53,37 @@ export const FLOWER_IMAGE = "/images/flower.png";
 // Each card flips to reveal its caption on hover (desktop) or tap (mobile).
 export const ETHOS_IMAGES = [
   {
-    src: "/images/contact/dinnerparties.png",
+    src: "/images/contact/dinnerparties.webp",
     x: -9,
     y: 391,
     caption: "My favorite culinary exploration was a deep dive into Uyghur cuisine",
   },
   {
-    src: "/images/contact/doublerainbow.png",
+    src: "/images/contact/doublerainbow.webp",
     x: 421,
     y: 44,
     caption: "Welcomed 2026 with a double rainbow in Kauai",
   },
   {
-    src: "/images/contact/dolomites.png",
+    src: "/images/contact/dolomites.webp",
     x: 1034,
     y: 700,
     caption: "One of the most beautiful places I've visited in the last year: Dolomites",
   },
   {
-    src: "/images/contact/casagilardi.png",
+    src: "/images/contact/casagilardi.webp",
     x: 1264,
     y: 150,
     caption: "A masterpiece in Casa Gilardi, Mexico City",
   },
   {
-    src: "/images/contact/reading.png",
+    src: "/images/contact/reading.webp",
     x: 488,
     y: 747,
     caption: "Current read: “Start with Why” by Simon Sinek",
   },
   {
-    src: "/images/contact/tennis.png",
+    src: "/images/contact/tennis.webp",
     x: 1580,
     y: 546,
     caption: "My latest obsession: tennis",

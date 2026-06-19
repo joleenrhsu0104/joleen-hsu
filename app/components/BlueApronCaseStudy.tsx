@@ -174,25 +174,25 @@ function BlueApronDesktop() {
    ─────────────────────────────────────────────────────────────── */
 
 const ALACARTE_SCREENS = [
-  `${IMG}/BlueApron1.png`,
-  `${IMG}/BlueApron2.png`,
+  `${IMG}/BlueApron1.webp`,
+  `${IMG}/BlueApron2.webp`,
   `${IMG}/BlueApron3.png`,
-  `${IMG}/BlueApron4.png`,
+  `${IMG}/BlueApron4.webp`,
 ];
 
 // URL-encoded paths because the user's uploaded filenames have a
-// space and an ampersand. (Meal Kit.png -> Meal%20Kit.png, etc.)
-const PDP_MEAL_KIT_SRC = `${IMG}/Meal%20Kit.png`;
-const PDP_PNR_SRC = `${IMG}/Prepared%26Ready.png`;
-const PDP_ADDON_SRC = `${IMG}/Add-On.png`;
+// space and an ampersand. (Meal Kit.png -> Meal%20Kit.webp, etc.)
+const PDP_MEAL_KIT_SRC = `${IMG}/Meal%20Kit.webp`;
+const PDP_PNR_SRC = `${IMG}/Prepared%26Ready.webp`;
+const PDP_ADDON_SRC = `${IMG}/Add-On.webp`;
 
 // Funnel marquee — five stages of the a-la-carte -> subscription
 // journey. Extend this array and drop matching files in /public/
 // images/blue-apron/ if you want more frames in the marquee.
 const FUNNEL_PHONES = [
   `${IMG}/SubscriptionMock1.png`,
-  `${IMG}/SubscriptionMock2.png`,
-  `${IMG}/SubscriptionMock3.png`,
+  `${IMG}/SubscriptionMock2.webp`,
+  `${IMG}/SubscriptionMock3.webp`,
   `${IMG}/SubscriptionMock4.png`,
   `${IMG}/SubscriptionMock5.png`,
 ];

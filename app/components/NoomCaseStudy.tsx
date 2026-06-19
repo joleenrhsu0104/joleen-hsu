@@ -127,7 +127,7 @@ const SCREEN_IMAGES = {
   },
   // Labeled 3-phone row — unbezeled exports (raw screen content)
   challengeCategory: {
-    src: `${IMG}/Challenges/Challenge%20Category%20Page.png`,
+    src: `${IMG}/Challenges/Challenge%20Category%20Page.webp`,
     alt: "Noom — challenge category page",
   },
   challengeDetail: {
@@ -736,7 +736,7 @@ const CARDS = {
     aspect: "1764 / 993", // 16:9
   },
   track: {
-    src: `${COLLAGE}/Trackyourprogress.png`,
+    src: `${COLLAGE}/Trackyourprogress.webp`,
     alt: "Track your progress with our GLP-1S",
     aspect: "952 / 1190",
   },
