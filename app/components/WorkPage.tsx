@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
-import { HERO_PROJECTS } from "@/app/lib/assets";
+import { HERO_PROJECTS, HERO_SIZES, heroSrcSet } from "@/app/lib/assets";
 import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
@@ -44,6 +44,8 @@ interface Project {
   category: string;
   slug: string;
   image: string;
+  /** Natural width of full-res hero file — needed by heroSrcSet for the upper `w` descriptor. */
+  imageWidth: number;
   side: "left" | "right";
   /** Image height in design-units. Wonder is shorter than the rest. */
   imageHeight: number;
@@ -56,6 +58,7 @@ const PROJECTS: Project[] = [
     category: "APP + WEB",
     slug: "wonder",
     image: HERO_PROJECTS[0].image,
+    imageWidth: HERO_PROJECTS[0].imageWidth,
     side: "left",
     imageHeight: 647,
   },
@@ -65,6 +68,7 @@ const PROJECTS: Project[] = [
     category: "APP",
     slug: "blue-apron",
     image: HERO_PROJECTS[1].image,
+    imageWidth: HERO_PROJECTS[1].imageWidth,
     side: "right",
     imageHeight: 730,
   },
@@ -74,6 +78,7 @@ const PROJECTS: Project[] = [
     category: "APP",
     slug: "noom",
     image: HERO_PROJECTS[2].image,
+    imageWidth: HERO_PROJECTS[2].imageWidth,
     side: "left",
     imageHeight: 730,
   },
@@ -83,6 +88,7 @@ const PROJECTS: Project[] = [
     category: "APP",
     slug: "neuday",
     image: HERO_PROJECTS[3].image,
+    imageWidth: HERO_PROJECTS[3].imageWidth,
     side: "right",
     imageHeight: 730,
   },
@@ -353,6 +359,8 @@ function ProjectCardDesktop({ project }: { project: Project }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={project.image}
+          srcSet={heroSrcSet(project)}
+          sizes={HERO_SIZES}
           alt={`${project.name} cover`}
           className="size-full object-cover transition-transform duration-700 ease-out"
           style={{ transform: hovered ? "scale(1.03)" : "scale(1)" }}
@@ -554,6 +562,8 @@ function ProjectCardMobile({ project }: { project: Project }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={project.image}
+          srcSet={heroSrcSet(project)}
+          sizes={HERO_SIZES}
           alt={`${project.name} cover`}
           className="size-full object-cover"
         />

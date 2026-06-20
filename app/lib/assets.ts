@@ -7,6 +7,11 @@
 // `href` (optional) lets the hero image link to the project's case
 // study page when present. Blue Apron's case study page hasn't been
 // built yet, so its href is omitted and the card stays non-clickable.
+//
+// `imageWidth` / `imageHeight` are the natural pixel dimensions of
+// the full-res file (the .webp at `image`). Used by heroSrcSet to
+// emit the correct `w` descriptor in srcset strings so browsers can
+// pick the smallest variant that satisfies their viewport × DPR.
 export const HERO_PROJECTS = [
   {
     name: "Wonder",
@@ -14,6 +19,8 @@ export const HERO_PROJECTS = [
     years: "2021-2025",
     counter: "[1 OF 4]",
     image: "/images/hero-wonder.webp",
+    imageWidth: 1459,
+    imageHeight: 2044,
     bg: "#260303", // dark burgundy
     href: "/work/wonder",
   },
@@ -23,6 +30,8 @@ export const HERO_PROJECTS = [
     years: "2024-2025",
     counter: "[2 OF 4]",
     image: "/images/hero-blue-apron.webp",
+    imageWidth: 1459,
+    imageHeight: 2044,
     bg: "#0f1b3c", // dark navy
     href: "/work/blue-apron",
   },
@@ -32,6 +41,8 @@ export const HERO_PROJECTS = [
     years: "2025-2026",
     counter: "[3 OF 4]",
     image: "/images/hero-noom.webp",
+    imageWidth: 1459,
+    imageHeight: 2044,
     bg: "#272a15", // dark olive
     href: "/work/noom",
   },
@@ -41,10 +52,49 @@ export const HERO_PROJECTS = [
     years: "2025-2026",
     counter: "[4 OF 4]",
     image: "/images/neuday/hero-neuday.webp",
+    imageWidth: 1605,
+    imageHeight: 2190,
     bg: "#030303", // near-black (matches --color-near-black token)
     href: "/work/neuday",
   },
 ] as const;
+
+/**
+ * Build a responsive srcset for a hero image. We ship three sizes
+ * of every hero: -800.webp (200–250 KB, perfect for 2x DPR phones),
+ * -1400.webp (350–450 KB, for 3x DPR phones + small desktops), and
+ * the full-res original (1459w or 1605w, for large desktops at high
+ * DPR). The browser uses the `w` descriptors + the `sizes` attr
+ * (HERO_SIZES) to pick the smallest variant that satisfies the
+ * required pixel count for the user's viewport × DPR.
+ */
+export function heroSrcSet(project: {
+  image: string;
+  imageWidth: number;
+}): string {
+  const dot = project.image.lastIndexOf(".");
+  const stem = project.image.slice(0, dot);
+  const ext = project.image.slice(dot);
+  return [
+    `${stem}-800${ext} 800w`,
+    `${stem}-1400${ext} 1400w`,
+    `${project.image} ${project.imageWidth}w`,
+  ].join(", ");
+}
+
+/**
+ * `sizes` attribute companion to heroSrcSet. Tells the browser how
+ * wide the image displays at each viewport breakpoint so it can
+ * pick the right srcset variant.
+ *
+ * - Mobile (<=768px): the hero card fills basically the entire
+ *   viewport width with minimal padding, so 100vw is accurate.
+ * - Desktop (>768px): the cycling-hero card is centered at ~600 CSS
+ *   pixels wide, so 600px is a safe upper bound. Smaller than the
+ *   true viewport width means the browser picks a smaller variant
+ *   (e.g., 800w instead of 1400w on 1x monitors) without quality loss.
+ */
+export const HERO_SIZES = "(max-width: 768px) 100vw, 600px";
 
 // About section
 export const FLOWER_IMAGE = "/images/flower.png";

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { HERO_PROJECTS } from "@/app/lib/assets";
+import { HERO_PROJECTS, HERO_SIZES, heroSrcSet } from "@/app/lib/assets";
 import MobileTopNav from "./MobileTopNav";
 
 /**
@@ -200,6 +200,8 @@ export default function MobileHero() {
             <img
               key={`bg-${project.name}`}
               src={project.image}
+              srcSet={heroSrcSet(project)}
+              sizes={HERO_SIZES}
               alt=""
               className="absolute inset-0 size-full object-cover"
               style={{
@@ -299,6 +301,8 @@ export default function MobileHero() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={project.image}
+                srcSet={heroSrcSet(project)}
+                sizes={HERO_SIZES}
                 alt={`${project.name} project`}
                 className="size-full object-cover"
                 style={{

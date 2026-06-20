@@ -10,7 +10,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { useIsMobile } from "@/app/hooks/useIsMobile";
-import { HERO_PROJECTS } from "@/app/lib/assets";
+import { HERO_PROJECTS, HERO_SIZES, heroSrcSet } from "@/app/lib/assets";
 import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
@@ -1330,6 +1330,8 @@ function OtherCaseStudies() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={p.image}
+                  srcSet={heroSrcSet(p)}
+                  sizes={HERO_SIZES}
                   alt={`${p.name} cover`}
                   className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
