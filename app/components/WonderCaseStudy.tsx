@@ -113,10 +113,10 @@ const APP_SCREENS = [
 ];
 
 const MEMBERSHIP_SCREENS = [
-  `${IMG}/membership-1.png`,
-  `${IMG}/membership-2.png`,
-  `${IMG}/membership-3.png`,
-  `${IMG}/membership-4.png`,
+  `${IMG}/membership-1.webp`,
+  `${IMG}/membership-2.webp`,
+  `${IMG}/membership-3.webp`,
+  `${IMG}/membership-4.webp`,
 ];
 
 const ORIGINAL_ORDER_STATES = [
@@ -276,7 +276,7 @@ function HeroDesktop() {
           a centered banner. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`${IMG}/wonder-logo.png`}
+        src={`${IMG}/wonder-logo.webp`}
         alt="Wonder"
         className="absolute"
         style={{
@@ -1423,7 +1423,7 @@ function WonderMobile() {
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/wonder-logo.png`}
+          src={`${IMG}/wonder-logo.webp`}
           alt="Wonder"
           className="absolute"
           style={{

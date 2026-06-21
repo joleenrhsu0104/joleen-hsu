@@ -98,12 +98,12 @@ const APP_SCREENS: Array<{ src: string; w: number; h: number }> = [
 ];
 
 const BRAND_BOOK_PAGES = [
-  `${IMG}/BrandBook1.png`,
-  `${IMG}/BrandBook2.png`,
-  `${IMG}/BrandBook3.png`,
-  `${IMG}/BrandBook4.png`,
-  `${IMG}/BrandBook5.png`,
-  `${IMG}/BrandBook6.png`,
+  `${IMG}/BrandBook1.webp`,
+  `${IMG}/BrandBook2.webp`,
+  `${IMG}/BrandBook3.webp`,
+  `${IMG}/BrandBook4.webp`,
+  `${IMG}/BrandBook5.webp`,
+  `${IMG}/BrandBook6.webp`,
 ];
 
 export default function NeudayCaseStudy() {
@@ -454,7 +454,7 @@ function BrowserMockupSection() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={ref}
-          src={`${IMG}/billboard1.png`}
+          src={`${IMG}/billboard1.webp`}
           alt="Neuday browser mockup"
           className="size-full object-cover"
           style={fadeInStyle(visible)}
@@ -713,7 +713,7 @@ function NeudayMobile() {
       </section>
 
       <MobileFadeInMockup
-        src={`${IMG}/billboard1.png`}
+        src={`${IMG}/billboard1.webp`}
         alt="Neuday browser mockup"
         aspect="1920 / 1034"
         bg={NEUDAY_NAVY}

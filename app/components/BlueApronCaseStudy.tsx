@@ -115,10 +115,10 @@ const APP_SCREENS = [
 ];
 
 const MEMBERSHIP_SCREENS = [
-  `${IMG}/membership-1.png`,
-  `${IMG}/membership-2.png`,
-  `${IMG}/membership-3.png`,
-  `${IMG}/membership-4.png`,
+  `${IMG}/membership-1.webp`,
+  `${IMG}/membership-2.webp`,
+  `${IMG}/membership-3.webp`,
+  `${IMG}/membership-4.webp`,
 ];
 
 const ORIGINAL_ORDER_STATES = [
@@ -182,7 +182,7 @@ function BlueApronDesktop() {
 const ALACARTE_SCREENS = [
   `${IMG}/BlueApron1.webp`,
   `${IMG}/BlueApron2.webp`,
-  `${IMG}/BlueApron3.png`,
+  `${IMG}/BlueApron3.webp`,
   `${IMG}/BlueApron4.webp`,
 ];
 
@@ -196,11 +196,11 @@ const PDP_ADDON_SRC = `${IMG}/Add-On.webp`;
 // journey. Extend this array and drop matching files in /public/
 // images/blue-apron/ if you want more frames in the marquee.
 const FUNNEL_PHONES = [
-  `${IMG}/SubscriptionMock1.png`,
+  `${IMG}/SubscriptionMock1.webp`,
   `${IMG}/SubscriptionMock2.webp`,
   `${IMG}/SubscriptionMock3.webp`,
-  `${IMG}/SubscriptionMock4.png`,
-  `${IMG}/SubscriptionMock5.png`,
+  `${IMG}/SubscriptionMock4.webp`,
+  `${IMG}/SubscriptionMock5.webp`,
 ];
 
 const SUBSCRIPTION_SCREENS = [
@@ -947,7 +947,7 @@ function HeroDesktop() {
           a centered banner. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={`${IMG}/blueapron-logo.png`}
+        src={`${IMG}/blueapron-logo.webp`}
         alt="Blue Apron"
         className="absolute"
         style={{
@@ -1981,7 +1981,7 @@ function BlueApronMobile() {
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={`${IMG}/blueapron-logo.png`}
+          src={`${IMG}/blueapron-logo.webp`}
           alt="Blue Apron"
           className="absolute"
           style={{

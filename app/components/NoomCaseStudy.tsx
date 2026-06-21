@@ -131,11 +131,11 @@ const SCREEN_IMAGES = {
     alt: "Noom — challenge category page",
   },
   challengeDetail: {
-    src: `${IMG}/Challenges/ChallengeDetailPage.png`,
+    src: `${IMG}/Challenges/ChallengeDetailPage.webp`,
     alt: "Noom — challenge detail page",
   },
   habitStack: {
-    src: `${IMG}/Challenges/HabitStackPage.png`,
+    src: `${IMG}/Challenges/HabitStackPage.webp`,
     alt: "Noom — habit stack page",
   },
 } as const;
@@ -741,7 +741,7 @@ const CARDS = {
     aspect: "952 / 1190",
   },
   microdose: {
-    src: `${COLLAGE}/Microdose.png`,
+    src: `${COLLAGE}/Microdose.webp`,
     alt: "Noom Microdose GLP-1",
     // 400 x 500 = 4:5, matches Track so the sub-row bottoms align.
     aspect: "4 / 5",
@@ -752,17 +752,17 @@ const CARDS = {
     aspect: "1818 / 2073",
   },
   progressBeyond: {
-    src: `${COLLAGE}/Progressbeyondprescription.png`,
+    src: `${COLLAGE}/Progressbeyondprescription.webp`,
     alt: "Progress beyond prescription",
     aspect: "1773 / 313",
   },
   foodNoise: {
-    src: `${COLLAGE}/FoodNoise.png`,
+    src: `${COLLAGE}/FoodNoise.webp`,
     alt: "Food noise now comes with a mute button",
     aspect: "1031 / 1290",
   },
   accessMedication: {
-    src: `${COLLAGE}/Accesstomedication.png`,
+    src: `${COLLAGE}/Accesstomedication.webp`,
     alt: "Access to high-quality, powerful weight-loss medications — 48%",
     aspect: "2220 / 786",
   },
