@@ -552,7 +552,7 @@ function FullTasteSection() {
     >
       <NarrativeSection
         heading="A full taste of Wonder"
-        body="We chose to lead with each restaurant's unique brand identity, while allowing the customer to get all the relevant context they need to place an order: cuisine, price range, and delivery ETA."
+        body="In the browse experience, it was important to lead with each restaurant's unique brand identity, while allowing the customer to get all the relevant context they need to place an order: cuisine, price range, and delivery ETA."
         tone="light"
       />
     </section>
@@ -1110,8 +1110,7 @@ function MobileWebSection() {
             }}
           >
             We conducted a series of A/B tests to drive users to
-            download the app, emphasizing the benefit of receiving
-            live updates (i.e. push notifications) for their orders.
+            download the app after their first order.
           </p>
         </div>
 
@@ -1621,9 +1620,10 @@ function WonderMobile() {
             marginBottom: "calc(var(--u-m) * 8)",
           }}
         >
-          We chose to lead with each restaurant&rsquo;s unique brand identity,
-          while allowing the customer to get all the relevant context they
-          need to place an order: cuisine, price range, and delivery ETA.
+          In the browse experience, it was important to lead with each
+          restaurant&rsquo;s unique brand identity, while allowing the
+          customer to get all the relevant context they need to place an
+          order: cuisine, price range, and delivery ETA.
         </p>
         {/* Auto-scrolling marquee — same animation pattern as the
             desktop RestaurantCardsRow. The cards loop continuously
@@ -1725,7 +1725,12 @@ function WonderMobile() {
         <div
           className="flex flex-col"
           style={{
-            marginTop: "calc(var(--u-m) * 16)",
+            // 40u-m of breathing room above the caption (was 16u-m).
+            // Body description sits in the section's normal flow above
+            // and the +24u-m extra gives the 'Original designs' label
+            // its own beat instead of feeling crammed against the
+            // copy.
+            marginTop: "calc(var(--u-m) * 40)",
             // Caption → mock gap unified at 12u-m across all three
             // case studies (Wonder, Blue Apron, Noom) so the labeled-
             // mock rhythm reads the same regardless of which case
@@ -1736,11 +1741,13 @@ function WonderMobile() {
           <span
             className="font-sans"
             style={{
+              // Left-aligned to match the rest of the mobile section
+              // (heading + 2 description paragraphs all flow left).
+              // Was textAlign:center which created an off-axis caption
+              // floating in a stream of left-flowing copy.
               fontSize: "calc(var(--u-m) * 12)",
               letterSpacing: "calc(var(--u-m) * -0.36)",
               opacity: 0.7,
-              textAlign: "center",
-              width: "100%",
             }}
           >
             Original designs
@@ -2001,8 +2008,7 @@ function WonderMobile() {
           <br />
           <br />
           We conducted a series of A/B tests to drive users to download
-          the app, emphasizing the benefit of receiving live updates
-          (i.e. push notifications) for their orders.
+          the app after their first order.
         </p>
       </section>
       <div

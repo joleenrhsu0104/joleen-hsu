@@ -777,6 +777,15 @@ function SubscriptionContent() {
 function BlueApronClosingSection() {
   const ref = useRef<HTMLDivElement | null>(null);
   const visible = useFadeInOnScroll(ref);
+  // Gate the section's fade-in on the food image being fully loaded
+  // so the photo and the tagline card appear as ONE unit. Without
+  // this, the container fades in as soon as it scrolls into view
+  // and the 488K WebP can finish downloading after the text card
+  // is already visible — making it look like the image pops in
+  // separately. With this gate, the section stays at opacity 0
+  // until BOTH conditions hold, then fades in everything together.
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const ready = visible && imageLoaded;
   return (
     <section
       className="relative"
@@ -789,7 +798,7 @@ function BlueApronClosingSection() {
       <div
         ref={ref}
         className="flex items-center"
-        style={{ ...fadeInStyle(visible) }}
+        style={{ ...fadeInStyle(ready) }}
       >
         {/* Left: full-bleed food image — exactly 50vw so it matches
             the width of the white tagline box on the right. */}
@@ -806,6 +815,10 @@ function BlueApronClosingSection() {
             src={`${IMG}/BlueApronClosing.webp`}
             alt="Blue Apron meals"
             className="block w-full h-full object-cover"
+            onLoad={() => setImageLoaded(true)}
+            // Fail-safe: if the image errors, still let the section
+            // fade in so the tagline isn't permanently hidden.
+            onError={() => setImageLoaded(true)}
           />
         </div>
 

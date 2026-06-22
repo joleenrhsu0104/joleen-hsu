@@ -521,11 +521,12 @@ function AdditionalWorkSection() {
         style={{
           // Matches the other case-study closing placeholders
           // (Wonder / Noom): 40u serif, -2% tracking, 1.25 line-height.
+          // No maxWidth — let the line breathe out to the section's
+          // 96u side-pad and avoid forcing an awkward wrap.
           fontSize: "calc(var(--u) * 40)",
           letterSpacing: "calc(var(--u) * -0.8)",
           lineHeight: 1.25,
           margin: 0,
-          maxWidth: "calc(var(--u) * 1200)",
           ...fadeInStyle(visible),
         }}
       >

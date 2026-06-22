@@ -412,6 +412,14 @@ function OnboardingScreensRowDesktop() {
    ─────────────────────────────────────────────────────────────── */
 
 function HabitLoopsSectionDesktop() {
+  // Row-level IntersectionObserver so both phones fade in together
+  // as one motion. Without this, each PhoneMockDesktop would self-
+  // fade with an 80ms-per-index stagger creating a left-to-right
+  // cascade that reads as 'phones loading one at a time' instead
+  // of 'this whole section appears.' Same pattern as
+  // OnboardingScreensRowDesktop.
+  const phoneRowRef = useRef<HTMLDivElement | null>(null);
+  const phonesVisible = useFadeInOnScroll(phoneRowRef);
   return (
     <section
       style={{
@@ -511,22 +519,29 @@ function HabitLoopsSectionDesktop() {
           </p>
         </div>
 
-        {/* Right: 2 phones (Challenges list + Energy category). */}
+        {/* Right: 2 phones (Challenges list + Energy category). Row
+            owns the fade-in; both phones opt out of self-fading via
+            fadeIn={false} so they reveal together when the row
+            enters viewport. */}
         <div
+          ref={phoneRowRef}
           className="flex items-start"
-          style={{ gap: "calc(var(--u) * 32)" }}
+          style={{
+            gap: "calc(var(--u) * 32)",
+            ...fadeInStyle(phonesVisible),
+          }}
         >
           <PhoneMockDesktop
             src={SCREEN_IMAGES.challenges.src}
             alt={SCREEN_IMAGES.challenges.alt}
             width={460}
-            stagger={0}
+            fadeIn={false}
           />
           <PhoneMockDesktop
             src={SCREEN_IMAGES.energyCategory.src}
             alt={SCREEN_IMAGES.energyCategory.alt}
             width={460}
-            stagger={1}
+            fadeIn={false}
           />
         </div>
       </div>
@@ -546,6 +561,15 @@ function ChallengePagesRowDesktop() {
     { label: "Challenge Detail Page", ...SCREEN_IMAGES.challengeDetail },
     { label: "Habit Stack Page", ...SCREEN_IMAGES.habitStack },
   ] as const;
+  // Row-level IntersectionObserver so all 3 labeled phones fade in
+  // together as one motion. Without this, per-phone fades with
+  // 80ms-per-index stagger would create a left-to-right cascade
+  // that reads as 'phones loading one at a time.' Each label+phone
+  // pair sits inside the same outer flex container which carries
+  // the fade-in style. PhoneMockDesktop instances opt out of
+  // self-fading via fadeIn={false}.
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const visible = useFadeInOnScroll(rowRef);
   return (
     <section
       style={{
@@ -560,10 +584,14 @@ function ChallengePagesRowDesktop() {
       }}
     >
       <div
+        ref={rowRef}
         className="flex items-start justify-center"
-        style={{ gap: "calc(var(--u) * 48)" }}
+        style={{
+          gap: "calc(var(--u) * 48)",
+          ...fadeInStyle(visible),
+        }}
       >
-        {phones.map(({ src, alt, label }, i) => (
+        {phones.map(({ src, alt, label }) => (
           <div
             key={src}
             className="flex flex-col items-center"
@@ -591,7 +619,7 @@ function ChallengePagesRowDesktop() {
               // tall, anything wider than ~360u pushes the row
               // taller than the viewport.
               width={350}
-              stagger={i}
+              fadeIn={false}
             />
           </div>
         ))}
@@ -901,12 +929,14 @@ function ComingSoonSection() {
           // Unified closing-placeholder sizing across all three case
           // studies (Wonder / Noom / Neuday): 40u serif, -2% tracking,
           // 1.25 line-height. Reads as a confident body-copy paragraph
-          // rather than a display headline.
+          // rather than a display headline. No maxWidth — the line
+          // is short enough to fit inside the section's 96u side-pad
+          // on one line, so let it breathe full-width instead of
+          // forcing an awkward two-line wrap.
           fontSize: "calc(var(--u) * 40)",
           letterSpacing: "calc(var(--u) * -0.8)",
           lineHeight: 1.25,
           margin: 0,
-          maxWidth: "calc(var(--u) * 1200)",
         }}
       >
         We&rsquo;re in the middle of a rebrand, so our app is getting a
