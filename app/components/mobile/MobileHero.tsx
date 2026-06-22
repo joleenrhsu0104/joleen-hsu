@@ -27,7 +27,13 @@ import MobileTopNav from "./MobileTopNav";
  * budget covers ~263u of content above 50vh (year + 8px gap + half
  * image) plus matching 263u below, with breathing room for the header.
  */
-const TRANSITION_MS = 900;
+// Crossfade duration is tuned to overlap the browser's scroll-snap
+// animation (~400-500ms on iOS Safari) so the visual transition
+// completes around when the snap settles. Previously 900ms — almost
+// 2× longer than the snap — which made the image change trail the
+// physical "click" of landing on the next project. 500ms reads as
+// one fluid motion: swipe → snap → crossfade-complete.
+const TRANSITION_MS = 500;
 // Image card geometry, in mobile design units (canvas is 390 wide).
 // Width 320u centered → 35u of breathing room on each side.
 // Height 448u keeps the natural hero PNG portrait aspect (~0.71).
@@ -65,7 +71,7 @@ const NAME_LINE_HEIGHT = 0.7;
 // pale rebrand mosaic) and therefore needs a brightness pass so the
 // cream-white project name reads with stronger contrast on top.
 const DARKEN_NAMES = new Set(["Blue Apron", "Noom"]);
-const DARKEN_BRIGHTNESS = 0.75;
+const DARKEN_BRIGHTNESS = 0.85;
 
 export default function MobileHero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -75,7 +81,15 @@ export default function MobileHero() {
     const el = containerRef.current;
     if (!el) return;
 
-    const handleScroll = () => {
+    // rAF-throttle the scroll handler. Without this, setActiveIndex
+    // fires on every scroll event (60+ times/sec during a swipe), and
+    // even though React no-ops when the value is unchanged, the
+    // per-event computation + re-render check still adds frame work
+    // during the snap animation. Matching the 2nd useEffect's rAF
+    // pattern below keeps both scroll listeners at frame cadence.
+    let raf = 0;
+    const update = () => {
+      raf = 0;
       const rect = el.getBoundingClientRect();
       const total = el.offsetHeight - window.innerHeight;
       const scrolled = -rect.top;
@@ -86,10 +100,16 @@ export default function MobileHero() {
       );
       setActiveIndex(idx);
     };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
 
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   // Enable CSS scroll-snap on the page-level scroller while the user is
@@ -136,8 +156,11 @@ export default function MobileHero() {
       ref={containerRef}
       className="relative"
       style={{
-        backgroundColor: HERO_PROJECTS[activeIndex].bg,
-        transition: "background-color 700ms ease-out",
+        // Shared dark fallback under the blurred hero image — was
+        // previously a per-project color on HERO_PROJECTS[i].bg, but
+        // the blur+gradient now fully covers the section so the
+        // per-project tint was effectively unused.
+        backgroundColor: "var(--color-near-black)",
         height: "400vh",
       }}
       aria-label="Featured work"
@@ -215,6 +238,12 @@ export default function MobileHero() {
                   ? `blur(36px) saturate(1.15) brightness(${DARKEN_BRIGHTNESS})`
                   : "blur(36px) saturate(1.15)",
                 transition: `opacity ${TRANSITION_MS}ms cubic-bezier(0.65, 0, 0.35, 1)`,
+                // Pre-promote to GPU compositor layer so the opacity
+                // crossfade doesn't trigger a repaint of the blurred
+                // image bytes on every transition frame. Combined with
+                // the 500ms duration above, makes the crossfade feel
+                // synced to the snap motion instead of trailing it.
+                willChange: "opacity",
               }}
             />
           ))}
@@ -296,6 +325,10 @@ export default function MobileHero() {
                     ? "inset(0 0 0 0)"
                     : "inset(0 50% 0 50%)",
                 transition: `clip-path ${TRANSITION_MS}ms cubic-bezier(0.77, 0, 0.175, 1)`,
+                // Foreground card layer — promote to GPU so the
+                // clip-path reveal animates smoothly alongside the
+                // backdrop opacity crossfade.
+                willChange: "clip-path",
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
