@@ -421,7 +421,7 @@ function HabitLoopsSectionDesktop() {
         // chapter for the challenges product story. The blue band
         // below picks up at the phone bottoms and hands off to the
         // labeled-pages section.
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "var(--color-white)",
         color: INK,
         paddingTop: "calc(var(--u) * 120)",
         paddingBottom: "calc(var(--u) * 120)",
@@ -898,17 +898,19 @@ function ComingSoonSection() {
       <p
         className="font-serif text-center"
         style={{
-          fontSize: "calc(var(--u) * 60)",
-          letterSpacing: "calc(var(--u) * -1.2)",
-          lineHeight: 1.2,
+          // Unified closing-placeholder sizing across all three case
+          // studies (Wonder / Noom / Neuday): 40u serif, -2% tracking,
+          // 1.25 line-height. Reads as a confident body-copy paragraph
+          // rather than a display headline.
+          fontSize: "calc(var(--u) * 40)",
+          letterSpacing: "calc(var(--u) * -0.8)",
+          lineHeight: 1.25,
           margin: 0,
-          maxWidth: "calc(var(--u) * 1400)",
+          maxWidth: "calc(var(--u) * 1200)",
         }}
       >
         We&rsquo;re in the middle of a rebrand, so our app is getting a
-        facelift.
-        <br />
-        More work details coming soon.
+        facelift. More work details coming soon.
       </p>
     </section>
   );
@@ -961,7 +963,7 @@ function NoomMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -1074,16 +1076,17 @@ function NoomMobile() {
         <p
           className="font-serif text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 28)",
-            letterSpacing: "calc(var(--u-m) * -0.56)",
+            // Unified closing-placeholder sizing across all three case
+            // studies on mobile: 24u-m serif, -2% tracking,
+            // 1.25 line-height.
+            fontSize: "calc(var(--u-m) * 24)",
+            letterSpacing: "calc(var(--u-m) * -0.48)",
             lineHeight: 1.25,
             margin: 0,
           }}
         >
           We&rsquo;re in the middle of a rebrand, so our app is getting a
-          facelift.
-          <br />
-          More work details coming soon.
+          facelift. More work details coming soon.
         </p>
       </section>
 
@@ -1127,7 +1130,7 @@ function HabitLoopsSectionMobile() {
         position: "relative",
         // Pure white (#FFFFFF) — matches the desktop variant; reads
         // as a distinct chapter from the cream surrounding sections.
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "var(--color-white)",
         color: INK,
         paddingTop: "calc(var(--u-m) * 64)",
         // No paddingBottom — the blue band already covers the bottom
@@ -1175,7 +1178,7 @@ function HabitLoopsSectionMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >

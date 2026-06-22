@@ -29,7 +29,7 @@ export default function MobileWhatIDoSection() {
           paddingLeft: "calc(var(--u-m) * 16)",
           fontSize: "calc(var(--u-m) * 14)",
           letterSpacing: "calc(var(--u-m) * 1.4)",
-          opacity: 0.75,
+          opacity: 0.7,
           marginBottom: "calc(var(--u-m) * 32)",
         }}
       >

@@ -12,6 +12,12 @@
 // the full-res file (the .webp at `image`). Used by heroSrcSet to
 // emit the correct `w` descriptor in srcset strings so browsers can
 // pick the smallest variant that satisfies their viewport × DPR.
+//
+// Note: per-project `bg` color fields were removed when the cycling
+// hero adopted the image-blur + dark gradient overlay. The blurred
+// hero image now fully covers the section background, so the
+// section just uses a single shared `--color-near-black` fallback
+// for the brief moment before the image renders.
 export const HERO_PROJECTS = [
   {
     name: "Wonder",
@@ -21,7 +27,6 @@ export const HERO_PROJECTS = [
     image: "/images/hero-wonder.webp",
     imageWidth: 1459,
     imageHeight: 2044,
-    bg: "#260303", // dark burgundy
     href: "/work/wonder",
   },
   {
@@ -32,7 +37,6 @@ export const HERO_PROJECTS = [
     image: "/images/hero-blue-apron.webp",
     imageWidth: 1459,
     imageHeight: 2044,
-    bg: "#0f1b3c", // dark navy
     href: "/work/blue-apron",
   },
   {
@@ -43,7 +47,6 @@ export const HERO_PROJECTS = [
     image: "/images/hero-noom.webp",
     imageWidth: 1459,
     imageHeight: 2044,
-    bg: "#272a15", // dark olive
     href: "/work/noom",
   },
   {
@@ -54,7 +57,6 @@ export const HERO_PROJECTS = [
     image: "/images/neuday/hero-neuday.webp",
     imageWidth: 1605,
     imageHeight: 2190,
-    bg: "#030303", // near-black (matches --color-near-black token)
     href: "/work/neuday",
   },
 ] as const;
@@ -95,9 +97,6 @@ export function heroSrcSet(project: {
  *   (e.g., 800w instead of 1400w on 1x monitors) without quality loss.
  */
 export const HERO_SIZES = "(max-width: 768px) 100vw, 600px";
-
-// About section
-export const FLOWER_IMAGE = "/images/flower.png";
 
 // Contact page — six scattered images, positioned per Figma (1920×1096 frame).
 // Each card flips to reveal its caption on hover (desktop) or tap (mobile).
@@ -142,8 +141,7 @@ export const ETHOS_IMAGES = [
 
 // Signature / closing
 export const BW_PORTRAIT = "/images/portrait-bw.webp";
-export const HEADLINE_TEXTURE = "/images/headline-texture.jpg";
-export const LOGO_HEADLINE = "/images/logo-headline.png";
+export const HEADLINE_TEXTURE = "/images/headline-texture.webp";
 
 // Job history (right column on cream section)
 export const JOB_HISTORY = [

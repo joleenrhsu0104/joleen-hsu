@@ -259,8 +259,9 @@ function RubinStatement({ fillProgress }: { fillProgress: number }) {
         progress={bylineProgress}
         className="font-sans text-center"
         style={{
-          fontSize: "calc(var(--u-m) * 13)",
-          letterSpacing: "calc(var(--u-m) * -0.26)",
+          // Standard caption tier: 12u-m + -2% tracking.
+          fontSize: "calc(var(--u-m) * 12)",
+          letterSpacing: "calc(var(--u-m) * -0.24)",
           lineHeight: 1.4,
           margin: 0,
         }}

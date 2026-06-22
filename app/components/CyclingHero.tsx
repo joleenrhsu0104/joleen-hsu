@@ -110,11 +110,13 @@ export default function CyclingHero() {
       ref={containerRef}
       className="relative h-screen overflow-hidden"
       style={{
-        // Active project's bg color — used as a fallback under the
-        // blurred ambient image layer (visible briefly during initial
-        // image load and as a subtle base tint).
-        backgroundColor: HERO_PROJECTS[activeIndex].bg,
-        transition: `background-color ${TRANSITION_MS}ms ease-out`,
+        // Shared dark fallback under the blurred ambient image
+        // layer — visible only during the brief moment before each
+        // hero image renders. Was previously a per-project color
+        // (burgundy/navy/olive/near-black) on HERO_PROJECTS[i].bg,
+        // but the blur+gradient now fully covers the section so the
+        // per-project tint was effectively unused.
+        backgroundColor: "var(--color-near-black)",
       }}
       aria-label="Featured work"
     >

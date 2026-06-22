@@ -1,4 +1,4 @@
-import { FLOWER_IMAGE, JOB_HISTORY } from "@/app/lib/assets";
+import { JOB_HISTORY } from "@/app/lib/assets";
 import ScrollFillText from "./ScrollFillText";
 
 /**
@@ -48,29 +48,6 @@ export default function AboutSection() {
           Joleen is a Staff Product Designer building consumer products in health
           & wellness.
         </ScrollFillText>
-
-        {/* Gradient-masked flower */}
-        <div
-          className="absolute overflow-hidden"
-          style={{
-            left: 0,
-            top: "calc(var(--u) * 331)",
-            width: "calc(var(--u) * 609)",
-            height: "calc(var(--u) * 695)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 60% 60% at 50% 45%, black 25%, transparent 90%)",
-            maskImage:
-              "radial-gradient(ellipse 60% 60% at 50% 45%, black 25%, transparent 90%)",
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={FLOWER_IMAGE}
-            alt=""
-            aria-hidden="true"
-            className="size-full object-cover"
-          />
-        </div>
 
         {/* Job history — inherits the scroll-driven text color */}
         <ol

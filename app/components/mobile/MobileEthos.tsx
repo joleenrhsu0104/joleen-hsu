@@ -60,8 +60,11 @@ export default function MobileEthos() {
         <p
           className="font-mono text-white text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 13)",
-            letterSpacing: "calc(var(--u-m) * -0.65)",
+            // Standard caption tier: 12u-m + -2% tracking.
+            // (Was 13u-m with -5% tracking — an orphan from before
+            // the design-system −2% sweep.)
+            fontSize: "calc(var(--u-m) * 12)",
+            letterSpacing: "calc(var(--u-m) * -0.24)",
             lineHeight: 1.1,
             margin: 0,
             width: "100%",

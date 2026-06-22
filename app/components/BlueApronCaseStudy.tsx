@@ -287,7 +287,7 @@ function FunnelSection() {
             color: INK,
             fontSize: "calc(var(--u) * 60)",
             letterSpacing: "calc(var(--u) * -1.2)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
             marginBottom: "calc(var(--u) * 28)",
           }}
@@ -361,7 +361,7 @@ function FunnelSection() {
                       ? {}
                       : {
                           border: "1px solid #E5E7EB",
-                          borderRadius: "16px",
+                          borderRadius: "calc(var(--u) * 16)",
                         }),
                   }}
                 />
@@ -408,7 +408,7 @@ function AlaCarteIntro() {
           style={{
             fontSize: "calc(var(--u) * 60)",
             letterSpacing: "calc(var(--u) * -1.2)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -561,7 +561,7 @@ function PdpCardsRow() {
                 // middle slice of the long image with straight cuts.
                 // Rounding the window itself gives all four corners
                 // the same shape regardless of scroll position.
-                borderRadius: "2vh",
+                borderRadius: "calc(var(--u) * 24)",
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -707,7 +707,7 @@ function SubscriptionIntro() {
           style={{
             fontSize: "calc(var(--u) * 60)",
             letterSpacing: "calc(var(--u) * -1.2)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -781,7 +781,7 @@ function BlueApronClosingSection() {
     <section
       className="relative"
       style={{
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "var(--color-white)",
         paddingTop: "calc(var(--u) * 0)",
         paddingBottom: "calc(var(--u) * 0)",
       }}
@@ -821,26 +821,18 @@ function BlueApronClosingSection() {
               style={{
                 fontSize: "calc(var(--u) * 60)",
                 letterSpacing: "calc(var(--u) * -1.2)",
-                lineHeight: 1.15,
+                // Closing-card headline gets the slightly looser 1.25
+                // line-height (vs other 60u headings at 1.1) since this
+                // sits inside a paragraph-style container and benefits
+                // from more breathing room. Matches the closing-text
+                // placeholder convention.
+                lineHeight: 1.25,
                 margin: 0,
               }}
             >
               Blue Apron has delivered over 600 million meals, and helped
               millions of people discover the <em>joy</em> of cooking.
             </h2>
-            <p
-              className="font-sans"
-              style={{
-                fontSize: "calc(var(--u) * 24)",
-                letterSpacing: "calc(var(--u) * -0.72)",
-                lineHeight: 1.4,
-                margin: 0,
-                marginTop: "calc(var(--u) * 40)",
-                opacity: 0.85,
-              }}
-            >
-              Additional work available upon request.
-            </p>
           </div>
         </div>
       </div>
@@ -1118,8 +1110,8 @@ function NarrativeSection({
       <h2
         className="font-serif"
         style={{
-          fontSize: "calc(var(--u) * 68)",
-          letterSpacing: "calc(var(--u) * -1.36)",
+          fontSize: "calc(var(--u) * 60)",
+          letterSpacing: "calc(var(--u) * -1.2)",
           lineHeight: 1.1,
           margin: 0,
         }}
@@ -1317,8 +1309,8 @@ function PostPurchaseSection() {
           <h2
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 68)",
-              letterSpacing: "calc(var(--u) * -1.36)",
+              fontSize: "calc(var(--u) * 60)",
+              letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
             }}
@@ -1702,8 +1694,8 @@ function OtherCaseStudies() {
         className="font-serif text-center"
         style={{
           color: INK,
-          fontSize: "calc(var(--u) * 68)",
-          letterSpacing: "calc(var(--u) * -1.36)",
+          fontSize: "calc(var(--u) * 60)",
+          letterSpacing: "calc(var(--u) * -1.2)",
           lineHeight: 1.1,
           margin: 0,
           marginBottom: "calc(var(--u) * 64)",
@@ -1886,7 +1878,11 @@ function MobilePdpScrollPin({
             paddingRight: "calc(var(--u-m) * 16)",
             paddingTop: "calc(var(--u-m) * 12)",
             paddingBottom: "calc(var(--u-m) * 12)",
-            gap: "calc(var(--u-m) * 8)",
+            // Caption → mock gap unified at 12u-m across all three
+            // case studies (Wonder, Blue Apron, Noom) so the labeled-
+            // mock rhythm reads the same regardless of which case
+            // study you're in.
+            gap: "calc(var(--u-m) * 12)",
           }}
         >
           {/* Label sits ABOVE the mock, centered to it. */}
@@ -1895,7 +1891,7 @@ function MobilePdpScrollPin({
             style={{
               fontSize: "calc(var(--u-m) * 12)",
               letterSpacing: "calc(var(--u-m) * -0.36)",
-              opacity: 0.75,
+              opacity: 0.7,
               flexShrink: 0,
               width: "calc(var(--u-m) * 240)",
             }}
@@ -2010,7 +2006,7 @@ function BlueApronMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -2077,8 +2073,11 @@ function BlueApronMobile() {
             <span
               className="font-mono uppercase"
               style={{
-                fontSize: "calc(var(--u-m) * 11)",
-                letterSpacing: "calc(var(--u-m) * -0.55)",
+                // Standard caption tier: 12u-m + -2% tracking.
+                // (Was 11u-m with -5% tracking — an orphan from before
+                // the design-system −2% sweep.)
+                fontSize: "calc(var(--u-m) * 12)",
+                letterSpacing: "calc(var(--u-m) * -0.24)",
                 opacity: 0.7,
               }}
             >
@@ -2141,7 +2140,7 @@ function BlueApronMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -2219,7 +2218,7 @@ function BlueApronMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
             paddingLeft: "calc(var(--u-m) * 16)",
             paddingRight: "calc(var(--u-m) * 16)",
@@ -2287,7 +2286,7 @@ function BlueApronMobile() {
       <section
         className="flex flex-col"
         style={{
-          backgroundColor: "#FFFFFF",
+          backgroundColor: "var(--color-white)",
           color: INK,
           // No horizontal padding on the section itself — the food
           // image sits flush at the top edge-to-edge. The text block
@@ -2324,25 +2323,17 @@ function BlueApronMobile() {
             style={{
               fontSize: "calc(var(--u-m) * 32)",
               letterSpacing: "calc(var(--u-m) * -0.64)",
-              lineHeight: 1.15,
+              // Closing-card headline on mobile gets the slightly looser
+              // 1.25 line-height (vs other 32u-m headings at 1.1) since
+              // this sits inside a paragraph-style container and benefits
+              // from more breathing room. Matches desktop closing card.
+              lineHeight: 1.25,
               margin: 0,
             }}
           >
             Blue Apron has delivered over 600 million meals, and helped
             millions of people discover the <em>joy</em> of cooking.
           </h2>
-          <p
-            className="font-sans"
-            style={{
-              fontSize: "calc(var(--u-m) * 14)",
-              letterSpacing: "calc(var(--u-m) * -0.42)",
-              lineHeight: 1.4,
-              margin: 0,
-              opacity: 0.85,
-            }}
-          >
-            Additional work available upon request.
-          </p>
         </div>
       </section>
 

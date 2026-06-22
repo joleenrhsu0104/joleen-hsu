@@ -451,8 +451,8 @@ function NarrativeSection({
       <h2
         className="font-serif"
         style={{
-          fontSize: "calc(var(--u) * 68)",
-          letterSpacing: "calc(var(--u) * -1.36)",
+          fontSize: "calc(var(--u) * 60)",
+          letterSpacing: "calc(var(--u) * -1.2)",
           lineHeight: 1.1,
           margin: 0,
         }}
@@ -650,8 +650,8 @@ function PostPurchaseSection() {
           <h2
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 68)",
-              letterSpacing: "calc(var(--u) * -1.36)",
+              fontSize: "calc(var(--u) * 60)",
+              letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
             }}
@@ -1076,8 +1076,8 @@ function MobileWebSection() {
           <h2
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 68)",
-              letterSpacing: "calc(var(--u) * -1.36)",
+              fontSize: "calc(var(--u) * 60)",
+              letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
               marginBottom: "calc(var(--u) * 32)",
@@ -1248,15 +1248,18 @@ function ClosingSection() {
             style={{
               color: INK,
               margin: 0,
-              fontSize: "calc(var(--u) * 36)",
-              letterSpacing: "calc(var(--u) * -0.72)",
+              // Unified closing-placeholder sizing across all three
+              // case studies (Wonder / Noom / Neuday): 40u serif,
+              // -2% tracking, 1.25 line-height. Reads as a confident
+              // body-copy paragraph rather than a display headline.
+              fontSize: "calc(var(--u) * 40)",
+              letterSpacing: "calc(var(--u) * -0.8)",
               lineHeight: 1.25,
             }}
           >
             From 2021&ndash;2024, I was 1 of 2 product designers, and
-            touched almost every screen of the entire product suite.
-            <br />
-            To see more of my work, check out{" "}
+            touched almost every screen of the entire product suite. To
+            see more of my work, check out{" "}
             <a
               href="https://wonder.com"
               target="_blank"
@@ -1294,8 +1297,8 @@ function OtherCaseStudies() {
         className="font-serif text-center"
         style={{
           color: INK,
-          fontSize: "calc(var(--u) * 68)",
-          letterSpacing: "calc(var(--u) * -1.36)",
+          fontSize: "calc(var(--u) * 60)",
+          letterSpacing: "calc(var(--u) * -1.2)",
           lineHeight: 1.1,
           margin: 0,
           marginBottom: "calc(var(--u) * 64)",
@@ -1452,7 +1455,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -1522,8 +1525,11 @@ function WonderMobile() {
             <span
               className="font-mono uppercase"
               style={{
-                fontSize: "calc(var(--u-m) * 11)",
-                letterSpacing: "calc(var(--u-m) * -0.55)",
+                // Standard caption tier: 12u-m + -2% tracking.
+                // (Was 11u-m with -5% tracking — an orphan from before
+                // the design-system −2% sweep.)
+                fontSize: "calc(var(--u-m) * 12)",
+                letterSpacing: "calc(var(--u-m) * -0.24)",
                 opacity: 0.7,
               }}
             >
@@ -1598,7 +1604,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -1692,7 +1698,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -1712,17 +1718,33 @@ function WonderMobile() {
           {"Customers frequently entered the wrong address or omitted components of their address and did not catch the issue in their order confirmation, which resulted in a slew of operational issues and late orders.\n\nI redesigned the post-purchase experience to reduce ambiguity at every order stage. Customer support inbounds dropped by nearly half, from 13% to 6%."}
         </p>
 
-        {/* ORIGINAL designs — 2×2 grid (first two on top, second two on
-            bottom) with an "Original designs" caption underneath,
-            mirroring the desktop's before/after composition but reflowed
-            for the narrower mobile viewport. */}
+        {/* ORIGINAL designs — caption ABOVE a 2×2 grid (first two on
+            top, second two on bottom), mirroring the desktop's
+            before/after composition but reflowed for the narrower
+            mobile viewport. */}
         <div
           className="flex flex-col"
           style={{
             marginTop: "calc(var(--u-m) * 16)",
-            gap: "calc(var(--u-m) * 8)",
+            // Caption → mock gap unified at 12u-m across all three
+            // case studies (Wonder, Blue Apron, Noom) so the labeled-
+            // mock rhythm reads the same regardless of which case
+            // study you're in.
+            gap: "calc(var(--u-m) * 12)",
           }}
         >
+          <span
+            className="font-sans"
+            style={{
+              fontSize: "calc(var(--u-m) * 12)",
+              letterSpacing: "calc(var(--u-m) * -0.36)",
+              opacity: 0.7,
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
+            Original designs
+          </span>
           <div
             className="grid"
             style={{
@@ -1752,18 +1774,6 @@ function WonderMobile() {
               </div>
             ))}
           </div>
-          <span
-            className="font-sans"
-            style={{
-              fontSize: "calc(var(--u-m) * 12)",
-              letterSpacing: "calc(var(--u-m) * -0.36)",
-              opacity: 0.7,
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            Original designs
-          </span>
         </div>
 
         {/* REDESIGNED — 4 animated mockups in a pinned horizontal
@@ -1832,7 +1842,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
             paddingLeft: "calc(var(--u-m) * 16)",
             paddingRight: "calc(var(--u-m) * 16)",
@@ -1913,7 +1923,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -1970,7 +1980,7 @@ function WonderMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -2047,16 +2057,18 @@ function WonderMobile() {
         <p
           className="font-serif text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 20)",
-            letterSpacing: "calc(var(--u-m) * -0.4)",
-            lineHeight: 1.4,
+            // Unified closing-placeholder sizing across all three
+            // case studies on mobile: 24u-m serif, -2% tracking,
+            // 1.25 line-height.
+            fontSize: "calc(var(--u-m) * 24)",
+            letterSpacing: "calc(var(--u-m) * -0.48)",
+            lineHeight: 1.25,
             margin: 0,
           }}
         >
           From 2021&ndash;2024, I was 1 of 2 product designers, and
-          touched almost every screen of the entire product suite.
-          <br />
-          To see more of my work, check out{" "}
+          touched almost every screen of the entire product suite. To
+          see more of my work, check out{" "}
           <a
             href="https://wonder.com"
             className="underline"

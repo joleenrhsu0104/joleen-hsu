@@ -334,8 +334,8 @@ function AppScreensRowDesktop() {
         backgroundColor: CREAM,
         paddingTop: "calc(var(--u) * 24)",
         paddingBottom: "calc(var(--u) * 92)",
-        paddingLeft: "calc(var(--u) * 63)",
-        paddingRight: "calc(var(--u) * 63)",
+        paddingLeft: "calc(var(--u) * 64)",
+        paddingRight: "calc(var(--u) * 64)",
       }}
     >
       <div
@@ -397,8 +397,8 @@ function BrandBookGridDesktop() {
         // hands off to BrowserMockupSection below.
         paddingTop: "calc(var(--u) * 150)",
         paddingBottom: "calc(var(--u) * 150)",
-        paddingLeft: "calc(var(--u) * 65)",
-        paddingRight: "calc(var(--u) * 65)",
+        paddingLeft: "calc(var(--u) * 64)",
+        paddingRight: "calc(var(--u) * 64)",
       }}
     >
       <div
@@ -519,6 +519,8 @@ function AdditionalWorkSection() {
         ref={ref}
         className="font-serif text-center"
         style={{
+          // Matches the other case-study closing placeholders
+          // (Wonder / Noom): 40u serif, -2% tracking, 1.25 line-height.
           fontSize: "calc(var(--u) * 40)",
           letterSpacing: "calc(var(--u) * -0.8)",
           lineHeight: 1.25,
@@ -581,7 +583,7 @@ function NeudayMobile() {
           style={{
             fontSize: "calc(var(--u-m) * 32)",
             letterSpacing: "calc(var(--u-m) * -0.64)",
-            lineHeight: 1.15,
+            lineHeight: 1.1,
             margin: 0,
           }}
         >
@@ -743,6 +745,9 @@ function NeudayMobile() {
         <p
           className="font-serif text-center"
           style={{
+            // Matches the other case-study closing placeholders on
+            // mobile (Wonder / Noom): 24u-m serif, -2% tracking,
+            // 1.25 line-height.
             fontSize: "calc(var(--u-m) * 24)",
             letterSpacing: "calc(var(--u-m) * -0.48)",
             lineHeight: 1.25,

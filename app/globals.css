@@ -11,6 +11,12 @@
   --color-near-black: #030303;
   --color-forest: #071b02;
   --color-neuday-navy: #1F2B36;
+  /* Pure white — used by Noom HabitLoops section bg and BlueApron
+     periwinkle-wrapper white sections. Distinct from --color-cream
+     (which is the warm off-white background of every other section)
+     so the role split stays explicit when a section needs full
+     pure-white contrast against the surrounding cream. */
+  --color-white: #ffffff;
 
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);

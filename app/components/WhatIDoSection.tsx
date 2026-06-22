@@ -152,7 +152,7 @@ export default function WhatIDoSection() {
           paddingLeft: "calc(var(--u) * 96)",
           fontSize: "calc(var(--u) * 18)",
           letterSpacing: "calc(var(--u) * 1.8)",
-          opacity: 0.75,
+          opacity: 0.7,
           zIndex: 1,
         }}
       >
@@ -236,7 +236,7 @@ export default function WhatIDoSection() {
             })`,
             width: `${PREVIEW_W}px`,
             height: `${PREVIEW_H}px`,
-            borderRadius: "24px",
+            borderRadius: "calc(var(--u) * 24)",
             opacity: hovered !== null ? 1 : 0,
             transition:
               "opacity 0.35s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), top 0.45s cubic-bezier(0.2, 0.7, 0.2, 1)",

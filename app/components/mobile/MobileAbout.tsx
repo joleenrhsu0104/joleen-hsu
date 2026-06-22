@@ -1,9 +1,8 @@
-import { FLOWER_IMAGE, JOB_HISTORY } from "@/app/lib/assets";
+import { JOB_HISTORY } from "@/app/lib/assets";
 
 /**
  * MobileAbout — cream band on mobile (Figma 547:1033, y=885..1793).
- * Layout: bio paragraph at top, flower image partially off-screen
- * on the left, job history stacked below.
+ * Layout: bio paragraph at top, job history stacked below.
  */
 export default function MobileAbout() {
   return (
@@ -20,38 +19,15 @@ export default function MobileAbout() {
           left: "calc(var(--u-m) * 16)",
           top: "calc(var(--u-m) * 53)",
           width: "calc(var(--u-m) * 358)",
-          fontSize: "calc(var(--u-m) * 28)",
-          letterSpacing: "calc(var(--u-m) * -0.56)",
-          lineHeight: 1.15,
+          fontSize: "calc(var(--u-m) * 32)",
+          letterSpacing: "calc(var(--u-m) * -0.64)",
+          lineHeight: 1.1,
           color: "var(--color-ink)",
         }}
       >
         Joleen is a Staff Product Designer building consumer products in
         health & wellness.
       </p>
-
-      {/* Flower — radial-mask soft fade, partial off-screen left */}
-      <div
-        className="absolute overflow-hidden"
-        style={{
-          left: "calc(var(--u-m) * -17)",
-          top: "calc(var(--u-m) * 181)",
-          width: "calc(var(--u-m) * 204)",
-          height: "calc(var(--u-m) * 233)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 60% 60% at 50% 45%, black 25%, transparent 90%)",
-          maskImage:
-            "radial-gradient(ellipse 60% 60% at 50% 45%, black 25%, transparent 90%)",
-        }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={FLOWER_IMAGE}
-          alt=""
-          aria-hidden="true"
-          className="size-full object-cover"
-        />
-      </div>
 
       {/* Job history */}
       <ol
@@ -73,8 +49,9 @@ export default function MobileAbout() {
             <h3
               className="font-serif"
               style={{
-                fontSize: "calc(var(--u-m) * 26)",
-                letterSpacing: "calc(var(--u-m) * -0.52)",
+                // Closing-tier sub-heading: 24u-m + -2% tracking.
+                fontSize: "calc(var(--u-m) * 24)",
+                letterSpacing: "calc(var(--u-m) * -0.48)",
                 lineHeight: 1.1,
                 margin: 0,
               }}

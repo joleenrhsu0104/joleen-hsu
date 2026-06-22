@@ -23,19 +23,28 @@ export const colors = {
   // Surfaces
   cream: "#fff9ec",         // page background / light section bg
   creamBright: "#fffdf7",   // brightest hero text
+  white: "#ffffff",         // pure white — Noom HabitLoops section bg
+                            // + BlueApron periwinkle-wrapper white
+                            // sections. Distinct from `cream` (warm
+                            // off-white) so the role split is explicit
+                            // when a section needs full pure-white
+                            // contrast against the surrounding cream.
   ink: "#231f20",           // body / heading text on cream
-  nearBlack: "#030303",     // dark section bg (ethos, hero panels) —
-                            // consolidates prior #0B0B0B and #0f0f0f
-                            // variants into a single near-black token
+  nearBlack: "#030303",     // dark section bg (ethos, hero panels,
+                            // cycling-hero fallback) — consolidates
+                            // prior #0B0B0B and #0f0f0f variants into
+                            // a single near-black token
   forest: "#071b02",        // Work page background — dark forest green
   neudayNavy: "#1F2B36",    // Neuday brand primary navy (brand book)
   periwinkle: "#D2DDFC",    // Blue Apron PDP card surface
 
-  // Hero palette — one per featured project
-  heroWonder: "#260303",    // dark burgundy
-  heroBlueApron: "#0f1b3c", // dark navy
-  heroNoom: "#272a15",      // dark olive
-  heroNeuday: "#030303",    // near-black (was #0f0f0f, consolidated)
+  // Note: the previous `heroWonder` / `heroBlueApron` / `heroNoom` /
+  // `heroNeuday` palette has been removed. They were per-project
+  // backgroundColor fallbacks on the cycling hero panel
+  // (HERO_PROJECTS[i].bg in assets.ts), but the image+blur+gradient
+  // treatment now fully covers the section bg, making the per-project
+  // tints redundant. CyclingHero + MobileHero now use the shared
+  // `nearBlack` token as a single dark fallback.
 } as const;
 
 export type ColorToken = keyof typeof colors;

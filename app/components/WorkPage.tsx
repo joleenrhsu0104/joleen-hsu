@@ -578,8 +578,8 @@ function ProjectCardMobile({ project }: { project: Project }) {
         <span
           className="font-serif flex-1 whitespace-nowrap"
           style={{
-            fontSize: "calc(var(--u-m) * 28)",
-            letterSpacing: "calc(var(--u-m) * -0.56)",
+            fontSize: "calc(var(--u-m) * 32)",
+            letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.1,
           }}
         >

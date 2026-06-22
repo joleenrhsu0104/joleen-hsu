@@ -12,17 +12,14 @@ Live tokens are in `app/lib/tokens.ts`. CSS variables live in `app/globals.css`.
 | ------------------ | --------- | ------------------------------------------------------- |
 | `cream`            | `#fff9ec` | Page background; primary light section background       |
 | `creamBright`      | `#fffdf7` | Largest white type (hero project name, wordmark)        |
+| `white`            | `#ffffff` | Pure white — Noom HabitLoops + BlueApron periwinkle-wrapper sections (distinct from `cream`) |
 | `ink`              | `#231f20` | Body & heading text on cream surfaces                   |
-| `nearBlack`        | `#030303` | Ethos / Work / Contact backgrounds, case-study hero panels |
+| `nearBlack`        | `#030303` | Ethos / Work / Contact backgrounds, case-study hero panels, cycling-hero fallback |
 | `forest`           | `#071b02` | Dark forest green (reserved — currently no consumer)    |
 | `neudayNavy`       | `#1F2B36` | Neuday brand primary navy (brand book)                  |
 | `periwinkle`       | `#D2DDFC` | Blue Apron PDP card surface                             |
-| `heroWonder`       | `#260303` | Hero panel — Wonder (burgundy)                          |
-| `heroBlueApron`    | `#0f1b3c` | Hero panel — Blue Apron (navy)                          |
-| `heroNoom`         | `#272a15` | Hero panel — Noom (olive)                               |
-| `heroNeuday`       | `#030303` | Hero panel — Neuday (near-black, same value as `nearBlack`) |
 
-The four `hero*` palettes are paired 1:1 with featured projects in `app/lib/assets.ts` (`HERO_PROJECTS[i].bg`). If a new project gets added, its hex goes there, not as a new top-level color token.
+**On hero project colors.** Previously this table had a `hero*` palette (one color per featured project) paired with `HERO_PROJECTS[i].bg` in `assets.ts`. Both have been removed — the cycling hero's image+blur+gradient treatment now fully covers the section background, so the per-project tints were redundant. CyclingHero + MobileHero now use the shared `nearBlack` token as their dark fallback during image load. Case-study-internal brand colors (e.g., `TASTE_GREEN`, `WONDER_YELLOW`, `NOOM_BLUE`) remain scoped at each case-study component file because they're tied to that case study's specific in-page section backgrounds, not the home-page hero.
 
 ### Ink RGB tuple
 
@@ -108,6 +105,21 @@ Twelve `lineHeight: 1.55` and one `lineHeight: 1.45` in body paragraphs across t
 ### Caption opacity normalized to 0.7
 
 Three "Original designs" captions sat at `opacity: 0.6` while every other dimmed caption (MetaRow eyebrows, etc.) uses `0.7`. Bumped to `0.7` to match the dimmed-text ladder of `0.7 / 0.75 / 0.85`.
+
+### Third-pass cleanup (case-study unification + role-distinct sizes)
+
+A later sweep across the four case studies tightened typography and surfaced a clean role-based ramp:
+
+- **Case-study `<h2>` section heading → unified at 60u desktop.** Previously split 60u (Noom, Neuday, parts of BlueApron) vs 68u (Wonder NarrativeSection, "Other case studies", parts of BlueApron). All in-section h2s, intro taglines, and "Other case studies" headings now use 60u serif with −2% tracking and 1.1 line-height. Display moments outside the case-study chrome (AboutSentences scroll-jacked statements) stay at 68u — they're hero-tier editorial.
+- **Closing-placeholder paragraphs → unified at 40u / 24u-m.** "From 2021…", "We're in the middle of a rebrand…", "Additional work available upon request" all share the same scale across Wonder / Noom / Neuday closing surfaces. Reads as a confident body-copy paragraph rather than a display headline. Blue Apron's `<h2>` closing headline ("Blue Apron has delivered…") stays at 60u because it IS a headline, not a placeholder.
+- **Mobile heading → 32u-m everywhere.** Project-card label on WorkPage mobile bumped from 28u-m → 32u-m. 32u-m is now the unambiguous mobile section-heading size (intro taglines, in-section h2s, scroll-jacked statements, service titles).
+- **Mobile orphan sizes consolidated.** 11u-m MetaRow labels → 12u-m, 13u-m Rick Rubin byline → 12u-m, 26u-m job-history → 24u-m. Two latent letter-spacing holdouts at −5% were also bumped to −2% as part of these edits.
+- **Line-height ramp tightened to a 4-tier system.** All `lineHeight: 1.15` (18 sites) and `1.5` orphans (5 sites — but those 5 are defensibly correct for 14u-m small captions, so they stayed) audited. Final ramp: `1.0` small chrome, `1.1` headlines + display, `1.25` mid-display + closing placeholders (incl. BlueApron's two closing-card headlines as a surgical exception), `1.4` body, `1.5` 14u-m captions only.
+- **Opacity 0.75 orphan → 0.7.** Three eyebrow captions ("WHAT I DO" etc.) folded into the standard caption opacity. Remaining `0.85` opacity is a *distinct role* (intro-paragraph readability) — leave it.
+- **`--color-white` token added.** Four hardcoded `"#FFFFFF"` backgroundColor uses (Noom HabitLoops, BlueApron periwinkle-wrapper white sections) now go through the token system so the "all colors via tokens" invariant is intact.
+- **`HERO_PROJECTS[i].bg` removed.** See the "On hero project colors" note above. Per-project burgundy/navy/olive/near-black tints are gone; cycling hero uses shared `nearBlack` fallback.
+- **`FLOWER_IMAGE` + flower references removed.** The asset file no longer exists on disk; the export and its two `<img>` consumers in `AboutSection` + `MobileAbout` are now deleted.
+- **Border-radius forced into the fluid scale.** Three sites used raw `"16px"` / `"24px"` / `"2vh"` instead of `calc(var(--u) * N)` and rendered the same physical size regardless of viewport. All converted to the `var(--u)` scaling so they breathe with the viewport like the rest of the design.
 
 ---
 

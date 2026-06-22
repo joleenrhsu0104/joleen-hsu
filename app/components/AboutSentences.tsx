@@ -262,7 +262,7 @@ function StatementText({
       style={{
         fontSize: "calc(var(--u) * 68)",
         letterSpacing: "calc(var(--u) * -1.36)",
-        lineHeight: 1.15,
+        lineHeight: 1.1,
         margin: 0,
       }}
     >
@@ -298,7 +298,7 @@ function RubinStatement({ fillProgress }: { fillProgress: number }) {
         style={{
           fontSize: "calc(var(--u) * 68)",
           letterSpacing: "calc(var(--u) * -1.36)",
-          lineHeight: 1.15,
+          lineHeight: 1.1,
           margin: 0,
         }}
       >
