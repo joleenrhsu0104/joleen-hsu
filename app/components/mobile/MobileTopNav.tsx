@@ -84,7 +84,7 @@ export default function MobileTopNav({
             letterSpacing: "calc(var(--u-m) * -0.72)",
           }}
         >
-          joleen
+          joleen <span className="italic">hsu</span>
         </Link>
         <button
           type="button"

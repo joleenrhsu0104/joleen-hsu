@@ -177,7 +177,7 @@ export default function CyclingHero() {
               letterSpacing: "calc(var(--u) * -0.5)",
             }}
           >
-            joleen
+            joleen <span className="italic">hsu</span>
           </Link>
           <div
             className="flex items-center h-full font-mono"
