@@ -6,6 +6,8 @@ import { useIsMobile } from "@/app/hooks/useIsMobile";
 import { ETHOS_IMAGES } from "@/app/lib/assets";
 import MobileTopNav from "./mobile/MobileTopNav";
 import ArrowUpRight from "./ArrowUpRight";
+import Logo from "./Logo";
+import ScrollNavLink from "./ScrollNavLink";
 
 /**
  * ContactPage
@@ -57,27 +59,23 @@ function ContactTopNav({ variant }: { variant: "desktop" | "mobile" }) {
       <Link
         href="/"
         aria-label="Home"
-        className="flex items-center h-full font-serif text-white whitespace-nowrap"
-        style={{
-          fontSize: `calc(${u} * ${isMobile ? 28 : 40})`,
-          lineHeight: 1,
-          letterSpacing: `calc(${u} * -0.5)`,
-        }}
+        className="flex items-center h-full text-white"
       >
-        joleen <span className="italic">hsu</span>
+        <Logo height={`calc(${u} * ${isMobile ? 20 : 28})`} />
       </Link>
       <div
-        className="flex items-center h-full font-mono"
+        className="flex items-center h-full font-sans"
         style={{
-          gap: `calc(${u} * ${isMobile ? 24 : 39})`,
-          fontSize: `calc(${u} * ${isMobile ? 14 : 20})`,
-          letterSpacing: `calc(${u} * -1)`,
+          gap: `calc(${u} * ${isMobile ? 24 : 48})`,
+          fontSize: `max(${isMobile ? "12px" : "14px"}, calc(${u} * ${isMobile ? 14 : 20}))`,
+          fontWeight: 500,
+          letterSpacing: `calc(${u} * ${isMobile ? -0.28 : -0.4})`,
           lineHeight: 1,
         }}
       >
-        <Link href="/work" className="hover:opacity-70 transition-opacity">
-          WORK
-        </Link>
+        <ScrollNavLink hash="work" className="hover:opacity-70 transition-opacity">
+          Work
+        </ScrollNavLink>
         <span className="flex items-center gap-[0.4em]">
           <span
             className="rounded-full bg-current shrink-0"
@@ -86,7 +84,7 @@ function ContactTopNav({ variant }: { variant: "desktop" | "mobile" }) {
               height: `calc(${u} * 4)`,
             }}
           />
-          <span aria-current="page">CONTACT</span>
+          <span aria-current="page">Contact</span>
         </span>
         <a
           href="https://www.linkedin.com/in/joleenhsu/"
@@ -94,7 +92,7 @@ function ContactTopNav({ variant }: { variant: "desktop" | "mobile" }) {
           rel="noopener noreferrer"
           className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
         >
-          LINKEDIN
+          LinkedIn
           <ArrowUpRight />
         </a>
       </div>
@@ -297,7 +295,7 @@ function CardFaces({
         <p
           className="font-sans"
           style={{
-            fontSize: `calc(${u} * ${captionSize})`,
+            fontSize: `max(${u === "var(--u-m)" ? "12px" : "14px"}, calc(${u} * ${captionSize}))`,
             lineHeight: 1.35,
             letterSpacing: `calc(${u} * -0.3)`,
             margin: 0,
@@ -437,7 +435,7 @@ function ContactDesktop() {
               onMouseLeave={() => setEmailHovered(false)}
               className="font-serif text-white whitespace-nowrap"
               style={{
-                fontSize: "calc(var(--u) * 140)",
+                fontSize: "max(14px, calc(var(--u) * 140))",
                 letterSpacing: "calc(var(--u) * -3)",
                 lineHeight: 1.1,
                 textDecorationLine: emailHovered ? "underline" : "none",
@@ -452,7 +450,7 @@ function ContactDesktop() {
             <p
               className="font-sans text-white"
               style={{
-                fontSize: "calc(var(--u) * 24)",
+                fontSize: "max(14px, calc(var(--u) * 24))",
                 letterSpacing: "calc(var(--u) * -0.72)",
                 lineHeight: 1.4,
                 margin: 0,
@@ -612,7 +610,7 @@ function ContactMobile() {
             href={`mailto:${EMAIL}`}
             className="font-serif text-white underline-offset-4"
             style={{
-              fontSize: "calc(var(--u-m) * 60)",
+              fontSize: "max(12px, calc(var(--u-m) * 60))",
               letterSpacing: "calc(var(--u-m) * -1.2)",
               lineHeight: 1.1,
             }}
@@ -622,7 +620,7 @@ function ContactMobile() {
           <p
             className="font-sans text-white"
             style={{
-              fontSize: "calc(var(--u-m) * 18)",
+              fontSize: "max(12px, calc(var(--u-m) * 18))",
               letterSpacing: "calc(var(--u-m) * -0.54)",
               lineHeight: 1.4,
               margin: 0,

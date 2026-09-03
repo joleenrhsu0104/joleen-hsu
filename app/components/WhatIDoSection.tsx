@@ -18,9 +18,12 @@ import { useRef, useState } from "react";
  * vertically into adjacent rows' empty space — without ever
  * obscuring any of the typography on top of it.
  *
- * The section keeps `id="ethos"` so `<ScrollBgSync>`'s cream→dark
- * transition driver — which interpolates against that element's
- * top edge — continues to work without changes.
+ * The cream→dark transition driver (<ScrollBgSync>) used to key
+ * off this section's `id="ethos"`, but that anchor has moved to
+ * HomeWorkSection above (the Work page cards preview that now sits
+ * between AboutSentences and WhatIDoSection on the home page).
+ * This section just reads --scroll-bg directly so the dark surface
+ * continues seamlessly from the HomeWorkSection above.
  */
 
 export interface Service {
@@ -56,10 +59,10 @@ export const SERVICES: Service[] = [
   },
 ];
 
-const PREVIEW_W = 320;
+const PREVIEW_W = 220;
 // Matches the 1650×2100 source aspect (0.786) so object-cover has no
 // vertical crop — the top of the photo is preserved on every preview.
-const PREVIEW_H = 407;
+const PREVIEW_H = 280;
 
 export default function WhatIDoSection() {
   const [hovered, setHovered] = useState<number | null>(null);
@@ -69,23 +72,36 @@ export default function WhatIDoSection() {
   const handleEnter = (i: number) => {
     // Center the preview vertically on the hovered row, measured
     // against the rows-wrapper (the preview's offsetParent).
+    // Clamp so the preview never extends above the rows-wrapper top
+    // (or below its bottom) — otherwise the top-most row's hover
+    // clipped the preview's upper edge, and the bottom-most row
+    // would clip its lower edge.
     const row = rowRefs.current[i];
+    const wrapper = row?.offsetParent as HTMLElement | null;
     if (row) {
-      setPreviewY(row.offsetTop + row.offsetHeight / 2);
+      const rawY = row.offsetTop + row.offsetHeight / 2;
+      const wrapperH = wrapper?.offsetHeight ?? Infinity;
+      const halfPreview = PREVIEW_H / 2;
+      const clampedY = Math.min(
+        Math.max(rawY, halfPreview),
+        wrapperH - halfPreview,
+      );
+      setPreviewY(clampedY);
     }
     setHovered(i);
   };
 
   return (
     <section
-      id="ethos"
       className="relative overflow-hidden text-white"
       style={{
-        backgroundColor: "var(--scroll-bg, #030303)",
+        // Hardcoded near-black — no longer tracks --scroll-bg.
+        // The dark→cream gradient that previously transitioned this
+        // section into the footer was removed at the user's request,
+        // so the boundary between this dark section and the cream
+        // SignatureSection below is now an intentional hard cut.
+        backgroundColor: "var(--color-near-black)",
         paddingTop: "calc(var(--u) * 80)",
-        // Extra padding-bottom gives the dark→cream transition room
-        // to play out between the last service row and the signature
-        // footer below, without crowding either side.
         paddingBottom: "calc(var(--u) * 200)",
       }}
     >
@@ -145,27 +161,12 @@ export default function WhatIDoSection() {
         />
       </div>
 
-      {/* WHAT I DO eyebrow */}
-      <div
-        className="relative font-mono uppercase"
-        style={{
-          paddingLeft: "calc(var(--u) * 96)",
-          fontSize: "calc(var(--u) * 18)",
-          letterSpacing: "calc(var(--u) * 1.8)",
-          opacity: 0.75,
-          zIndex: 1,
-        }}
-      >
-        What I Do
-      </div>
-
       {/* Service rows */}
       <div
         className="relative"
         style={{
           paddingLeft: "calc(var(--u) * 96)",
           paddingRight: "calc(var(--u) * 96)",
-          marginTop: "calc(var(--u) * 32)",
           zIndex: 1,
         }}
       >
@@ -191,10 +192,19 @@ export default function WhatIDoSection() {
               }}
             >
               <h3
-                className="font-serif relative z-10"
+                className="font-serif relative z-10 whitespace-nowrap"
                 style={{
-                  fontSize: "calc(var(--u) * 100)",
-                  letterSpacing: "calc(var(--u) * -2)",
+                  // Cap tightened further (60 → 52px) and calc
+                  // multiplier lowered (100 → 86) so the widest
+                  // title ("Agentic Development") fits in the h3
+                  // column reserved by `justify-between` (~258px
+                  // at an 825px viewport) without pushing the
+                  // body p past the row's right edge. Prevents the
+                  // Agentic Development row's body copy from
+                  // misaligning with the other three rows.
+                  fontSize:
+                    "min(52px, max(14px, calc(var(--u) * 86)))",
+                  letterSpacing: "calc(var(--u) * -1.72)",
                   lineHeight: 1.02,
                   margin: 0,
                   opacity: isDimmed ? 0.3 : 1,
@@ -206,11 +216,25 @@ export default function WhatIDoSection() {
               <p
                 className="font-sans relative z-10"
                 style={{
-                  width: "calc(var(--u) * 320)",
-                  fontSize: "calc(var(--u) * 18)",
+                  // Widened + floored to 460px so the longest
+                  // ~150-char description wraps into up to 3 lines
+                  // on any viewport. On wider screens the calc
+                  // term wins so width scales proportionally.
+                  width: "max(460px, calc(var(--u) * 380))",
+                  // Font capped at 18px so the description doesn't
+                  // balloon on wide viewports where the uncapped
+                  // 18u would push it to 22px+.
+                  fontSize: "min(18px, max(14px, calc(var(--u) * 18)))",
                   letterSpacing: "calc(var(--u) * -0.36)",
                   lineHeight: 1.4,
-                  margin: 0,
+                  // Individual margins so marginLeft (the 24px+ gap
+                  // from the h3 title) isn't clobbered by a
+                  // shorthand `margin: 0`. Floor bumped from 16 →
+                  // 24px per the design spec.
+                  marginTop: 0,
+                  marginRight: 0,
+                  marginBottom: 0,
+                  marginLeft: "max(24px, calc(var(--u) * 32))",
                   opacity: isDimmed ? 0.35 : 0.85,
                   transition: "opacity 0.4s ease",
                   flexShrink: 0,
@@ -236,7 +260,7 @@ export default function WhatIDoSection() {
             })`,
             width: `${PREVIEW_W}px`,
             height: `${PREVIEW_H}px`,
-            borderRadius: "24px",
+            borderRadius: "4px",
             opacity: hovered !== null ? 1 : 0,
             transition:
               "opacity 0.35s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), top 0.45s cubic-bezier(0.2, 0.7, 0.2, 1)",

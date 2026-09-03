@@ -1,28 +1,33 @@
 "use client";
 
 import { useIsMobile } from "@/app/hooks/useIsMobile";
-import CyclingHero from "./CyclingHero";
+import OpeningSequence from "./OpeningSequence";
 import AboutSentences from "./AboutSentences";
+import HomeWorkSection from "./HomeWorkSection";
 import WhatIDoSection from "./WhatIDoSection";
 import SignatureSection from "./SignatureSection";
-import ScrollBgSync from "./ScrollBgSync";
-import MobileHero from "./mobile/MobileHero";
+import MobileOpeningSequence from "./mobile/MobileOpeningSequence";
 import MobileAboutSentences from "./mobile/MobileAboutSentences";
+import MobileHomeWorkSection from "./mobile/MobileHomeWorkSection";
 import MobileWhatIDoSection from "./mobile/MobileWhatIDoSection";
 import MobileSignature from "./mobile/MobileSignature";
 
 /**
  * ResponsiveHome — switches between desktop and mobile compositions
- * based on viewport width. The breakpoint is 768px (Tailwind `md`).
+ * based on viewport width (breakpoint inside useIsMobile).
  *
- * Page flow (both surfaces):
- *   Hero → AboutSentences (3 cream panels, char-by-char scroll fill)
- *        → EthosSection (dark, floating images, dramatic reveal)
- *        → SignatureSection
+ * Both surfaces share the same composition:
+ *   1. OpeningSequence      — landing hero (wordmark, nav, bio,
+ *                             drifting rectangles with cursor
+ *                             repulsion on desktop)
+ *   2. AboutSentences       — scroll-jack: "I believe…" → Rubin
+ *                             quote, character fill on both
+ *   3. HomeWorkSection      — Work cards stack
+ *   4. WhatIDoSection       — services list on near-black
+ *   5. SignatureSection     — cream signature footer
  *
- * The cream → dark transition before EthosSection is still driven by
- * <ScrollBgSync>, which interpolates the `--scroll-bg` CSS var that
- * EthosSection's background reads.
+ * Section backgrounds are hardcoded (no --scroll-bg dependency),
+ * so ScrollBgSync is not mounted here.
  */
 export default function ResponsiveHome() {
   const isMobile = useIsMobile();
@@ -30,8 +35,9 @@ export default function ResponsiveHome() {
   if (isMobile) {
     return (
       <main>
-        <MobileHero />
+        <MobileOpeningSequence />
         <MobileAboutSentences />
+        <MobileHomeWorkSection />
         <MobileWhatIDoSection />
         <MobileSignature />
       </main>
@@ -40,9 +46,9 @@ export default function ResponsiveHome() {
 
   return (
     <main className="bg-[var(--color-cream)]">
-      <ScrollBgSync />
-      <CyclingHero />
+      <OpeningSequence />
       <AboutSentences />
+      <HomeWorkSection />
       <WhatIDoSection />
       <SignatureSection />
     </main>

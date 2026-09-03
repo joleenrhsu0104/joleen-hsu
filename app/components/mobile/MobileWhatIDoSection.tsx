@@ -22,20 +22,6 @@ export default function MobileWhatIDoSection() {
         paddingBottom: "calc(var(--u-m) * 64)",
       }}
     >
-      {/* WHAT I DO eyebrow */}
-      <div
-        className="font-mono uppercase"
-        style={{
-          paddingLeft: "calc(var(--u-m) * 16)",
-          fontSize: "calc(var(--u-m) * 14)",
-          letterSpacing: "calc(var(--u-m) * 1.4)",
-          opacity: 0.75,
-          marginBottom: "calc(var(--u-m) * 32)",
-        }}
-      >
-        What I Do
-      </div>
-
       <div
         style={{
           paddingLeft: "calc(var(--u-m) * 16)",
@@ -59,8 +45,12 @@ export default function MobileWhatIDoSection() {
               <h3
                 className="font-serif"
                 style={{
-                  fontSize: "calc(var(--u-m) * 32)",
-                  letterSpacing: "calc(var(--u-m) * -0.64)",
+                  // Capped at 28px to match the Work card project
+                  // names — keeps every serif header in the mobile
+                  // composition on the same scale so the flow
+                  // reads as one system.
+                  fontSize: "min(28px, max(12px, calc(var(--u-m) * 28)))",
+                  letterSpacing: "calc(var(--u-m) * -0.56)",
                   lineHeight: 1.05,
                   margin: 0,
                   marginBottom: "calc(var(--u-m) * 12)",
@@ -71,7 +61,7 @@ export default function MobileWhatIDoSection() {
               <p
                 className="font-sans"
                 style={{
-                  fontSize: "calc(var(--u-m) * 14)",
+                  fontSize: "min(16px, max(12px, calc(var(--u-m) * 14)))",
                   letterSpacing: "calc(var(--u-m) * -0.28)",
                   lineHeight: 1.5,
                   margin: 0,

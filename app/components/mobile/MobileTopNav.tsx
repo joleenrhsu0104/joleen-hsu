@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
+import Logo from "../Logo";
 
 /**
  * MobileTopNav — the universal mobile header used across every page:
@@ -77,14 +78,9 @@ export default function MobileTopNav({
         <Link
           href="/"
           aria-label="Home"
-          className="flex items-center h-full font-serif whitespace-nowrap"
-          style={{
-            fontSize: "calc(var(--u-m) * 36)",
-            lineHeight: 1,
-            letterSpacing: "calc(var(--u-m) * -0.72)",
-          }}
+          className="flex items-center h-full"
         >
-          joleen <span className="italic">hsu</span>
+          <Logo height="calc(var(--u-m) * 22)" />
         </Link>
         <button
           type="button"

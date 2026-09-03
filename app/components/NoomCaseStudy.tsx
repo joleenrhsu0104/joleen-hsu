@@ -14,6 +14,8 @@ import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
 import MobileHorizontalPin from "./mobile/MobileHorizontalPin";
 import ArrowUpRight from "./ArrowUpRight";
+import Logo from "./Logo";
+import ScrollNavLink from "./ScrollNavLink";
 
 /**
  * useFadeInOnScroll — IntersectionObserver-based one-shot fade-in.
@@ -98,6 +100,19 @@ const NOOM_HERO = `${IMG}/hero-noom.png`;
  * Filename note: "Challenge Category Page.png" has spaces in the
  * filename, URL-encoded as %20.
  */
+// Animated dial that plays on top of the first onboarding phone
+// (NoomHero1). Source webm is cropped from the raw export to hold
+// just the ring animation — no NOOM logo, no back arrow, no
+// surrounding blank screen. Cream background is preserved so the
+// video blends into the phone's cream screen under it.
+const NOOM_ONBOARDING_DIAL_VIDEO = `${IMG}/NoomHero1-dial.webm`;
+
+// Design-sprint mural — full-width artboard summarizing the sprint
+// facilitator's Miro/FigJam board (how-might-we, agenda, user
+// problems, goals). Sits below the challenges section on both
+// desktop and mobile. Filename has a space so URL-encode it.
+const NOOM_DESIGN_SPRINT_IMAGE = `${IMG}/${encodeURIComponent("Noom Design Sprint.png")}`;
+
 const SCREEN_IMAGES = {
   // Onboarding row (NoomHero1-4) — bezeled exports, cream backdrops
   onboarding: {
@@ -158,6 +173,7 @@ function NoomDesktop() {
       <HabitLoopsSectionDesktop />
       <ChallengePagesRowDesktop />
       <ChallengeStatSectionDesktop />
+      <DesignSprintsSectionDesktop />
       <MosaicGridDesktop />
       <ComingSoonSection />
       <SignatureSection />
@@ -191,40 +207,33 @@ function HeroDesktop() {
         <Link
           href="/"
           aria-label="Home"
-          className="flex items-center h-full font-serif whitespace-nowrap"
-          style={{
-            fontSize: "calc(var(--u) * 40)",
-            lineHeight: 1,
-            letterSpacing: "calc(var(--u) * -0.5)",
-          }}
+          className="flex items-center h-full"
         >
-          joleen <span className="italic">hsu</span>
+          <Logo height="calc(var(--u) * 28)" />
         </Link>
         <div
-          className="flex items-center h-full font-mono"
+          className="flex items-center h-full font-sans"
           style={{
-            gap: "calc(var(--u) * 39)",
-            fontSize: "calc(var(--u) * 20)",
-            letterSpacing: "calc(var(--u) * -1)",
+            gap: "calc(var(--u) * 48)",
+            fontSize: "max(14px, calc(var(--u) * 20))",
+            fontWeight: 500,
+            letterSpacing: "calc(var(--u) * -0.4)",
             lineHeight: 1,
           }}
         >
-          <Link href="/work" className="hover:opacity-70 transition-opacity">
-            WORK
-          </Link>
-          <Link
-            href="/contact"
-            className="hover:opacity-70 transition-opacity"
-          >
-            CONTACT
-          </Link>
+          <ScrollNavLink hash="work" className="hover:opacity-70 transition-opacity">
+            Work
+          </ScrollNavLink>
+          <ScrollNavLink hash="contact" className="hover:opacity-70 transition-opacity">
+            Contact
+          </ScrollNavLink>
           <a
             href="https://www.linkedin.com/in/joleenhsu/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
           >
-            LINKEDIN
+            LinkedIn
             <ArrowUpRight />
           </a>
         </div>
@@ -275,7 +284,7 @@ function IntroDesktop() {
           <p
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 60)",
+              fontSize: "max(14px, calc(var(--u) * 60))",
               letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
@@ -287,7 +296,7 @@ function IntroDesktop() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -328,7 +337,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-mono uppercase"
         style={{
-          fontSize: "calc(var(--u) * 18)",
+          fontSize: "max(14px, calc(var(--u) * 18))",
           letterSpacing: "calc(var(--u) * -0.9)",
           lineHeight: 1.1,
         }}
@@ -338,7 +347,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-sans"
         style={{
-          fontSize: "calc(var(--u) * 24)",
+          fontSize: "max(14px, calc(var(--u) * 24))",
           letterSpacing: "calc(var(--u) * -0.72)",
           lineHeight: 1.4,
         }}
@@ -390,15 +399,61 @@ function OnboardingScreensRowDesktop() {
           ...fadeInStyle(visible),
         }}
       >
-        {phones.map(({ src, alt }) => (
-          <PhoneMockDesktop
-            key={src}
-            src={src}
-            alt={alt}
-            width={400}
-            fadeIn={false}
-          />
-        ))}
+        {phones.map(({ src, alt }, i) => {
+          const phone = (
+            <PhoneMockDesktop
+              src={src}
+              alt={alt}
+              width={400}
+              fadeIn={false}
+            />
+          );
+          // First phone (NoomHero1) gets an animated dial overlay
+          // laid over the static dial in the PNG. Position + size
+          // are % of the phone container so the overlay tracks with
+          // any width change to PhoneMockDesktop.
+          if (i === 0) {
+            return (
+              <div key={src} className="relative">
+                {phone}
+                <video
+                  src={NOOM_ONBOARDING_DIAL_VIDEO}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-hidden
+                  className="absolute pointer-events-none"
+                  style={{
+                    // Overlay is inset to sit inside the phone
+                    // bezel — measured from the source PNG, the
+                    // cream screen area runs from ~5.2% to ~94.8%
+                    // of the phone image width. Height derives
+                    // from the video's own aspect ratio (720:820)
+                    // so it always scales proportionally with the
+                    // phone. Centered vertically via `top` so the
+                    // animated dial center lines up with the
+                    // static dial center in the PNG (~48% of
+                    // phone height).
+                    // 5.2% inset on each side lines up with the
+                    // phone's own bezel-to-screen transition;
+                    // adding an extra 6% margin on each side gives
+                    // the dial ~24px of breathing room from the
+                    // screen edge on the desktop phone (400u ≈
+                    // 400px at viewport = 1920). Scales with the
+                    // phone width so the ratio stays consistent
+                    // at every breakpoint.
+                    top: "26%",
+                    left: "11.2%",
+                    width: "77.6%",
+                    aspectRatio: "720 / 820",
+                  }}
+                />
+              </div>
+            );
+          }
+          return <div key={src}>{phone}</div>;
+        })}
       </div>
     </section>
   );
@@ -474,7 +529,7 @@ function HabitLoopsSectionDesktop() {
           <h2
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 60)",
+              fontSize: "max(14px, calc(var(--u) * 60))",
               letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
@@ -485,7 +540,7 @@ function HabitLoopsSectionDesktop() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -499,7 +554,7 @@ function HabitLoopsSectionDesktop() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -572,7 +627,7 @@ function ChallengePagesRowDesktop() {
             <span
               className="font-sans"
               style={{
-                fontSize: "calc(var(--u) * 14)",
+                fontSize: "max(14px, calc(var(--u) * 14))",
                 letterSpacing: "calc(var(--u) * -0.28)",
                 color: INK,
                 opacity: 0.7,
@@ -636,7 +691,7 @@ function ChallengeStatSectionDesktop() {
         <p
           className="font-serif text-center"
           style={{
-            fontSize: "calc(var(--u) * 40)",
+            fontSize: "max(14px, calc(var(--u) * 40))",
             letterSpacing: "calc(var(--u) * -0.8)",
             lineHeight: 1.25,
             margin: 0,
@@ -647,6 +702,85 @@ function ChallengeStatSectionDesktop() {
           started with a 78% opt-in rate and 58% completion rate. DAU
           has increased by ~9%.
         </p>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Design sprints section — cream band sitting between the
+   challenges block above and the mosaic grid below. Centered
+   title + short body over a full-width mural image of the sprint
+   facilitator's board (how-might-we, agenda, user problems,
+   goals). Mirrors the pattern used by the challenges intro
+   (h2 + body) but full-bleed image instead of phone mocks.
+   ─────────────────────────────────────────────────────────────── */
+
+function DesignSprintsSectionDesktop() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const visible = useFadeInOnScroll(ref);
+  return (
+    <section
+      style={{
+        backgroundColor: CREAM,
+        color: INK,
+        paddingTop: "calc(var(--u) * 96)",
+        paddingBottom: "calc(var(--u) * 96)",
+        paddingLeft: "calc(var(--u) * 96)",
+        paddingRight: "calc(var(--u) * 96)",
+      }}
+    >
+      <div
+        ref={ref}
+        className="flex flex-col items-center"
+        style={{ gap: "calc(var(--u) * 32)", ...fadeInStyle(visible) }}
+      >
+        <h2
+          className="font-serif text-center"
+          style={{
+            fontSize: "max(14px, calc(var(--u) * 56))",
+            letterSpacing: "calc(var(--u) * -1.12)",
+            lineHeight: 1.1,
+            margin: 0,
+          }}
+        >
+          Design sprints
+        </h2>
+        <p
+          className="font-sans text-center"
+          style={{
+            fontSize: "max(14px, calc(var(--u) * 24))",
+            letterSpacing: "calc(var(--u) * -0.72)",
+            lineHeight: 1.4,
+            margin: 0,
+            maxWidth: "calc(var(--u) * 1000)",
+            opacity: 0.85,
+          }}
+        >
+          Early in the year, I worked with leadership to pinpoint the most
+          critical open questions, then ran a full design sprint to reimagine
+          our Home Tab &mdash; a powerful way to align stakeholders on
+          product direction and give the team a clear North Star.
+        </p>
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "calc(var(--u) * 1440)",
+            marginTop: "calc(var(--u) * 16)",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={NOOM_DESIGN_SPRINT_IMAGE}
+            alt="Noom design sprint board — how might we, agenda, user problems, and goals"
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+              borderRadius: "24px",
+            }}
+          />
+        </div>
       </div>
     </section>
   );
@@ -790,7 +924,7 @@ function MosaicCard({ which }: { which: CardKey }) {
       className="overflow-hidden"
       style={{
         aspectRatio: card.aspect,
-        borderRadius: "calc(var(--u) * 16)",
+        borderRadius: "24px",
         ...fadeInStyle(visible),
       }}
     >
@@ -898,7 +1032,7 @@ function ComingSoonSection() {
       <p
         className="font-serif text-center"
         style={{
-          fontSize: "calc(var(--u) * 60)",
+          fontSize: "max(14px, calc(var(--u) * 60))",
           letterSpacing: "calc(var(--u) * -1.2)",
           lineHeight: 1.2,
           margin: 0,
@@ -959,7 +1093,7 @@ function NoomMobile() {
         <p
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -971,7 +1105,7 @@ function NoomMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1023,6 +1157,7 @@ function NoomMobile() {
       <HabitLoopsSectionMobile />
       <ChallengePagesRowMobile />
       <ChallengeStatSectionMobile />
+      <DesignSprintsSectionMobile />
 
       {/* Mosaic grid — single column stack on mobile. Each card
           keeps its source-image aspect so nothing is cropped. */}
@@ -1074,7 +1209,7 @@ function NoomMobile() {
         <p
           className="font-serif text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 28)",
+            fontSize: "max(12px, calc(var(--u-m) * 28))",
             letterSpacing: "calc(var(--u-m) * -0.56)",
             lineHeight: 1.25,
             margin: 0,
@@ -1112,9 +1247,49 @@ function OnboardingScreensRowMobile() {
       style={{ backgroundColor: CREAM }}
     >
       <MobileHorizontalPin>
-        {phones.map(({ src, alt }) => (
-          <PhoneMockMobile key={src} src={src} alt={alt} />
-        ))}
+        {phones.map(({ src, alt }, i) => {
+          if (i === 0) {
+            return (
+              <div key={src} className="relative" style={{ width: "calc(var(--u-m) * 220)" }}>
+                <PhoneMockMobile src={src} alt={alt} />
+                <video
+                  src={NOOM_ONBOARDING_DIAL_VIDEO}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-hidden
+                  className="absolute pointer-events-none"
+                  style={{
+                    // Overlay is inset to sit inside the phone
+                    // bezel — measured from the source PNG, the
+                    // cream screen area runs from ~5.2% to ~94.8%
+                    // of the phone image width. Height derives
+                    // from the video's own aspect ratio (720:820)
+                    // so it always scales proportionally with the
+                    // phone. Centered vertically via `top` so the
+                    // animated dial center lines up with the
+                    // static dial center in the PNG (~48% of
+                    // phone height).
+                    // 5.2% inset on each side lines up with the
+                    // phone's own bezel-to-screen transition;
+                    // adding an extra 6% margin on each side gives
+                    // the dial ~24px of breathing room from the
+                    // screen edge on the desktop phone (400u ≈
+                    // 400px at viewport = 1920). Scales with the
+                    // phone width so the ratio stays consistent
+                    // at every breakpoint.
+                    top: "26%",
+                    left: "11.2%",
+                    width: "77.6%",
+                    aspectRatio: "720 / 820",
+                  }}
+                />
+              </div>
+            );
+          }
+          return <PhoneMockMobile key={src} src={src} alt={alt} />;
+        })}
       </MobileHorizontalPin>
     </section>
   );
@@ -1173,7 +1348,7 @@ function HabitLoopsSectionMobile() {
         <h2
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -1184,7 +1359,7 @@ function HabitLoopsSectionMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1198,7 +1373,7 @@ function HabitLoopsSectionMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1210,34 +1385,65 @@ function HabitLoopsSectionMobile() {
         </p>
       </div>
 
-      {/* 2-phone row immediately below the text, full-bleed
-          MobileHorizontalPin to match the other case-study patterns.
-          position: relative + zIndex 1 lifts the phones above the
-          absolutely-positioned blue band at the section bottom so
-          they render OVER it (not behind it). */}
+      {/* 2-phone row immediately below the text — rendered as a
+          real 2-column layout (NOT the shared MobileHorizontalPin,
+          which vertical-stacks its children now). Phones are sized
+          down so both fit on one row on any mobile viewport with
+          16u-m side padding and a 12u-m gutter. The row is anchored
+          bottom-aligned to the section via `position: relative +
+          zIndex 1` so the phones sit ON TOP of the absolutely-
+          positioned blue band below, and marginTop: auto pushes
+          them down so their bottom edges land exactly at the top
+          of the blue band (no dip, no gap). */}
       <div
+        className="grid"
         style={{
+          gridTemplateColumns: "1fr 1fr",
+          gap: "calc(var(--u-m) * 12)",
+          paddingLeft: "calc(var(--u-m) * 16)",
+          paddingRight: "calc(var(--u-m) * 16)",
           marginTop: "calc(var(--u-m) * 32)",
+          // Push the phone row up by exactly the blue band height
+          // (102u-m) so phone bottoms land at the top of the blue
+          // band (no overlap into blue, no gap above it).
+          marginBottom: "calc(var(--u-m) * 102)",
+          alignItems: "end",
           position: "relative",
           zIndex: 1,
         }}
       >
-        {/* paddingY override 44u-m → 16u-m so the pin's sticky stage
-            doesn't waste vertical space above/below the phones — the
-            tighter framing reduces the empty blue area before the
-            next section's phone row appears. */}
-        <MobileHorizontalPin paddingY="calc(var(--u-m) * 8)">
-          <PhoneMockMobile
-            src={SCREEN_IMAGES.challenges.src}
-            alt={SCREEN_IMAGES.challenges.alt}
-          />
-          <PhoneMockMobile
-            src={SCREEN_IMAGES.energyCategory.src}
-            alt={SCREEN_IMAGES.energyCategory.alt}
-          />
-        </MobileHorizontalPin>
+        <TwoUpPhone
+          src={SCREEN_IMAGES.challenges.src}
+          alt={SCREEN_IMAGES.challenges.alt}
+        />
+        <TwoUpPhone
+          src={SCREEN_IMAGES.energyCategory.src}
+          alt={SCREEN_IMAGES.energyCategory.alt}
+        />
       </div>
     </section>
+  );
+}
+
+/** Phone mock sized to fit two-up inside the mobile content column
+ *  with 16u-m side padding and a 12u-m gutter. Width: 100% of grid
+ *  cell (~1/2 viewport minus paddings/gap) so both phones scale
+ *  together as the viewport widens. */
+function TwoUpPhone({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div style={{ width: "100%" }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          width: "100%",
+          height: "auto",
+          display: "block",
+        }}
+        draggable={false}
+      />
+    </div>
   );
 }
 
@@ -1270,7 +1476,7 @@ function ChallengePagesRowMobile() {
             <span
               className="font-sans"
               style={{
-                fontSize: "calc(var(--u-m) * 12)",
+                fontSize: "max(12px, calc(var(--u-m) * 12))",
                 letterSpacing: "calc(var(--u-m) * -0.24)",
                 color: INK,
                 opacity: 0.7,
@@ -1308,7 +1514,7 @@ function ChallengeStatSectionMobile() {
       <p
         className="font-serif text-center"
         style={{
-          fontSize: "calc(var(--u-m) * 24)",
+          fontSize: "max(12px, calc(var(--u-m) * 24))",
           letterSpacing: "calc(var(--u-m) * -0.48)",
           lineHeight: 1.25,
           margin: 0,
@@ -1318,6 +1524,68 @@ function ChallengeStatSectionMobile() {
         started with a 78% opt-in rate and 58% completion rate. DAU
         has increased by ~9%.
       </p>
+    </section>
+  );
+}
+
+/* Mobile counterpart to DesignSprintsSectionDesktop — same
+   content stacked in a narrower column with mobile type scale. */
+function DesignSprintsSectionMobile() {
+  return (
+    <section
+      style={{
+        backgroundColor: CREAM,
+        color: INK,
+        paddingTop: "calc(var(--u-m) * 64)",
+        paddingBottom: "calc(var(--u-m) * 64)",
+        paddingLeft: "calc(var(--u-m) * 16)",
+        paddingRight: "calc(var(--u-m) * 16)",
+      }}
+    >
+      <div
+        className="flex flex-col items-center"
+        style={{ gap: "calc(var(--u-m) * 20)" }}
+      >
+        <h2
+          className="font-serif text-center"
+          style={{
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
+            letterSpacing: "calc(var(--u-m) * -0.64)",
+            lineHeight: 1.15,
+            margin: 0,
+          }}
+        >
+          Design sprints
+        </h2>
+        <p
+          className="font-sans text-center"
+          style={{
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
+            letterSpacing: "calc(var(--u-m) * -0.42)",
+            lineHeight: 1.4,
+            margin: 0,
+            opacity: 0.85,
+          }}
+        >
+          Early in the year, I worked with leadership to pinpoint the most
+          critical open questions, then ran a full design sprint to reimagine
+          our Home Tab &mdash; a powerful way to align stakeholders on
+          product direction and give the team a clear North Star.
+        </p>
+        <div style={{ width: "100%", marginTop: "calc(var(--u-m) * 8)" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={NOOM_DESIGN_SPRINT_IMAGE}
+            alt="Noom design sprint board — how might we, agenda, user problems, and goals"
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+              borderRadius: "12px",
+            }}
+          />
+        </div>
+      </div>
     </section>
   );
 }
@@ -1359,7 +1627,7 @@ function MobileMosaicCard({ which }: { which: CardKey }) {
       className="overflow-hidden"
       style={{
         aspectRatio: card.aspect,
-        borderRadius: "calc(var(--u-m) * 12)",
+        borderRadius: "24px",
         ...fadeInStyle(visible),
       }}
     >
@@ -1382,7 +1650,7 @@ function MobileMetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-mono uppercase"
         style={{
-          fontSize: "calc(var(--u-m) * 12)",
+          fontSize: "max(12px, calc(var(--u-m) * 12))",
           letterSpacing: "calc(var(--u-m) * -0.6)",
           lineHeight: 1.1,
         }}
@@ -1392,7 +1660,7 @@ function MobileMetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-sans"
         style={{
-          fontSize: "calc(var(--u-m) * 14)",
+          fontSize: "max(12px, calc(var(--u-m) * 14))",
           letterSpacing: "calc(var(--u-m) * -0.42)",
           lineHeight: 1.5,
         }}

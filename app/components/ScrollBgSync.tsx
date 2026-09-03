@@ -12,9 +12,9 @@ import { useEffect } from "react";
  *
  * Two transition phases drive the variable:
  *
- *   Phase 1 (cream → dark): triggered by `#ethos` (WhatIDoSection)
- *     entering the viewport from below. Both Rubin and
- *     WhatIDoSection read --scroll-bg, so their boundary blends.
+ *   Phase 1 (cream → dark): triggered by `#ethos` (HomeWorkSection)
+ *     entering the viewport from below. AboutSentences and
+ *     HomeWorkSection both read --scroll-bg, so their boundary blends.
  *
  *   Phase 2 (dark → cream): triggered by `#contact` (SignatureSection)
  *     entering the viewport from below. WhatIDoSection and Signature

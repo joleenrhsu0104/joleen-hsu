@@ -5,22 +5,20 @@ import { INK_RGB } from "@/app/lib/tokens";
 import ScrollCharFill from "../ScrollCharFill";
 
 /**
- * MobileAboutSentences — mobile counterpart to AboutSentences.
+ * MobileAboutSentences — mobile counterpart to AboutSentences. Two
+ * remaining statement panels (the "I'm Joleen…" intro is now on the
+ * landing hero as static bio text) scroll-jacked through a single
+ * pinned viewport.
  *
- * Mirrors the desktop scroll-jack: a single 510vh wrapper holds a
- * 100vh sticky stage that pins while the user scrolls past, and three
- * statement panels cross-fade in place based on scroll progress. Same
- * fade-in / fill / hold / fade-out envelope as desktop; same per-panel
- * scroll allocation. Only the font scale (--u-m) and a couple panel
- * sizes change.
+ * Wrapper 370vh tall, sticky stage 100vh, two panels cross-fade in
+ * turn. Same reading cadence as desktop — only the type scale
+ * (--u-m) and container width differ.
  *
- * Per-panel breakdown at the 410vh total scroll budget:
- *   • Panel 1, 2 (140vh each): fade-in 20vh, fill 60vh, hold 60vh, fade-out 20vh
- *   • Panel 3 (130vh):         fade-in 20vh, fill 60vh, hold 50vh, fade-out 20vh
+ *   • Panel 1 (140vh): fade-in 20vh, fill 60vh, hold 60vh, fade-out 20vh
+ *   • Panel 2 (130vh): fade-in 20vh, fill 60vh, hold 50vh, fade-out 20vh
  *
- * Background tracks `var(--scroll-bg)` so the bottom of the column
- * blends into the dark WhatIDoSection without a hard horizontal line —
- * same blend trick as the desktop variant.
+ * Background is cream throughout — matches MobileOpeningSequence
+ * above and MobileHomeWorkSection's hard dark boundary below.
  */
 
 // Single-source ink tuple (see token comment in app/lib/tokens.ts for
@@ -30,11 +28,10 @@ const TO = `rgb(${INK_RGB})`;
 
 // Per-panel scroll allocation, in vh. Same values as the desktop
 // scroll-jack so the reading cadence reads identically on both
-// surfaces — the only difference between desktop and mobile is the
-// type scale + container width, not the scroll timing.
-const PANEL_SCROLL_VH = [140, 140, 130];
-const TOTAL_SCROLL_VH = PANEL_SCROLL_VH.reduce((a, b) => a + b, 0); // 410
-const WRAPPER_VH = TOTAL_SCROLL_VH + 100; // sticky stage + scroll budget = 510vh
+// surfaces.
+const PANEL_SCROLL_VH = [140, 130];
+const TOTAL_SCROLL_VH = PANEL_SCROLL_VH.reduce((a, b) => a + b, 0); // 270
+const WRAPPER_VH = TOTAL_SCROLL_VH + 100; // sticky stage + scroll budget = 370vh
 
 // Each panel's normalized progress segment [start, end].
 const SEGMENTS = (() => {
@@ -50,11 +47,11 @@ const SEGMENTS = (() => {
 })();
 
 // Fade + fill windows as a fraction of TOTAL scroll (not per-segment)
-// so every panel gets the same scroll distance for these transitions
-// regardless of its segment length.
-const FADE_IN_FRACTION = 0.049; // ≈ 20vh of scroll
-const FADE_OUT_FRACTION = 0.049; // ≈ 20vh of scroll
-const FILL_FRACTION = 0.146; // ≈ 60vh of scroll
+// so both panels get the same scroll distance for these transitions
+// regardless of their segment length. ~20vh + ~60vh at 270vh total.
+const FADE_IN_FRACTION = 20 / 270;
+const FADE_OUT_FRACTION = 20 / 270;
+const FILL_FRACTION = 60 / 270;
 
 function clamp01(x: number) {
   return Math.max(0, Math.min(1, x));
@@ -121,10 +118,9 @@ export default function MobileAboutSentences() {
     };
   }, []);
 
-  // Three per-panel envelopes derived from the single global progress.
+  // Two per-panel envelopes derived from the single global progress.
   const p0 = localProgress(progress, 0);
   const p1 = localProgress(progress, 1);
-  const p2 = localProgress(progress, 2);
 
   return (
     <section
@@ -133,10 +129,7 @@ export default function MobileAboutSentences() {
       className="relative"
       style={{
         height: `${WRAPPER_VH}vh`,
-        // Track ScrollBgSync so the bottom of the About column blends
-        // into WhatIDoSection. Falls back to cream if ScrollBgSync
-        // isn't mounted on the page.
-        backgroundColor: "var(--scroll-bg, var(--color-cream))",
+        backgroundColor: "var(--color-cream)",
       }}
     >
       <div
@@ -145,20 +138,13 @@ export default function MobileAboutSentences() {
       >
         <PanelLayer opacity={panelOpacity(p0, 0)}>
           <StatementText fillProgress={panelFillProgress(p0, 0)}>
-            I&rsquo;m Joleen, a Staff Product Designer building
-            mission-driven consumer experiences.
-          </StatementText>
-        </PanelLayer>
-
-        <PanelLayer opacity={panelOpacity(p1, 1)}>
-          <StatementText fillProgress={panelFillProgress(p1, 1)}>
             I believe the best design is built off of deep curiosity
             and empathy.
           </StatementText>
         </PanelLayer>
 
-        <PanelLayer opacity={panelOpacity(p2, 2)}>
-          <RubinStatement fillProgress={panelFillProgress(p2, 2)} />
+        <PanelLayer opacity={panelOpacity(p1, 1)}>
+          <RubinStatement fillProgress={panelFillProgress(p1, 1)} />
         </PanelLayer>
       </div>
     </section>
@@ -207,9 +193,9 @@ function StatementText({
       progress={fillProgress}
       className="font-serif text-center"
       style={{
-        fontSize: "calc(var(--u-m) * 32)",
-        letterSpacing: "calc(var(--u-m) * -0.64)",
-        lineHeight: 1.2,
+        fontSize: "max(12px, calc(var(--u-m) * 24))",
+        letterSpacing: "calc(var(--u-m) * -0.48)",
+        lineHeight: 1.25,
         margin: 0,
       }}
     >
@@ -219,7 +205,7 @@ function StatementText({
 }
 
 /**
- * Third panel — Rubin quote + ethos byline. The quote fills first;
+ * Second panel — Rubin quote + ethos byline. The quote fills first;
  * only once it's fully inked does the byline begin filling. Split
  * point at 0.8 of total fillProgress matches the relative character
  * lengths, mirroring the desktop variant.
@@ -242,9 +228,9 @@ function RubinStatement({ fillProgress }: { fillProgress: number }) {
         progress={quoteProgress}
         className="font-serif text-center"
         style={{
-          fontSize: "calc(var(--u-m) * 32)",
-          letterSpacing: "calc(var(--u-m) * -0.64)",
-          lineHeight: 1.2,
+          fontSize: "max(12px, calc(var(--u-m) * 24))",
+          letterSpacing: "calc(var(--u-m) * -0.48)",
+          lineHeight: 1.25,
           margin: 0,
         }}
       >
@@ -259,7 +245,7 @@ function RubinStatement({ fillProgress }: { fillProgress: number }) {
         progress={bylineProgress}
         className="font-sans text-center"
         style={{
-          fontSize: "calc(var(--u-m) * 13)",
+          fontSize: "max(12px, calc(var(--u-m) * 13))",
           letterSpacing: "calc(var(--u-m) * -0.26)",
           lineHeight: 1.4,
           margin: 0,

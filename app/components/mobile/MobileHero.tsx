@@ -249,7 +249,7 @@ export default function MobileHero() {
             top: `calc(50vh - var(--u-m) * ${IMG_HALF_H} - 8px - var(--u-m) * 31 + var(--u-m) * ${HEADER_OFFSET})`,
             width: `calc(var(--u-m) * ${IMG_W})`,
             height: "calc(var(--u-m) * 31)",
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.7)",
             lineHeight: "calc(var(--u-m) * 31)",
             textAlign: "left",
@@ -325,7 +325,7 @@ export default function MobileHero() {
             top: `calc(50vh + var(--u-m) * ${IMG_HALF_H} + 8px + var(--u-m) * ${HEADER_OFFSET})`,
             width: `calc(var(--u-m) * ${IMG_W})`,
             height: "calc(var(--u-m) * 31)",
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.7)",
             lineHeight: "calc(var(--u-m) * 31)",
             textAlign: "right",
@@ -361,7 +361,7 @@ export default function MobileHero() {
               className="absolute font-serif text-center transition-opacity duration-700 ease-out"
               style={{
                 color: "var(--color-cream-bright)",
-                fontSize: `calc(var(--u-m) * ${NAME_FONT_SIZE})`,
+                fontSize: `max(12px, calc(var(--u-m) * ${NAME_FONT_SIZE}))`,
                 letterSpacing: `calc(var(--u-m) * ${NAME_LETTER_SPACING})`,
                 lineHeight: NAME_LINE_HEIGHT,
                 textShadow:

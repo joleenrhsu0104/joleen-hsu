@@ -5,28 +5,28 @@ import { INK_RGB } from "@/app/lib/tokens";
 import ScrollCharFill from "./ScrollCharFill";
 
 /**
- * AboutSentences — three editorial statements, scroll-jacked through
- * a single pinned viewport.
+ * AboutSentences — two editorial statements, scroll-jacked through
+ * a single pinned viewport. Loads immediately after the landing hero
+ * (OpeningSequence), which already covers the "I'm Joleen…" intro
+ * as static bio text.
  *
- * The outer wrapper is 300vh tall (one viewport of scroll budget per
- * statement). A sticky inner stage pins at top:0 with 100vh height
- * while the wrapper scrolls past, so the user's viewport stays fixed.
- * Three statement panels are layered absolutely at the stage's center
- * and cross-fade based on scroll progress (0..1 across the wrapper):
+ * The outer wrapper is 370vh tall. A sticky inner stage pins at
+ * top:0 with 100vh height while the wrapper scrolls past, so the
+ * user's viewport stays fixed. Two statement panels are layered
+ * absolutely at the stage's center and cross-fade based on scroll
+ * progress (0..1 across the wrapper):
  *
- *   • Panel 1 — "I'm Joleen…": active in segment [0, 1/3]
- *   • Panel 2 — "I believe…": active in segment [1/3, 2/3]
- *   • Panel 3 — Rubin quote + ethos line: active in segment [2/3, 1]
+ *   • Panel 1 — "I believe…": active in segment [0, 140/270]
+ *   • Panel 2 — Rubin quote + ethos line: active in segment [140/270, 1]
  *
  * Within each panel's segment:
  *   • 0–15% of segment: opacity 0→1 + ScrollCharFill 0→1 (chars fill)
  *   • 15–85%: opacity 1, fill held at 1 (statement reads, no motion)
  *   • 85–100%: opacity 1→0 (fade out to next panel)
  *
- * Background: cream throughout. The dark WhatIDoSection that follows
- * still uses var(--scroll-bg) for its entry fade, but the
- * scroll-jacked section itself stays cream for visual stability while
- * the user is pinned.
+ * Background: cream throughout — matches OpeningSequence above and
+ * HomeWorkSection's boundary below (which starts a hardcoded dark
+ * band, so we don't need a soft crossfade here).
  */
 
 // Ink RGB tuple sourced from the ink token (`colors.ink = #231f20` →
@@ -38,21 +38,16 @@ const FROM = `rgba(${INK_RGB}, 0.3)`;
 const TO = `rgb(${INK_RGB})`;
 
 /**
- * Per-panel scroll allocation, in vh of scroll budget. Bumped up
- * across the board (panels 1 + 2: 100 → 140vh, panel 3: 60 → 130vh)
- * so the char fill inside each panel runs at a slower pace AND the
- * pure-hold window — where the sentence is fully inked at full
- * opacity before the next sentence fades in — is meaningfully
- * longer than it was. Net per-panel breakdown at the new sizes:
- *   • Panel 1, 2 (140vh): fade-in 20vh, fill 60vh, hold 60vh, fade-out 20vh
- *   • Panel 3 (130vh):    fade-in 20vh, fill 60vh, hold 50vh, fade-out 20vh
- * Compared to the previous timings (fill 45vh, hold ~25vh), the
- * reader now has noticeably more room to absorb each filled
- * statement before it transitions.
+ * Per-panel scroll allocation, in vh of scroll budget. Same pacing
+ * per panel as the previous three-panel version — the reader gets
+ * ~60vh of ink fill and ~50-60vh of pure-hold before the panel
+ * fades to the next.
+ *   • Panel 1 (140vh): fade-in 20vh, fill 60vh, hold 60vh, fade-out 20vh
+ *   • Panel 2 (130vh): fade-in 20vh, fill 60vh, hold 50vh, fade-out 20vh
  */
-const PANEL_SCROLL_VH = [140, 140, 130];
-const TOTAL_SCROLL_VH = PANEL_SCROLL_VH.reduce((a, b) => a + b, 0); // 410
-const WRAPPER_VH = TOTAL_SCROLL_VH + 100; // sticky stage + scroll budget = 510vh
+const PANEL_SCROLL_VH = [140, 130];
+const TOTAL_SCROLL_VH = PANEL_SCROLL_VH.reduce((a, b) => a + b, 0); // 270
+const WRAPPER_VH = TOTAL_SCROLL_VH + 100; // sticky stage + scroll budget = 370vh
 
 // Each panel's normalized progress segment [start, end] computed
 // from its share of the total scroll budget.
@@ -69,17 +64,13 @@ const SEGMENTS = (() => {
 })();
 
 // Fade-in / fade-out windows, expressed as a fraction of TOTAL
-// scroll (not per-segment), so all three panels get the same scroll
+// scroll (not per-segment), so both panels get the same scroll
 // distance for fade transitions regardless of their segment length.
-// ~20vh each at the new 410vh total — slightly longer than the
-// previous 15vh so the cross-fade between panels reads as
-// deliberate rather than abrupt.
-const FADE_IN_FRACTION = 0.049; // ≈ 20vh of scroll
-const FADE_OUT_FRACTION = 0.049; // ≈ 20vh of scroll
-// Char fill window (also a fraction of total scroll) — ~60vh at
-// the new 410vh total. 33% slower than the previous 45vh, so the
-// ink runs across each line at a more readable pace.
-const FILL_FRACTION = 0.146;
+// ~20vh each at 270vh total = 20/270 ≈ 0.074.
+const FADE_IN_FRACTION = 20 / 270;
+const FADE_OUT_FRACTION = 20 / 270;
+// Char fill window — ~60vh at 270vh total. Same pacing as before.
+const FILL_FRACTION = 60 / 270;
 
 function clamp01(x: number) {
   return Math.max(0, Math.min(1, x));
@@ -164,10 +155,9 @@ export default function AboutSentences() {
     };
   }, []);
 
-  // Three per-panel envelopes derived from the single global progress.
+  // Two per-panel envelopes derived from the single global progress.
   const p0 = localProgress(progress, 0);
   const p1 = localProgress(progress, 1);
-  const p2 = localProgress(progress, 2);
 
   return (
     <section
@@ -176,35 +166,23 @@ export default function AboutSentences() {
       className="relative"
       style={{
         height: `${WRAPPER_VH}vh`,
-        // Track ScrollBgSync's cream → dark CSS variable so the
-        // bottom of the About column blends into WhatIDoSection's
-        // top instead of meeting it at a hard horizontal line. Same
-        // trick the original RubinPanel used before this section was
-        // rewritten as a scroll-jack.
-        backgroundColor: "var(--scroll-bg, var(--color-cream))",
+        backgroundColor: "var(--color-cream)",
       }}
     >
       <div
         className="sticky top-0 overflow-hidden"
         style={{ height: "100vh" }}
       >
-        {/* Three statement panels, stacked at sticky center. */}
+        {/* Two statement panels, stacked at sticky center. */}
         <PanelLayer opacity={panelOpacity(p0, 0)}>
           <StatementText fillProgress={panelFillProgress(p0, 0)}>
-            I&rsquo;m Joleen, a Staff Product Designer building
-            mission-driven consumer experiences.
-          </StatementText>
-        </PanelLayer>
-
-        <PanelLayer opacity={panelOpacity(p1, 1)}>
-          <StatementText fillProgress={panelFillProgress(p1, 1)}>
             I believe the best design is built off of deep curiosity
             and empathy.
           </StatementText>
         </PanelLayer>
 
-        <PanelLayer opacity={panelOpacity(p2, 2)}>
-          <RubinStatement fillProgress={panelFillProgress(p2, 2)} />
+        <PanelLayer opacity={panelOpacity(p1, 1)}>
+          <RubinStatement fillProgress={panelFillProgress(p1, 1)} />
         </PanelLayer>
       </div>
     </section>
@@ -260,9 +238,9 @@ function StatementText({
       progress={fillProgress}
       className="font-serif text-center"
       style={{
-        fontSize: "calc(var(--u) * 68)",
+        fontSize: "max(14px, calc(var(--u) * 68))",
         letterSpacing: "calc(var(--u) * -1.36)",
-        lineHeight: 1.15,
+        lineHeight: 1,
         margin: 0,
       }}
     >
@@ -272,7 +250,7 @@ function StatementText({
 }
 
 /**
- * Third panel — Rubin quote + ethos byline. The quote fills first;
+ * Second panel — Rubin quote + ethos byline. The quote fills first;
  * only once it's fully inked does the byline begin filling. Split
  * point at 0.8 of total fillProgress matches the relative character
  * lengths (quote ~115 chars vs byline ~30 chars), so each gets
@@ -296,9 +274,9 @@ function RubinStatement({ fillProgress }: { fillProgress: number }) {
         progress={quoteProgress}
         className="font-serif text-center"
         style={{
-          fontSize: "calc(var(--u) * 68)",
+          fontSize: "max(14px, calc(var(--u) * 68))",
           letterSpacing: "calc(var(--u) * -1.36)",
-          lineHeight: 1.15,
+          lineHeight: 1,
           margin: 0,
         }}
       >
@@ -313,7 +291,7 @@ function RubinStatement({ fillProgress }: { fillProgress: number }) {
         progress={bylineProgress}
         className="font-sans text-center"
         style={{
-          fontSize: "calc(var(--u) * 18)",
+          fontSize: "max(14px, calc(var(--u) * 18))",
           letterSpacing: "calc(var(--u) * -0.36)",
           lineHeight: 1.4,
           margin: 0,

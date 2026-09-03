@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Logo from "../Logo";
+import ScrollNavLink from "../ScrollNavLink";
 
 /**
  * MobileMenu — full-screen drawer overlay triggered by the hamburger.
@@ -42,14 +44,9 @@ export default function MobileMenu({
           href="/"
           aria-label="Home"
           onClick={onClose}
-          className="flex items-center h-full font-serif text-black whitespace-nowrap"
-          style={{
-            fontSize: "calc(var(--u-m) * 36)",
-            lineHeight: 1,
-            letterSpacing: "calc(var(--u-m) * -0.72)",
-          }}
+          className="flex items-center h-full text-black"
         >
-          joleen <span className="italic">hsu</span>
+          <Logo height="calc(var(--u-m) * 22)" />
         </Link>
         <button
           type="button"
@@ -86,12 +83,12 @@ export default function MobileMenu({
         }}
       >
         {[
-          { label: "Work", href: "/work" },
-          { label: "Contact", href: "/contact" },
+          { label: "Work", hash: "work" as const, external: false as const },
+          { label: "Contact", hash: "contact" as const, external: false as const },
           {
             label: "LinkedIn",
             href: "https://www.linkedin.com/in/joleenhsu/",
-            external: true,
+            external: true as const,
           },
         ].map((item, i, arr) => (
           <div key={item.label}>
@@ -103,7 +100,7 @@ export default function MobileMenu({
                 onClick={onClose}
                 className="block hover:opacity-60 transition-opacity"
                 style={{
-                  fontSize: "calc(var(--u-m) * 44)",
+                  fontSize: "max(12px, calc(var(--u-m) * 44))",
                   letterSpacing: "calc(var(--u-m) * -0.88)",
                   lineHeight: 1.2,
                   paddingTop: "calc(var(--u-m) * 12)",
@@ -113,12 +110,12 @@ export default function MobileMenu({
                 {item.label}
               </a>
             ) : (
-              <Link
-                href={item.href}
+              <ScrollNavLink
+                hash={item.hash}
                 onClick={onClose}
                 className="block hover:opacity-60 transition-opacity"
                 style={{
-                  fontSize: "calc(var(--u-m) * 44)",
+                  fontSize: "max(12px, calc(var(--u-m) * 44))",
                   letterSpacing: "calc(var(--u-m) * -0.88)",
                   lineHeight: 1.2,
                   paddingTop: "calc(var(--u-m) * 12)",
@@ -126,7 +123,7 @@ export default function MobileMenu({
                 }}
               >
                 {item.label}
-              </Link>
+              </ScrollNavLink>
             )}
             {i < arr.length - 1 && (
               <div

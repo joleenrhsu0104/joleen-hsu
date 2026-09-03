@@ -78,7 +78,7 @@ export default function EthosSection() {
             <p
               className="font-mono text-white text-center"
               style={{
-                fontSize: "calc(var(--u) * 18)",
+                fontSize: "max(14px, calc(var(--u) * 18))",
                 letterSpacing: "calc(var(--u) * -0.9)",
                 lineHeight: 1.1,
                 margin: 0,
@@ -90,7 +90,7 @@ export default function EthosSection() {
             <blockquote
               className="font-serif text-white text-center"
               style={{
-                fontSize: "calc(var(--u) * 68)",
+                fontSize: "max(14px, calc(var(--u) * 68))",
                 letterSpacing: "calc(var(--u) * -1.36)",
                 lineHeight: 1.1,
                 margin: 0,

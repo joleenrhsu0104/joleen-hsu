@@ -8,6 +8,8 @@ import SignatureSection from "./SignatureSection";
 import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
 import ArrowUpRight from "./ArrowUpRight";
+import Logo from "./Logo";
+import ScrollNavLink from "./ScrollNavLink";
 
 /**
  * WorkPage — Figma node 579:1046.
@@ -53,7 +55,7 @@ const PROJECTS: Project[] = [
   {
     name: "Wonder",
     years: "2021-2025",
-    category: "APP + WEB",
+    category: "App + Web",
     slug: "wonder",
     image: HERO_PROJECTS[0].image,
     side: "left",
@@ -62,7 +64,7 @@ const PROJECTS: Project[] = [
   {
     name: "Blue Apron",
     years: "2024-2025",
-    category: "APP",
+    category: "App",
     slug: "blue-apron",
     image: HERO_PROJECTS[1].image,
     side: "right",
@@ -71,7 +73,7 @@ const PROJECTS: Project[] = [
   {
     name: "Noom",
     years: "2025-2026",
-    category: "APP",
+    category: "App",
     slug: "noom",
     image: HERO_PROJECTS[2].image,
     side: "left",
@@ -80,7 +82,7 @@ const PROJECTS: Project[] = [
   {
     name: "Neuday",
     years: "2026",
-    category: "APP",
+    category: "App",
     slug: "neuday",
     image: HERO_PROJECTS[3].image,
     side: "right",
@@ -131,21 +133,17 @@ function WorkTopNav({ variant }: { variant: "desktop" | "mobile" }) {
       <Link
         href="/"
         aria-label="Home"
-        className="flex items-center h-full font-serif text-white whitespace-nowrap"
-        style={{
-          fontSize: `calc(${u} * ${isMobile ? 28 : 40})`,
-          lineHeight: 1,
-          letterSpacing: `calc(${u} * -0.5)`,
-        }}
+        className="flex items-center h-full text-white"
       >
-        joleen <span className="italic">hsu</span>
+        <Logo height={`calc(${u} * ${isMobile ? 20 : 28})`} />
       </Link>
       <div
-        className="flex items-center h-full font-mono"
+        className="flex items-center h-full font-sans"
         style={{
-          gap: `calc(${u} * ${isMobile ? 24 : 39})`,
-          fontSize: `calc(${u} * ${isMobile ? 14 : 20})`,
-          letterSpacing: `calc(${u} * -1)`,
+          gap: `calc(${u} * ${isMobile ? 24 : 48})`,
+          fontSize: `max(${isMobile ? "12px" : "14px"}, calc(${u} * ${isMobile ? 14 : 20}))`,
+          fontWeight: 500,
+          letterSpacing: `calc(${u} * ${isMobile ? -0.28 : -0.4})`,
           lineHeight: 1,
         }}
       >
@@ -157,18 +155,18 @@ function WorkTopNav({ variant }: { variant: "desktop" | "mobile" }) {
               height: `calc(${u} * 4)`,
             }}
           />
-          <span aria-current="page">WORK</span>
+          <span aria-current="page">Work</span>
         </span>
-        <Link href="/contact" className="hover:opacity-70 transition-opacity">
-          CONTACT
-        </Link>
+        <ScrollNavLink hash="contact" className="hover:opacity-70 transition-opacity">
+          Contact
+        </ScrollNavLink>
         <a
           href="https://www.linkedin.com/in/joleenhsu/"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
         >
-          LINKEDIN
+          LinkedIn
           <ArrowUpRight />
         </a>
       </div>
@@ -272,7 +270,7 @@ function ServicesRowDesktop() {
         className="sticky overflow-hidden text-white"
         style={{
           top: 0,
-          fontSize: "calc(var(--u) * 90)",
+          fontSize: "max(14px, calc(var(--u) * 90))",
           letterSpacing: "calc(var(--u) * -1.8)",
           lineHeight: 1.1,
           paddingTop: "calc(var(--u) * 24)",
@@ -367,7 +365,7 @@ function ProjectCardDesktop({ project }: { project: Project }) {
           <span
             className="font-sans text-white"
             style={{
-              fontSize: "calc(var(--u) * 18)",
+              fontSize: "max(14px, calc(var(--u) * 18))",
               letterSpacing: "calc(var(--u) * -0.36)",
               lineHeight: 1.1,
             }}
@@ -388,7 +386,7 @@ function ProjectCardDesktop({ project }: { project: Project }) {
         <span
           className="font-serif flex-1 whitespace-nowrap"
           style={{
-            fontSize: "calc(var(--u) * 48)",
+            fontSize: "max(14px, calc(var(--u) * 48))",
             letterSpacing: "calc(var(--u) * -0.96)",
             lineHeight: 1.1,
           }}
@@ -399,7 +397,7 @@ function ProjectCardDesktop({ project }: { project: Project }) {
           className="flex flex-col text-right font-mono"
           style={{
             width: "calc(var(--u) * 153)",
-            fontSize: "calc(var(--u) * 18)",
+            fontSize: "max(14px, calc(var(--u) * 18))",
             letterSpacing: "calc(var(--u) * -0.9)",
             lineHeight: 1.1,
             gap: "calc(var(--u) * 8)",
@@ -506,7 +504,7 @@ function ServicesRowMobile() {
         // around 342u-m which fits comfortably inside the 390u-m
         // mobile viewport with ~24u-m of breathing room on each side.
         // letterSpacing stays at -2% of the font (= -0.72u-m).
-        fontSize: "calc(var(--u-m) * 36)",
+        fontSize: "max(12px, calc(var(--u-m) * 36))",
         letterSpacing: "calc(var(--u-m) * -0.72)",
         lineHeight: 1.1,
       }}
@@ -568,7 +566,7 @@ function ProjectCardMobile({ project }: { project: Project }) {
         <span
           className="font-serif flex-1 whitespace-nowrap"
           style={{
-            fontSize: "calc(var(--u-m) * 28)",
+            fontSize: "max(12px, calc(var(--u-m) * 28))",
             letterSpacing: "calc(var(--u-m) * -0.56)",
             lineHeight: 1.1,
           }}
@@ -578,7 +576,7 @@ function ProjectCardMobile({ project }: { project: Project }) {
         <div
           className="flex flex-col text-right font-mono"
           style={{
-            fontSize: "calc(var(--u-m) * 12)",
+            fontSize: "max(12px, calc(var(--u-m) * 12))",
             letterSpacing: "calc(var(--u-m) * -0.6)",
             lineHeight: 1.1,
             gap: "calc(var(--u-m) * 4)",

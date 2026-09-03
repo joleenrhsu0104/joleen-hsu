@@ -23,7 +23,17 @@
 :root {
   --design-w: 1920;
   --u: calc(100vw / 1920);
-  --u-m: calc(100vw / 390);
+  /* --u-m capped at 1.8px so the mobile design scales up on
+     tablet-width mobile viewports (600-799px) — landing images,
+     wordmark, and section paddings all keep growing until the
+     cap kicks in at ~702px viewport, filling the extra horizontal
+     room instead of pooling in a tiny cluster in the middle.
+     Elements that shouldn't balloon (service titles, card names)
+     have their own explicit px caps via min(Npx, ...).
+     Both args of min() must be lengths — mixing a unitless number
+     with a length makes the whole expression invalid, which would
+     unset --u-m and collapse every calc(var(--u-m) * N) downstream. */
+  --u-m: min(2.2px, calc(100vw / 390)); /* fluid mobile unit */
 
   /* Global content-to-edge padding. Every section that wants its
      content kept off the viewport edges should use these tokens for
@@ -141,6 +151,171 @@ body {
   background-clip: text;
   color: transparent;
 }
+
+/* OpeningSequence wordmark hover gradient.
+ * The h1 ("joleen") + span (".design") both carry .wordmark-text,
+ * and their flex wrapper carries .wordmark-group. The wordmark-text
+ * always paints a horizontal linear-gradient (ink → warm amber →
+ * ink) clipped to text glyph shapes, but the opaque ink color hides
+ * it by default — the text reads as solid ink. On hover of the
+ * wordmark-group parent, the color transitions to transparent over
+ * 0.4s, gradually revealing the gradient through the now-empty
+ * glyph fill. The j's curl is briefly clipped during hover because
+ * bg-clip:text constrains paint to the padding-box — accepted
+ * trade-off for the gradient effect; the curl returns when the
+ * cursor leaves.
+ */
+/* Base wordmark text. Plain ink color, no bg-clip:text — so the
+ * j's curling descender renders normally as a regular glyph
+ * (browsers can constrain bg-clipped glyphs to the padding-box,
+ * which was clipping the curl in default state). The gradient
+ * effect is applied via a ::before pseudo overlay that fades in
+ * on hover. */
+.wordmark-text {
+  position: relative;
+  color: var(--color-ink);
+}
+
+/* Hover gradient overlay. Pseudo-element duplicates the text via
+ * content: attr(data-text), positioned absolutely over the base.
+ * Uses bg-clip:text with a horizontal linear-gradient. background-size:
+ * 100% 400% extends the painted extent 4× past the padding-box so
+ * the gradient covers the j descender curl too. Opacity 0 by
+ * default, fades to 1 on hover via .wordmark-group:hover. The base
+ * ink text always shows through (under the pseudo), so even if
+ * the pseudo's bg-clip ever did fail to cover the curl, the base
+ * provides a fallback. On hover, the @keyframes animation cycles
+ * the background-image through four warm tones. */
+.wordmark-text::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    to right,
+    #231f20 0%,
+    #d4892d 50%,
+    #231f20 100%
+  );
+  background-size: 100% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.wordmark-group:hover .wordmark-text::before {
+  opacity: 1;
+  animation: wordmark-color-cycle 8s ease-in-out infinite;
+}
+
+/* Mobile variant — there's no :hover on touch devices, so the
+ * gradient overlay is permanently visible and continuously cycles
+ * through the same colour palette. Applied as an additional class
+ * on the mobile wordmark halves. */
+.wordmark-mobile-cycle::before {
+  opacity: 1;
+  animation: wordmark-color-cycle 8s ease-in-out infinite;
+}
+
+/* Colour cycle for the wordmark hover gradient. Cycles through
+ * four warm dark tones: gold → terracotta → burgundy → olive →
+ * back to gold. All four colours pass WCAG AA contrast against
+ * the cream background, so the text stays legible at every frame.
+ * 8s per full cycle balances "noticeably alive" with "doesn't
+ * feel hyperactive". ease-in-out gives the colour transitions a
+ * soft start and finish at each keyframe. Chrome (and other
+ * modern browsers) smoothly interpolate between linear-gradient
+ * keyframes as long as the gradient direction, stop count, and
+ * stop positions all match between frames — which they do here. */
+@keyframes wordmark-color-cycle {
+  0% {
+    background-image: linear-gradient(
+      to right,
+      #231f20 0%,
+      #d4892d 50%,
+      #231f20 100%
+    );
+  }
+  25% {
+    background-image: linear-gradient(
+      to right,
+      #231f20 0%,
+      #b8622e 50%,
+      #231f20 100%
+    );
+  }
+  50% {
+    background-image: linear-gradient(
+      to right,
+      #231f20 0%,
+      #7a3b4e 50%,
+      #231f20 100%
+    );
+  }
+  75% {
+    background-image: linear-gradient(
+      to right,
+      #231f20 0%,
+      #4a5d2e 50%,
+      #231f20 100%
+    );
+  }
+  100% {
+    background-image: linear-gradient(
+      to right,
+      #231f20 0%,
+      #d4892d 50%,
+      #231f20 100%
+    );
+  }
+}
+
+
+/* OpeningSequence hero — drifting shape animations. Each shape uses
+ * a different keyframe path (a / b / c / d / e) so no two shapes
+ * ever move in lockstep. Amplitudes bumped to 25-40px so the drift
+ * reads as clearly ambient on smaller mobile tiles where 10-20px
+ * gets lost. */
+@keyframes shape-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25%      { transform: translate3d(28px, -22px, 0); }
+  50%      { transform: translate3d(-14px, -32px, 0); }
+  75%      { transform: translate3d(-24px, 14px, 0); }
+}
+
+@keyframes shape-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25%      { transform: translate3d(-32px, -16px, 0); }
+  50%      { transform: translate3d(20px, 28px, 0); }
+  75%      { transform: translate3d(-12px, -26px, 0); }
+}
+
+@keyframes shape-drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33%      { transform: translate3d(24px, 30px, 0); }
+  66%      { transform: translate3d(-28px, -18px, 0); }
+}
+
+@keyframes shape-drift-d {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20%      { transform: translate3d(-18px, 24px, 0); }
+  60%      { transform: translate3d(34px, -20px, 0); }
+  80%      { transform: translate3d(-8px, -30px, 0); }
+}
+
+@keyframes shape-drift-e {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  30%      { transform: translate3d(30px, 16px, 0); }
+  70%      { transform: translate3d(-26px, -28px, 0); }
+}
+
+.animate-shape-drift-a { animation: shape-drift-a 11s ease-in-out infinite; }
+.animate-shape-drift-b { animation: shape-drift-b 13s ease-in-out infinite; }
+.animate-shape-drift-c { animation: shape-drift-c 9s ease-in-out infinite; }
+.animate-shape-drift-d { animation: shape-drift-d 15s ease-in-out infinite; }
+.animate-shape-drift-e { animation: shape-drift-e 10s ease-in-out infinite; }
 
 /* Hide the scrollbar rail across browsers — used on horizontal swipe
    rows (MobileHorizontalPin) where the swipe gesture itself is

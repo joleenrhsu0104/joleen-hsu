@@ -1,70 +1,96 @@
 import Link from "next/link";
 import { BW_PORTRAIT, HEADLINE_TEXTURE } from "@/app/lib/assets";
 import ArrowUpRight from "../ArrowUpRight";
+import Logo from "../Logo";
+import ScrollNavLink from "../ScrollNavLink";
 
 /**
- * MobileSignature — cream closing band on mobile
- * (Figma 547:1033, y=2499..3005, height 506).
+ * MobileSignature — cream closing band on mobile, mirrors the
+ * desktop SignatureSection composition:
  *
- * Layout:
- *   • Right-side links stack (WORK / CONTACT / LINKEDIN) at (146, 37)
- *   • B&W portrait centered at (82, 201), 226×305
- *   • Giant wordmark at (28, 382), 334×96 — textured fill
+ *   • Top-left: small JOLEEN.DESIGN logo, aligned with portrait top
+ *   • Top-right: horizontal Work / Contact / LinkedIn nav
+ *   • Centered: B&W portrait
+ *   • Bottom: giant "hi@joleen.design" mailto link with textured fill
  */
 export default function MobileSignature() {
   return (
     <section
-      id="contact-mobile"
+      id="contact"
       className="relative bg-[var(--color-cream)]"
       style={{
-        height: "calc(var(--u-m) * 506)",
+        // Section sized just tall enough to hold the header row +
+        // ~40u-m breathing gap + the 305u-m portrait. No trailing
+        // padding below — portrait bottom aligns with section
+        // bottom (the "floor" of the screen).
+        height: "calc(var(--u-m) * 400)",
       }}
     >
-      {/* Right-side links */}
-      <nav
-        className="absolute flex flex-col font-mono text-center text-black"
+      {/* Top-left: small logo — link back to home. Sits on the same
+          horizontal baseline as the portrait's top edge (top: 32u-m)
+          so the eye traces a straight line: logo → portrait top → nav. */}
+      <Link
+        href="/"
+        aria-label="Home"
+        className="absolute active:opacity-70 transition-opacity"
         style={{
-          left: "calc(var(--u-m) * 146)",
-          top: "calc(var(--u-m) * 37)",
-          width: "calc(var(--u-m) * 99)",
-          gap: "calc(var(--u-m) * 16)",
-          fontSize: "calc(var(--u-m) * 16)",
-          letterSpacing: "calc(var(--u-m) * -0.8)",
+          left: "calc(var(--u-m) * 20)",
+          top: "calc(var(--u-m) * 32)",
+          color: "var(--color-ink)",
+          zIndex: 20,
         }}
       >
-        <Link href="/work" className="hover:opacity-60 transition-opacity">
-          WORK
-        </Link>
-        <Link
-          href="/contact"
-          className="hover:opacity-60 transition-opacity"
-        >
-          CONTACT
-        </Link>
+        <Logo height="calc(var(--u-m) * 18)" />
+      </Link>
+
+      {/* Top-right: horizontal nav — Work · Contact · LinkedIn.
+          12u-m font + 14u-m gaps so the three items fit alongside
+          the top-left logo inside the 350u-m usable width. */}
+      <nav
+        className="absolute flex flex-row items-center font-sans text-black whitespace-nowrap"
+        style={{
+          right: "calc(var(--u-m) * 20)",
+          top: "calc(var(--u-m) * 32)",
+          height: "calc(var(--u-m) * 18)",
+          gap: "calc(var(--u-m) * 14)",
+          fontSize: "max(12px, calc(var(--u-m) * 12))",
+          fontWeight: 500,
+          letterSpacing: "calc(var(--u-m) * -0.24)",
+          lineHeight: 1,
+          zIndex: 20,
+        }}
+      >
+        <ScrollNavLink hash="work" className="active:opacity-60 transition-opacity">
+          Work
+        </ScrollNavLink>
+        <ScrollNavLink hash="contact" className="active:opacity-60 transition-opacity">
+          Contact
+        </ScrollNavLink>
         <a
           href="https://www.linkedin.com/in/joleenhsu/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-baseline justify-center gap-[4px] hover:opacity-60 transition-opacity"
+          className="inline-flex items-baseline gap-[3px] active:opacity-60 transition-opacity"
         >
-          LINKEDIN
-          {/* Default ArrowUpRight (0.85em SVG, viewBox "3 3 10 10"
-              → ~0.68em of visible arrow content) which lands at
-              roughly cap-height of the LINKEDIN text. */}
+          LinkedIn
           <ArrowUpRight />
         </a>
       </nav>
 
-      {/* B&W portrait — rounded top */}
+      {/* B&W portrait — centered horizontally, bottom flush with
+          the section's bottom edge so it visually anchors the whole
+          footer to the floor of the screen. 4px top corner radius
+          matches the sitewide standard. */}
       <div
         className="absolute overflow-hidden"
         style={{
-          left: "calc(var(--u-m) * 82)",
-          top: "calc(var(--u-m) * 201)",
+          left: "50%",
+          transform: "translateX(-50%)",
+          bottom: 0,
           width: "calc(var(--u-m) * 226)",
           height: "calc(var(--u-m) * 305)",
-          borderTopLeftRadius: "calc(var(--u-m) * 16)",
-          borderTopRightRadius: "calc(var(--u-m) * 16)",
+          borderTopLeftRadius: "4px",
+          borderTopRightRadius: "4px",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -75,49 +101,38 @@ export default function MobileSignature() {
         />
       </div>
 
-      {/* Giant "joleen hsu" wordmark — image-fill text with a subtle
-          drifting background to mimic the movement of water.
-
-          • Width spans the full footer (left/right anchored to 0).
-          • Font bumped to 100u with very tight letter-spacing (-5% of
-            font) so the text reads edge-to-edge while compressing the
-            character spacing enough to fit "joleen hsu" inside any
-            mobile viewport.
-          • The "j" has a leftward descender curl that extends past its
-            glyph box. backgroundPosition is shifted to "-6% 0" so the
-            textured fill starts a bit to the left of the element edge,
-            giving the j's curl full coverage and a tiny side padding
-            against being clipped by the section's overflow-hidden. */}
-      {/* Wordmark anchored to the section bottom. The `paddingBottom`
-          is what's actually doing the work fixing the j: text-fill-image
-          uses `background-clip: text` with transparent text color, and
-          the background image only paints within the h2's padding-box.
-          Without padding-bottom, the j's descender hook extends past
-          the line-box (= the box edge) and renders as transparent —
-          invisible against the cream background, which reads as a
-          clip. Padding-bottom 30u extends the h2's painting area past
-          the descender so the background image actually fills it. */}
-      <h2
-        className="absolute font-serif text-fill-image animate-water-drift text-center"
+      {/* Giant "hi@joleen.design" mailto link — overlaid on top of
+          the portrait's lower half. Left/right insets match the
+          top-row logo + nav (20u-m each), so the wordmark's edges
+          land on the same vertical rules as the header chrome.
+          Font sized so the 16-char string reads edge-to-edge across
+          that 350u-m span.
+          text-fill-image makes the letter interiors show the
+          water-drift texture; the surrounding "empty" box lets the
+          portrait show through the gaps between letters, so the
+          two layers weave together. */}
+      <a
+        href="mailto:hi@joleen.design"
+        aria-label="Email hi@joleen.design"
+        className="absolute font-serif text-fill-image animate-water-drift text-center block"
         style={{
-          left: 0,
-          right: 0,
-          bottom: 0,
-          paddingBottom: "calc(var(--u-m) * 30)",
-          fontSize: "calc(var(--u-m) * 115)",
-          letterSpacing: "calc(var(--u-m) * -3.45)",
+          left: "calc(var(--u-m) * 20)",
+          right: "calc(var(--u-m) * 20)",
+          bottom: "calc(var(--u-m) * 24)",
+          fontSize: "max(12px, calc(var(--u-m) * 65))",
+          letterSpacing: "calc(var(--u-m) * -1.3)",
           lineHeight: 1.05,
           margin: 0,
           backgroundImage: `url(${HEADLINE_TEXTURE})`,
           backgroundSize: "130% 320%",
           backgroundPosition: "-12% 0",
           backgroundRepeat: "no-repeat",
-          pointerEvents: "none",
           whiteSpace: "nowrap",
+          zIndex: 10,
         }}
       >
-        joleen <span className="italic">hsu</span>
-      </h2>
+        hi@joleen.design
+      </a>
     </section>
   );
 }

@@ -40,7 +40,7 @@ export default function AboutSection() {
             left: "calc(var(--u) * 96)",
             top: "calc(var(--u) * 168)",
             width: "calc(var(--u) * 917)",
-            fontSize: "calc(var(--u) * 68)",
+            fontSize: "max(14px, calc(var(--u) * 68))",
             letterSpacing: "calc(var(--u) * -1.36)",
             lineHeight: 1.1,
           }}
@@ -92,7 +92,7 @@ export default function AboutSection() {
               <h3
                 className="font-serif"
                 style={{
-                  fontSize: "calc(var(--u) * 48)",
+                  fontSize: "max(14px, calc(var(--u) * 48))",
                   letterSpacing: "calc(var(--u) * -0.96)",
                   lineHeight: 1.1,
                   margin: 0,
@@ -103,7 +103,7 @@ export default function AboutSection() {
               <div
                 className="flex items-center justify-between font-sans"
                 style={{
-                  fontSize: "calc(var(--u) * 24)",
+                  fontSize: "max(14px, calc(var(--u) * 24))",
                   letterSpacing: "calc(var(--u) * -0.72)",
                   lineHeight: 1.4,
                 }}

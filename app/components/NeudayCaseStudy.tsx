@@ -14,6 +14,8 @@ import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
 import MobileHorizontalPin from "./mobile/MobileHorizontalPin";
 import ArrowUpRight from "./ArrowUpRight";
+import Logo from "./Logo";
+import ScrollNavLink from "./ScrollNavLink";
 
 /**
  * useFadeInOnScroll — IntersectionObserver-based one-shot fade-in.
@@ -173,40 +175,33 @@ function HeroDesktop() {
         <Link
           href="/"
           aria-label="Home"
-          className="flex items-center h-full font-serif text-white whitespace-nowrap"
-          style={{
-            fontSize: "calc(var(--u) * 40)",
-            lineHeight: 1,
-            letterSpacing: "calc(var(--u) * -0.5)",
-          }}
+          className="flex items-center h-full text-white"
         >
-          joleen <span className="italic">hsu</span>
+          <Logo height="calc(var(--u) * 28)" />
         </Link>
         <div
-          className="flex items-center h-full font-mono"
+          className="flex items-center h-full font-sans"
           style={{
-            gap: "calc(var(--u) * 39)",
-            fontSize: "calc(var(--u) * 20)",
-            letterSpacing: "calc(var(--u) * -1)",
+            gap: "calc(var(--u) * 48)",
+            fontSize: "max(14px, calc(var(--u) * 20))",
+            fontWeight: 500,
+            letterSpacing: "calc(var(--u) * -0.4)",
             lineHeight: 1,
           }}
         >
-          <Link href="/work" className="hover:opacity-70 transition-opacity">
-            WORK
-          </Link>
-          <Link
-            href="/contact"
-            className="hover:opacity-70 transition-opacity"
-          >
-            CONTACT
-          </Link>
+          <ScrollNavLink hash="work" className="hover:opacity-70 transition-opacity">
+            Work
+          </ScrollNavLink>
+          <ScrollNavLink hash="contact" className="hover:opacity-70 transition-opacity">
+            Contact
+          </ScrollNavLink>
           <a
             href="https://www.linkedin.com/in/joleenhsu/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
           >
-            LINKEDIN
+            LinkedIn
             <ArrowUpRight />
           </a>
         </div>
@@ -243,7 +238,7 @@ function IntroDesktop() {
           <p
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 60)",
+              fontSize: "max(14px, calc(var(--u) * 60))",
               letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
@@ -254,7 +249,7 @@ function IntroDesktop() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -294,7 +289,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-mono uppercase"
         style={{
-          fontSize: "calc(var(--u) * 18)",
+          fontSize: "max(14px, calc(var(--u) * 18))",
           letterSpacing: "calc(var(--u) * -0.9)",
           lineHeight: 1.1,
         }}
@@ -304,7 +299,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-sans"
         style={{
-          fontSize: "calc(var(--u) * 24)",
+          fontSize: "max(14px, calc(var(--u) * 24))",
           letterSpacing: "calc(var(--u) * -0.72)",
           lineHeight: 1.4,
         }}
@@ -519,7 +514,7 @@ function AdditionalWorkSection() {
         ref={ref}
         className="font-serif text-center"
         style={{
-          fontSize: "calc(var(--u) * 40)",
+          fontSize: "max(14px, calc(var(--u) * 40))",
           letterSpacing: "calc(var(--u) * -0.8)",
           lineHeight: 1.25,
           margin: 0,
@@ -540,7 +535,7 @@ function AdditionalWorkSection() {
 function NeudayMobile() {
   return (
     <main className="relative" style={{ backgroundColor: CREAM }}>
-      <MobileTopNav mode="overlay" navClassName="text-white" />
+      <MobileTopNav />
 
       {/* Hero — section height tracks the source image's natural
           aspect ratio (1920 × 1065 ≈ 1.8:1) so the full billboard
@@ -579,7 +574,7 @@ function NeudayMobile() {
         <p
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -590,7 +585,7 @@ function NeudayMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -743,7 +738,7 @@ function NeudayMobile() {
         <p
           className="font-serif text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 24)",
+            fontSize: "max(12px, calc(var(--u-m) * 24))",
             letterSpacing: "calc(var(--u-m) * -0.48)",
             lineHeight: 1.25,
             margin: 0,
@@ -799,7 +794,7 @@ function MobileMetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-mono uppercase"
         style={{
-          fontSize: "calc(var(--u-m) * 12)",
+          fontSize: "max(12px, calc(var(--u-m) * 12))",
           letterSpacing: "calc(var(--u-m) * -0.6)",
           lineHeight: 1.1,
         }}
@@ -809,7 +804,7 @@ function MobileMetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-sans"
         style={{
-          fontSize: "calc(var(--u-m) * 14)",
+          fontSize: "max(12px, calc(var(--u-m) * 14))",
           letterSpacing: "calc(var(--u-m) * -0.42)",
           lineHeight: 1.5,
         }}

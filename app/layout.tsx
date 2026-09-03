@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Instrument_Sans, B612_Mono } from "next/font/google";
+import {
+  Instrument_Serif,
+  Instrument_Sans,
+  B612_Mono,
+  Zalando_Sans_SemiExpanded,
+} from "next/font/google";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -19,6 +24,16 @@ const b612Mono = B612_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "700"],
+});
+
+// Used only for the JOLEEN.DESIGN wordmark logo across every page.
+// Zalando Sans SemiExpanded is a slightly wider variant of Zalando
+// Sans — gives the wordmark a distinctive stretched-uppercase
+// character that reads as a mark rather than as body text.
+const zalandoSans = Zalando_Sans_SemiExpanded({
+  variable: "--font-zalando",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -57,7 +72,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSerif.variable} ${instrumentSans.variable} ${b612Mono.variable} antialiased`}
+      className={`${instrumentSerif.variable} ${instrumentSans.variable} ${b612Mono.variable} ${zalandoSans.variable} antialiased`}
     >
       <body>{children}</body>
     </html>

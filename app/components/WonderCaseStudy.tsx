@@ -16,6 +16,8 @@ import MobileTopNav from "./mobile/MobileTopNav";
 import MobileSignature from "./mobile/MobileSignature";
 import MobileHorizontalPin from "./mobile/MobileHorizontalPin";
 import ArrowUpRight from "./ArrowUpRight";
+import Logo from "./Logo";
+import ScrollNavLink from "./ScrollNavLink";
 
 /**
  * useFadeInOnScroll — IntersectionObserver-based one-shot fade-in.
@@ -223,40 +225,33 @@ function HeroDesktop() {
         <Link
           href="/"
           aria-label="Home"
-          className="flex items-center h-full font-serif text-white whitespace-nowrap"
-          style={{
-            fontSize: "calc(var(--u) * 40)",
-            lineHeight: 1,
-            letterSpacing: "calc(var(--u) * -0.5)",
-          }}
+          className="flex items-center h-full text-white"
         >
-          joleen <span className="italic">hsu</span>
+          <Logo height="calc(var(--u) * 28)" />
         </Link>
         <div
-          className="flex items-center h-full font-mono"
+          className="flex items-center h-full font-sans"
           style={{
-            gap: "calc(var(--u) * 39)",
-            fontSize: "calc(var(--u) * 20)",
-            letterSpacing: "calc(var(--u) * -1)",
+            gap: "calc(var(--u) * 48)",
+            fontSize: "max(14px, calc(var(--u) * 20))",
+            fontWeight: 500,
+            letterSpacing: "calc(var(--u) * -0.4)",
             lineHeight: 1,
           }}
         >
-          <Link href="/work" className="hover:opacity-70 transition-opacity">
-            WORK
-          </Link>
-          <Link
-            href="/contact"
-            className="hover:opacity-70 transition-opacity"
-          >
-            CONTACT
-          </Link>
+          <ScrollNavLink hash="work" className="hover:opacity-70 transition-opacity">
+            Work
+          </ScrollNavLink>
+          <ScrollNavLink hash="contact" className="hover:opacity-70 transition-opacity">
+            Contact
+          </ScrollNavLink>
           <a
             href="https://www.linkedin.com/in/joleenhsu/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
           >
-            LINKEDIN
+            LinkedIn
             <ArrowUpRight />
           </a>
         </div>
@@ -312,7 +307,7 @@ function IntroDesktop() {
           <p
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 60)",
+              fontSize: "max(14px, calc(var(--u) * 60))",
               letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
@@ -324,7 +319,7 @@ function IntroDesktop() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -369,7 +364,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-mono uppercase"
         style={{
-          fontSize: "calc(var(--u) * 18)",
+          fontSize: "max(14px, calc(var(--u) * 18))",
           letterSpacing: "calc(var(--u) * -0.9)",
           lineHeight: 1.1,
           opacity: 0.7,
@@ -380,7 +375,7 @@ function MetaRow({ label, value }: { label: string; value: string }) {
       <span
         className="font-sans"
         style={{
-          fontSize: "calc(var(--u) * 24)",
+          fontSize: "max(14px, calc(var(--u) * 24))",
           letterSpacing: "calc(var(--u) * -0.72)",
           lineHeight: 1.4,
         }}
@@ -431,7 +426,7 @@ function NarrativeSection({
         <span
           className="font-mono uppercase"
           style={{
-            fontSize: "calc(var(--u) * 18)",
+            fontSize: "max(14px, calc(var(--u) * 18))",
             letterSpacing: "calc(var(--u) * -0.9)",
             opacity: 0.7,
           }}
@@ -442,7 +437,7 @@ function NarrativeSection({
       <h2
         className="font-serif"
         style={{
-          fontSize: "calc(var(--u) * 68)",
+          fontSize: "max(14px, calc(var(--u) * 68))",
           letterSpacing: "calc(var(--u) * -1.36)",
           lineHeight: 1.1,
           margin: 0,
@@ -453,7 +448,7 @@ function NarrativeSection({
       <p
         className="font-sans"
         style={{
-          fontSize: "calc(var(--u) * 24)",
+          fontSize: "max(14px, calc(var(--u) * 24))",
           letterSpacing: "calc(var(--u) * -0.72)",
           lineHeight: 1.4,
           margin: 0,
@@ -510,7 +505,7 @@ function AppScreensRowDesktop() {
               //   per-phone width caps at 1728/5 = ~345u in practice).
               width: "calc(var(--u) * 340)",
               aspectRatio: "1152 / 2169",
-              borderRadius: "calc(var(--u) * 32)",
+              borderRadius: "24px",
               overflow: "hidden",
             }}
           >
@@ -598,7 +593,7 @@ function RestaurantCardsRow() {
                 className="w-full h-auto"
                 style={{
                   display: "block",
-                  borderRadius: "calc(var(--u) * 24)",
+                  borderRadius: "24px",
                 }}
                 draggable={false}
               />
@@ -641,7 +636,7 @@ function PostPurchaseSection() {
           <h2
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 68)",
+              fontSize: "max(14px, calc(var(--u) * 68))",
               letterSpacing: "calc(var(--u) * -1.36)",
               lineHeight: 1.1,
               margin: 0,
@@ -652,7 +647,7 @@ function PostPurchaseSection() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -710,7 +705,7 @@ function PostPurchaseSection() {
           <span
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 14)",
+              fontSize: "max(14px, calc(var(--u) * 14))",
               letterSpacing: "calc(var(--u) * -0.28)",
               color: INK,
               opacity: 0.7,
@@ -853,7 +848,7 @@ function MembershipSection() {
           <h2
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 60)",
+              fontSize: "max(14px, calc(var(--u) * 60))",
               letterSpacing: "calc(var(--u) * -1.2)",
               lineHeight: 1.1,
               margin: 0,
@@ -864,7 +859,7 @@ function MembershipSection() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -1067,7 +1062,7 @@ function MobileWebSection() {
           <h2
             className="font-serif"
             style={{
-              fontSize: "calc(var(--u) * 68)",
+              fontSize: "max(14px, calc(var(--u) * 68))",
               letterSpacing: "calc(var(--u) * -1.36)",
               lineHeight: 1.1,
               margin: 0,
@@ -1079,7 +1074,7 @@ function MobileWebSection() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -1093,7 +1088,7 @@ function MobileWebSection() {
           <p
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u) * 24)",
+              fontSize: "max(14px, calc(var(--u) * 24))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.4,
               margin: 0,
@@ -1231,7 +1226,7 @@ function ClosingSection() {
             paddingBottom: "calc(var(--u) * 80)",
             paddingLeft: "calc(var(--u) * 80)",
             paddingRight: "calc(var(--u) * 80)",
-            borderRadius: "calc(var(--u) * 16)",
+            borderRadius: "24px",
           }}
         >
           <p
@@ -1239,7 +1234,7 @@ function ClosingSection() {
             style={{
               color: INK,
               margin: 0,
-              fontSize: "calc(var(--u) * 36)",
+              fontSize: "max(14px, calc(var(--u) * 36))",
               letterSpacing: "calc(var(--u) * -0.72)",
               lineHeight: 1.25,
             }}
@@ -1285,7 +1280,7 @@ function OtherCaseStudies() {
         className="font-serif text-center"
         style={{
           color: INK,
-          fontSize: "calc(var(--u) * 68)",
+          fontSize: "max(14px, calc(var(--u) * 68))",
           letterSpacing: "calc(var(--u) * -1.36)",
           lineHeight: 1.1,
           margin: 0,
@@ -1315,7 +1310,7 @@ function OtherCaseStudies() {
                 className="relative overflow-hidden"
                 style={{
                   aspectRatio: "475 / 647",
-                  borderRadius: "calc(var(--u) * 16)",
+                  borderRadius: "24px",
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1332,7 +1327,7 @@ function OtherCaseStudies() {
                 <span
                   className="font-serif whitespace-nowrap"
                   style={{
-                    fontSize: "calc(var(--u) * 48)",
+                    fontSize: "max(14px, calc(var(--u) * 48))",
                     letterSpacing: "calc(var(--u) * -0.96)",
                     lineHeight: 1.1,
                   }}
@@ -1350,7 +1345,7 @@ function OtherCaseStudies() {
                 <span
                   className="font-mono text-right"
                   style={{
-                    fontSize: "calc(var(--u) * 18)",
+                    fontSize: "max(14px, calc(var(--u) * 18))",
                     letterSpacing: "calc(var(--u) * -0.9)",
                     lineHeight: 1.1,
                   }}
@@ -1436,7 +1431,7 @@ function WonderMobile() {
         <p
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -1448,7 +1443,7 @@ function WonderMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1508,7 +1503,7 @@ function WonderMobile() {
             <span
               className="font-mono uppercase"
               style={{
-                fontSize: "calc(var(--u-m) * 11)",
+                fontSize: "max(12px, calc(var(--u-m) * 11))",
                 letterSpacing: "calc(var(--u-m) * -0.55)",
                 opacity: 0.7,
               }}
@@ -1518,7 +1513,7 @@ function WonderMobile() {
             <span
               className="font-sans"
               style={{
-                fontSize: "calc(var(--u-m) * 14)",
+                fontSize: "max(12px, calc(var(--u-m) * 14))",
                 letterSpacing: "calc(var(--u-m) * -0.42)",
                 lineHeight: 1.5,
               }}
@@ -1545,7 +1540,7 @@ function WonderMobile() {
               style={{
                 width: "calc(var(--u-m) * 220)",
                 aspectRatio: "1152 / 2169",
-                borderRadius: "calc(var(--u-m) * 20)",
+                borderRadius: "24px",
                 overflow: "hidden",
               }}
             >
@@ -1582,7 +1577,7 @@ function WonderMobile() {
         <h2
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -1593,7 +1588,7 @@ function WonderMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1646,7 +1641,7 @@ function WonderMobile() {
                     className="w-full h-auto"
                     style={{
                       display: "block",
-                      borderRadius: "calc(var(--u-m) * 16)",
+                      borderRadius: "24px",
                     }}
                     draggable={false}
                   />
@@ -1676,7 +1671,7 @@ function WonderMobile() {
         <h2
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -1687,7 +1682,7 @@ function WonderMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1741,7 +1736,7 @@ function WonderMobile() {
           <span
             className="font-sans"
             style={{
-              fontSize: "calc(var(--u-m) * 12)",
+              fontSize: "max(12px, calc(var(--u-m) * 12))",
               letterSpacing: "calc(var(--u-m) * -0.36)",
               opacity: 0.7,
               textAlign: "center",
@@ -1816,7 +1811,7 @@ function WonderMobile() {
         <h2
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -1829,7 +1824,7 @@ function WonderMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1897,7 +1892,7 @@ function WonderMobile() {
         <h2
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -1908,7 +1903,7 @@ function WonderMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -1954,7 +1949,7 @@ function WonderMobile() {
         <h2
           className="font-serif"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.15,
             margin: 0,
@@ -1965,7 +1960,7 @@ function WonderMobile() {
         <p
           className="font-sans"
           style={{
-            fontSize: "calc(var(--u-m) * 14)",
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
             letterSpacing: "calc(var(--u-m) * -0.42)",
             lineHeight: 1.4,
             margin: 0,
@@ -2003,7 +1998,7 @@ function WonderMobile() {
                 style={{
                   width: "calc(var(--u-m) * 220)",
                   aspectRatio: "1929 / 3896",
-                  borderRadius: "calc(var(--u-m) * 16)",
+                  borderRadius: "24px",
                   overflow: "hidden",
                 }}
               >
@@ -2033,7 +2028,7 @@ function WonderMobile() {
         <p
           className="font-serif text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 20)",
+            fontSize: "max(12px, calc(var(--u-m) * 20))",
             letterSpacing: "calc(var(--u-m) * -0.4)",
             lineHeight: 1.4,
             margin: 0,

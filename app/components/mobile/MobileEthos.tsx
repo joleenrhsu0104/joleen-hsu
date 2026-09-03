@@ -60,7 +60,7 @@ export default function MobileEthos() {
         <p
           className="font-mono text-white text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 13)",
+            fontSize: "max(12px, calc(var(--u-m) * 13))",
             letterSpacing: "calc(var(--u-m) * -0.65)",
             lineHeight: 1.1,
             margin: 0,
@@ -72,7 +72,7 @@ export default function MobileEthos() {
         <blockquote
           className="font-serif text-white text-center"
           style={{
-            fontSize: "calc(var(--u-m) * 32)",
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
             letterSpacing: "calc(var(--u-m) * -0.64)",
             lineHeight: 1.2,
             margin: 0,

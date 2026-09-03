@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { HERO_PROJECTS } from "@/app/lib/assets";
 import ArrowUpRight from "./ArrowUpRight";
+import Logo from "./Logo";
+import ScrollNavLink from "./ScrollNavLink";
 
 /**
  * CyclingHero
@@ -170,37 +172,33 @@ export default function CyclingHero() {
           <Link
             href="/"
             aria-label="Home"
-            className="flex items-center h-full font-serif text-white whitespace-nowrap"
-            style={{
-              fontSize: "calc(var(--u) * 40)",
-              lineHeight: 1,
-              letterSpacing: "calc(var(--u) * -0.5)",
-            }}
+            className="flex items-center h-full text-white"
           >
-            joleen <span className="italic">hsu</span>
+            <Logo height="calc(var(--u) * 28)" />
           </Link>
           <div
-            className="flex items-center h-full font-mono"
+            className="flex items-center h-full font-sans"
             style={{
-              gap: "calc(var(--u) * 39)",
-              fontSize: "calc(var(--u) * 20)",
-              letterSpacing: "calc(var(--u) * -1)",
+              gap: "calc(var(--u) * 48)",
+              fontSize: "max(14px, calc(var(--u) * 20))",
+              fontWeight: 500,
+              letterSpacing: "calc(var(--u) * -0.4)",
               lineHeight: 1,
             }}
           >
-            <Link href="/work" className="hover:opacity-70 transition-opacity">
-              WORK
-            </Link>
-            <Link href="/contact" className="hover:opacity-70 transition-opacity">
-              CONTACT
-            </Link>
+            <ScrollNavLink hash="work" className="hover:opacity-70 transition-opacity">
+              Work
+            </ScrollNavLink>
+            <ScrollNavLink hash="contact" className="hover:opacity-70 transition-opacity">
+              Contact
+            </ScrollNavLink>
             <a
               href="https://www.linkedin.com/in/joleenhsu/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-baseline gap-[4px] hover:opacity-70 transition-opacity"
             >
-              LINKEDIN
+              LinkedIn
               <ArrowUpRight />
             </a>
           </div>
@@ -220,7 +218,7 @@ export default function CyclingHero() {
             top: "calc(50vh - var(--u) * 365 - 8px - var(--u) * 31)",
             width: "calc(var(--u) * 535)",
             height: "calc(var(--u) * 31)",
-            fontSize: "calc(var(--u) * 16)",
+            fontSize: "max(14px, calc(var(--u) * 16))",
             letterSpacing: "calc(var(--u) * -0.8)",
             lineHeight: "calc(var(--u) * 31)",
             textAlign: "left",
@@ -293,7 +291,7 @@ export default function CyclingHero() {
             top: "calc(50vh + var(--u) * 365 + 8px)",
             width: "calc(var(--u) * 535)",
             height: "calc(var(--u) * 31)",
-            fontSize: "calc(var(--u) * 16)",
+            fontSize: "max(14px, calc(var(--u) * 16))",
             letterSpacing: "calc(var(--u) * -0.8)",
             lineHeight: "calc(var(--u) * 31)",
             textAlign: "right",
@@ -325,7 +323,7 @@ export default function CyclingHero() {
               className="absolute font-serif text-center transition-opacity duration-500 ease-out"
               style={{
                 color: "var(--color-cream-bright)",
-                fontSize: "calc(var(--u) * 350)",
+                fontSize: "max(14px, calc(var(--u) * 350))",
                 letterSpacing: "calc(var(--u) * -7)",
                 lineHeight: 1.2,
                 textShadow:

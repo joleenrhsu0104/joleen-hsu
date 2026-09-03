@@ -20,7 +20,7 @@ export default function MobileAbout() {
           left: "calc(var(--u-m) * 16)",
           top: "calc(var(--u-m) * 53)",
           width: "calc(var(--u-m) * 358)",
-          fontSize: "calc(var(--u-m) * 28)",
+          fontSize: "max(12px, calc(var(--u-m) * 28))",
           letterSpacing: "calc(var(--u-m) * -0.56)",
           lineHeight: 1.15,
           color: "var(--color-ink)",
@@ -73,7 +73,7 @@ export default function MobileAbout() {
             <h3
               className="font-serif"
               style={{
-                fontSize: "calc(var(--u-m) * 26)",
+                fontSize: "max(12px, calc(var(--u-m) * 26))",
                 letterSpacing: "calc(var(--u-m) * -0.52)",
                 lineHeight: 1.1,
                 margin: 0,
@@ -84,7 +84,7 @@ export default function MobileAbout() {
             <div
               className="flex items-baseline justify-between font-sans"
               style={{
-                fontSize: "calc(var(--u-m) * 14)",
+                fontSize: "max(12px, calc(var(--u-m) * 14))",
                 letterSpacing: "calc(var(--u-m) * -0.42)",
                 lineHeight: 1.3,
                 gap: "calc(var(--u-m) * 12)",
