@@ -5,6 +5,8 @@ import {
   B612_Mono,
   Zalando_Sans_SemiExpanded,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -74,7 +76,14 @@ export default function RootLayout({
       lang="en"
       className={`${instrumentSerif.variable} ${instrumentSans.variable} ${b612Mono.variable} ${zalandoSans.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Vercel Analytics + Speed Insights — auto-report page
+            views and Core Web Vitals to the Vercel dashboard.
+            Both are privacy-friendly (no cookies, no PII). */}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
