@@ -114,9 +114,9 @@ const SHAPES: Array<{
   // smaller than the four corners). Corner offsets stay ±150.
   { top: 80, centerOffset: -150, w: 140, h: 140, driftDuration: 13 }, // 1 — TOP-LEFT
   { top: 80, centerOffset: 150, w: 140, h: 140, driftDuration: 9 }, // 2 — TOP-RIGHT
-  { bottomPx: 130, centerOffset: -150, w: 140, h: 140, driftDuration: 11 }, // 3 — BOTTOM-LEFT
-  { bottomPx: 130, centerOffset: 150, w: 140, h: 140, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
-  { top: 220, topCapPx: 250, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Base 220u-m centers it on narrow phones (~700px height). topCapPx of 250 stops it from sliding further down on wider mobile viewports (600-800px) where --u-m * 220 would push its top edge past ~440px — well below the visual midpoint.
+  { bottomPx: 170, centerOffset: -150, w: 140, h: 140, driftDuration: 11 }, // 3 — BOTTOM-LEFT
+  { bottomPx: 170, centerOffset: 150, w: 140, h: 140, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
+  { top: 300, topCapPx: 320, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Base 300u-m puts it midway between the top and bottom rows on tall phones like iPhone 16 Pro Max (~430px viewport, ~800px tall) so the 5 shapes read as evenly distributed vertically. topCapPx of 320 stops it from sliding further down on wider mobile viewports (600–800px).
 ];
 
 const SHAPE_COLOR = "#c4bcaf";
@@ -403,7 +403,7 @@ export default function MobileOpeningSequence() {
         style={{
           left: "calc(var(--u-m) * 20)",
           right: "calc(var(--u-m) * 20)",
-          bottom: "calc(var(--u-m) * 24)",
+          bottom: "calc(var(--u-m) * 60)",
           color: "var(--color-ink)",
           zIndex: 10,
         }}

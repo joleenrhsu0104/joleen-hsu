@@ -98,7 +98,7 @@ export default function MobileHomeWorkSection() {
           paddingBottom: "calc(var(--u-m) * 64)",
           paddingLeft: "calc(var(--u-m) * 16)",
           paddingRight: "calc(var(--u-m) * 16)",
-          gap: "calc(var(--u-m) * 48)",
+          gap: "calc(var(--u-m) * 48 + 16px)",
         }}
       >
         {PROJECTS.map((project, i) => (
