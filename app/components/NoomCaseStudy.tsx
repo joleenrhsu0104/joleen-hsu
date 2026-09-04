@@ -722,7 +722,10 @@ function DesignSprintsSectionDesktop() {
   return (
     <section
       style={{
-        backgroundColor: CREAM,
+        // Pure white so this section reads as its own chapter,
+        // distinct from the cream challenges block above and the
+        // taupe rebrand mosaic (MosaicGridDesktop) below.
+        backgroundColor: "#FFFFFF",
         color: INK,
         paddingTop: "calc(var(--u) * 96)",
         paddingBottom: "calc(var(--u) * 96)",
@@ -1250,7 +1253,7 @@ function OnboardingScreensRowMobile() {
         {phones.map(({ src, alt }, i) => {
           if (i === 0) {
             return (
-              <div key={src} className="relative" style={{ width: "calc(var(--u-m) * 220)" }}>
+              <div key={src} className="relative" style={{ width: "min(calc(var(--u-m) * 220), 100%)" }}>
                 <PhoneMockMobile src={src} alt={alt} />
                 <video
                   src={NOOM_ONBOARDING_DIAL_VIDEO}
@@ -1465,8 +1468,11 @@ function ChallengePagesRowMobile() {
     >
       {/* paddingY override 44u-m → 16u-m matches the habit-loops pin
           above so the labels sit closer to the top of the labeled
-          section and the empty blue space above them shrinks. */}
-      <MobileHorizontalPin paddingY="calc(var(--u-m) * 8)">
+          section and the empty blue space above them shrinks.
+          Forced to a 1-column layout so each labeled Challenge page
+          reads full-width instead of squeezing three cards into a
+          2-column grid where the third would sit alone below. */}
+      <MobileHorizontalPin paddingY="calc(var(--u-m) * 8)" columns={1}>
         {phones.map(({ src, alt, label }) => (
           <div
             key={src}
@@ -1534,7 +1540,8 @@ function DesignSprintsSectionMobile() {
   return (
     <section
       style={{
-        backgroundColor: CREAM,
+        // Pure white — see DesignSprintsSectionDesktop for why.
+        backgroundColor: "#FFFFFF",
         color: INK,
         paddingTop: "calc(var(--u-m) * 64)",
         paddingBottom: "calc(var(--u-m) * 64)",
@@ -1598,7 +1605,7 @@ function DesignSprintsSectionMobile() {
    aspectRatio wrapper. */
 function PhoneMockMobile({ src, alt }: { src: string; alt: string }) {
   return (
-    <div style={{ width: "calc(var(--u-m) * 220)" }}>
+    <div style={{ width: "min(calc(var(--u-m) * 220), 100%)" }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}

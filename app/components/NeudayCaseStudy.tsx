@@ -657,7 +657,7 @@ function NeudayMobile() {
               key={src}
               className="shrink-0"
               style={{
-                width: "calc(var(--u-m) * 220)",
+                width: "min(calc(var(--u-m) * 220), 100%)",
                 aspectRatio: "420 / 803",
               }}
             >

@@ -62,6 +62,11 @@ const LANDING_IMAGES: string[] = [
 const SHAPES: Array<{
   top?: number;
   bottomPx?: number;
+  /** Optional px ceiling on `top` — used by the accent shape so
+   *  it doesn't drift too far down the viewport on wider mobile
+   *  widths where --u-m scales the base value past the visual
+   *  midpoint. Ignored for corner shapes. */
+  topCapPx?: number;
   centerOffset: number; // signed distance from viewport center, in u-m
   w: number;
   h: number;
@@ -78,11 +83,40 @@ const SHAPES: Array<{
   // giving 30/130 ≈ 23% bleed at 160 — under the 25% ceiling with
   // a small safety margin. (The old formula-with-left-anchor gave
   // 55%+ bleed on one side.)
-  { top: 30, centerOffset: -160, w: 130, h: 130, driftDuration: 13 }, // 1 — TOP-LEFT
-  { top: 30, centerOffset: 160, w: 130, h: 130, driftDuration: 9 }, // 2 — TOP-RIGHT
-  { bottomPx: 80, centerOffset: -160, w: 130, h: 130, driftDuration: 11 }, // 3 — BOTTOM-LEFT
-  { bottomPx: 80, centerOffset: 160, w: 130, h: 130, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
-  { top: 240, centerOffset: 0, w: 100, h: 100, driftDuration: 10 }, // 5 — CENTERED ACCENT above wordmark
+  // Widths bumped 130 → 160 to fill more of the viewport; bottom
+  // shapes raised (80 → 160) so they clear the two-line bio
+  // caption anchored at bottom:24u-m below.
+  // All 5 shapes standardized to w:120 (matches the middle shape's
+  // size). Corner offsets tightened to ±160 so bleed stays ≤25%
+  // of width at every mobile viewport ((60 + 160 − 195)/120 =
+  // 21%). Accent shape moved to y-position 200 so it sits in the
+  // vertical gap between the top and bottom rows.
+  // Top shapes pulled up (100 → 40) to close the ~180px empty
+  // strip above them on wider mobile viewports. Bottom shapes
+  // moved down (160 → 90) so they still clear the two-line bio
+  // caption (~89px tall at bottom:24u-m). Accent shape sits at
+  // top:140 in the vertical band between the top and bottom rows;
+  // horizontally centered (offset 0) so it never crosses into
+  // either corner column. Result: no shape-on-shape overlap at
+  // any mobile viewport, only shape-on-wordmark (handled by the
+  // cream drop-shadow halo).
+  // Top pushed from 40 → 80 and bottomPx pushed from 90 → 160 so
+  // that even at max drift + cursor-repulsion travel (~78px at
+  // 800vw with MAX_PUSH=30 / DRIFT_AMPLITUDE=8) the shape edges
+  // still can't reach either the top nav row (~63px tall) or the
+  // two-line bio caption (~89px tall at bottom:24u-m).
+  // Corner shapes bumped w:120 → 140 (17% larger). CenterOffset
+  // relaxed to ±150 so bleed drops from 25% to 18% (formula:
+  // (offset + w/2 − 195)/w). Accent shape kept at w:120 so it
+  // still reads as a smaller focal accent.
+  // All 5 shapes standardized at w:140 so they read as one size
+  // (previous 120 on the accent shape made it look meaningfully
+  // smaller than the four corners). Corner offsets stay ±150.
+  { top: 80, centerOffset: -150, w: 140, h: 140, driftDuration: 13 }, // 1 — TOP-LEFT
+  { top: 80, centerOffset: 150, w: 140, h: 140, driftDuration: 9 }, // 2 — TOP-RIGHT
+  { bottomPx: 130, centerOffset: -150, w: 140, h: 140, driftDuration: 11 }, // 3 — BOTTOM-LEFT
+  { bottomPx: 130, centerOffset: 150, w: 140, h: 140, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
+  { top: 220, topCapPx: 250, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Base 220u-m centers it on narrow phones (~700px height). topCapPx of 250 stops it from sliding further down on wider mobile viewports (600-800px) where --u-m * 220 would push its top edge past ~440px — well below the visual midpoint.
 ];
 
 const SHAPE_COLOR = "#c4bcaf";
@@ -93,10 +127,14 @@ const SHAPE_COLOR = "#c4bcaf";
 // rather than 1920. `uScale` in the tick loop still scales these
 // proportionally to the actual viewport width.
 const INFLUENCE_RADIUS = 260;
-const MAX_PUSH = 70;
+// Push + drift amplitudes trimmed on mobile so shapes never drift
+// into the LA-time/nav row at the top or the bio caption at the
+// bottom, even at the widest mobile viewports (~800px) where the
+// per-frame amplitude scales up by ~2×.
+const MAX_PUSH = 30;
 const LERP = 0.045;
 const MOUSE_LERP = 0.075;
-const DRIFT_AMPLITUDE = 12;
+const DRIFT_AMPLITUDE = 8;
 
 export default function MobileOpeningSequence() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -231,7 +269,11 @@ export default function MobileOpeningSequence() {
             className="absolute overflow-hidden"
             style={{
               ...(shape.top !== undefined
-                ? { top: `calc(var(--u-m) * ${shape.top})` }
+                ? {
+                    top: shape.topCapPx
+                      ? `min(calc(var(--u-m) * ${shape.top}), ${shape.topCapPx}px)`
+                      : `calc(var(--u-m) * ${shape.top})`,
+                  }
                 : { bottom: `${shape.bottomPx}px` }),
               // Center-anchored horizontal position — subtract
               // w/2 from the offset so `centerOffset` is the
@@ -241,9 +283,13 @@ export default function MobileOpeningSequence() {
               // sides otherwise pushes right-side shapes further
               // from center than left-side ones by w units.
               left: `calc(50% + var(--u-m) * ${shape.centerOffset - shape.w / 2})`,
-              width: `calc(var(--u-m) * ${shape.w})`,
-              height: `calc(var(--u-m) * ${shape.h})`,
-              borderRadius: "4px",
+              // Size capped at 180px so shapes don't balloon on
+              // wider mobile viewports (600-800px) where u-m *
+              // 140 would push them past 250px and force the top
+              // and bottom rows to overlap.
+              width: `min(calc(var(--u-m) * ${shape.w}), 180px)`,
+              height: `min(calc(var(--u-m) * ${shape.h}), 180px)`,
+              borderRadius: "8px",
               backgroundColor: SHAPE_COLOR,
               willChange: "transform",
               zIndex: 0,
@@ -374,7 +420,8 @@ export default function MobileOpeningSequence() {
           }}
         >
           I&rsquo;m a Staff Product Designer building 0 &rarr; 1
-          products{" "}
+          products
+          <br />
           <span className="font-serif italic" style={{ fontWeight: 400, letterSpacing: 0 }}>
             (specializing in consumer at the intersection of AI x human
             flourishing)

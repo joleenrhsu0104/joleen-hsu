@@ -89,8 +89,8 @@ export default function MobileSignature() {
           bottom: 0,
           width: "calc(var(--u-m) * 226)",
           height: "calc(var(--u-m) * 305)",
-          borderTopLeftRadius: "4px",
-          borderTopRightRadius: "4px",
+          borderTopLeftRadius: "12px",
+          borderTopRightRadius: "12px",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -119,9 +119,21 @@ export default function MobileSignature() {
           left: "calc(var(--u-m) * 20)",
           right: "calc(var(--u-m) * 20)",
           bottom: "calc(var(--u-m) * 24)",
-          fontSize: "max(12px, calc(var(--u-m) * 65))",
+          // Font sized to fill the 16-char string edge-to-edge in
+          // the container (100vw − 40u-m for the ±20u-m insets),
+          // so the wordmark's left/right edges land on the same
+          // vertical rules as the top-left logo and top-right nav.
+          // 15vw hits ~59px at 393vw (fits with ~3px margin) and
+          // scales cleanly up through the 800px mobile ceiling.
+          // Capped at 140px so it doesn't runaway on tablet-width
+          // mobile viewports.
+          fontSize: "max(12px, min(150px, 16vw))",
           letterSpacing: "calc(var(--u-m) * -1.3)",
-          lineHeight: 1.05,
+          // Bumped 1.05 → 1.4 so the serif italic descenders
+          // (j, g) and ascenders (h, l, d) aren't clipped by
+          // the tight line box that background-clip: text uses
+          // as its mask boundary.
+          lineHeight: 1.4,
           margin: 0,
           backgroundImage: `url(${HEADLINE_TEXTURE})`,
           backgroundSize: "130% 320%",

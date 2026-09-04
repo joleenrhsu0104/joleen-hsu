@@ -1538,7 +1538,7 @@ function WonderMobile() {
               key={src}
               className="shrink-0"
               style={{
-                width: "calc(var(--u-m) * 220)",
+                width: "min(calc(var(--u-m) * 220), 100%)",
                 aspectRatio: "1152 / 2169",
                 borderRadius: "24px",
                 overflow: "hidden",
@@ -1764,7 +1764,7 @@ function WonderMobile() {
                 key={src}
                 className="shrink-0"
                 style={{
-                  width: "calc(var(--u-m) * 240)",
+                  width: "min(calc(var(--u-m) * 240), 100%)",
                   aspectRatio: "756 / 1432",
                 }}
               >
@@ -1996,7 +1996,7 @@ function WonderMobile() {
                 key={src}
                 className="shrink-0"
                 style={{
-                  width: "calc(var(--u-m) * 220)",
+                  width: "min(calc(var(--u-m) * 220), 100%)",
                   aspectRatio: "1929 / 3896",
                   borderRadius: "24px",
                   overflow: "hidden",

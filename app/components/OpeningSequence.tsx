@@ -155,11 +155,23 @@ const SHAPES: Array<{
   // 5↔1/4 with partial Y) still hold >200u edge-to-edge gap under
   // max cursor push. Slot 5 bottomPx tightened from 150 to 100 so
   // the taller shape doesn't dip deeper into the wordmark band.
-  { bottomPx: 80, left: -50, w: 360, h: 360, driftDuration: 18 }, // 1 — LEFT bleed
-  { top: 100, left: 440, w: 360, h: 360, driftDuration: 22 }, // 2 — upper mid-left
-  { top: 140, left: 1300, w: 360, h: 360, driftDuration: 16 }, // 3 — upper right
-  { bottomPx: 80, left: 1740, w: 360, h: 360, driftDuration: 24 }, // 4 — RIGHT bleed
-  { bottomPx: 100, left: 870, w: 360, h: 360, driftDuration: 20 }, // 5 — BOTTOM center (bottomPx dropped from 150 → 100 so the 360u-tall shape's top edge stays out of the deeper wordmark band)
+  // Widths bumped 360 → 450u (25% bigger) at the user's request.
+  // Horizontal positions shifted slightly toward center so the
+  // wider tiles keep the same edge bleed on both sides.
+  //
+  // `bottomPx` is now interpreted as u-scaled (see render below —
+  // was fixed px). Values raised so that even at the widest
+  // reasonable viewports, the shape's bottom edge stays above
+  // the two-line bio caption (top ~100u from the section bottom)
+  // with a max travel buffer of ~48u for drift + push.
+  //
+  // Top values raised to 160u so the top edge stays below the
+  // nav row (bottom ~104u) at all viewports.
+  { bottomPx: 160, left: -95, w: 450, h: 450, driftDuration: 18 }, // 1 — LEFT bleed
+  { top: 160, left: 395, w: 450, h: 450, driftDuration: 22 }, // 2 — upper mid-left
+  { top: 160, left: 1255, w: 450, h: 450, driftDuration: 16 }, // 3 — upper right
+  { bottomPx: 160, left: 1695, w: 450, h: 450, driftDuration: 24 }, // 4 — RIGHT bleed
+  { bottomPx: 160, left: 825, w: 450, h: 450, driftDuration: 20 }, // 5 — BOTTOM center
 ];
 
 // Pool of image srcs the shapes draw from, in order. Index N of
@@ -179,16 +191,18 @@ const SHAPE_COLOR = "#c4bcaf";
 
 // Cursor repulsion parameters (in viewport pixels).
 const INFLUENCE_RADIUS = 380;
-const MAX_PUSH = 120;
+// Push + drift amplitudes trimmed so shapes never drift into the
+// top-nav row (bottom ~104u) or the bio/taste captions (top ~100u
+// from the section bottom). Both scale by viewport / 1920 in the
+// tick loop, so at 2560vw the effective push is ~53px.
+const MAX_PUSH = 40;
 // Spring stiffness — how fast the current push offset lerps toward
-// the target each frame. Halved from 0.09 so the shape's response
-// to cursor movement feels heavier / half-speed.
+// the target each frame.
 const LERP = 0.045;
-// Mouse-position smoothing — halved from 0.15 for the same slower,
-// smoother tracking feel.
+// Mouse-position smoothing.
 const MOUSE_LERP = 0.075;
 // Per-axis amplitude (px) of each shape's ambient sine drift.
-const DRIFT_AMPLITUDE = 14;
+const DRIFT_AMPLITUDE = 8;
 
 export default function OpeningSequence() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -350,11 +364,17 @@ export default function OpeningSequence() {
               // captions regardless of viewport aspect).
               ...(shape.top !== undefined
                 ? { top: `calc(var(--u) * ${shape.top})` }
-                : { bottom: `${shape.bottomPx}px` }),
+                : { bottom: `calc(var(--u) * ${shape.bottomPx})` }),
               left: `calc(var(--u) * ${shape.left})`,
-              width: `calc(var(--u) * ${shape.w})`,
-              height: `calc(var(--u) * ${shape.h})`,
-              borderRadius: "4px",
+              // Width/height capped at 280px so shapes don't
+              // balloon on wide desktop viewports (~1440+). The
+              // 450u base gives the intended +25% presence on
+              // narrow/tablet viewports (~900px, where 450u ≈
+              // 210px) but tops out once the u-scaled value hits
+              // the cap around 1195vw viewport width.
+              width: `min(calc(var(--u) * ${shape.w}), 280px)`,
+              height: `min(calc(var(--u) * ${shape.h}), 280px)`,
+              borderRadius: "12px",
               backgroundColor: SHAPE_COLOR,
               willChange: "transform",
               zIndex: 0,

@@ -56,7 +56,7 @@ const PROJECTS: Project[] = [
     slug: "wonder",
     image: HERO_PROJECTS[0].image,
     side: "left",
-    imageHeight: 730,
+    imageHeight: 657,
   },
   {
     name: "Blue Apron",
@@ -65,7 +65,7 @@ const PROJECTS: Project[] = [
     slug: "blue-apron",
     image: HERO_PROJECTS[1].image,
     side: "right",
-    imageHeight: 730,
+    imageHeight: 657,
   },
   {
     name: "Noom",
@@ -74,7 +74,7 @@ const PROJECTS: Project[] = [
     slug: "noom",
     image: HERO_PROJECTS[2].image,
     side: "left",
-    imageHeight: 730,
+    imageHeight: 657,
   },
   {
     name: "Neuday",
@@ -83,7 +83,7 @@ const PROJECTS: Project[] = [
     slug: "neuday",
     image: HERO_PROJECTS[3].image,
     side: "right",
-    imageHeight: 730,
+    imageHeight: 657,
   },
 ];
 
@@ -249,9 +249,15 @@ function ProjectCardDesktop({ project }: { project: Project }) {
       href={`/work/${project.slug}`}
       className="relative block group"
       style={{
-        width: "calc(var(--u) * 813)",
-        marginLeft: isLeft ? "calc(var(--u) * 176)" : "auto",
-        marginRight: isLeft ? "auto" : "calc(var(--u) * 115)",
+        // Card width reduced 10% from the original 813u (→ 732u)
+        // — the previous 30% cut felt too small, so nudged back
+        // up.
+        width: "calc(var(--u) * 732)",
+        // Symmetric side margins so left cards sit the same
+        // distance from the viewport's left edge as right cards
+        // sit from the viewport's right edge.
+        marginLeft: isLeft ? "calc(var(--u) * 145)" : "auto",
+        marginRight: isLeft ? "auto" : "calc(var(--u) * 145)",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -262,7 +268,7 @@ function ProjectCardDesktop({ project }: { project: Project }) {
         style={{
           width: "100%",
           height: `calc(var(--u) * ${project.imageHeight})`,
-          borderRadius: "4px",
+          borderRadius: "12px",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}

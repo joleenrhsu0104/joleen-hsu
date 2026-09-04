@@ -1881,7 +1881,7 @@ function MobilePdpScrollPin({
               letterSpacing: "calc(var(--u-m) * -0.36)",
               opacity: 0.75,
               flexShrink: 0,
-              width: "calc(var(--u-m) * 240)",
+              width: "min(calc(var(--u-m) * 240), 100%)",
             }}
           >
             {label}
@@ -1899,7 +1899,7 @@ function MobilePdpScrollPin({
             ref={windowRef}
             className="overflow-hidden"
             style={{
-              width: "calc(var(--u-m) * 240)",
+              width: "min(calc(var(--u-m) * 240), 100%)",
               maxHeight: "calc(100vh - var(--u-m) * 50)",
               borderRadius: "24px",
             }}
@@ -2089,7 +2089,7 @@ function BlueApronMobile() {
             key={src}
             className="shrink-0"
             style={{
-              width: "calc(var(--u-m) * 220)",
+              width: "min(calc(var(--u-m) * 220), 100%)",
               aspectRatio: "420 / 803",
             }}
           >
@@ -2232,7 +2232,7 @@ function BlueApronMobile() {
                 key={src}
                 className="shrink-0"
                 style={{
-                  width: "calc(var(--u-m) * 220)",
+                  width: "min(calc(var(--u-m) * 220), 100%)",
                   // Mock 3 (index 2) has the border/radius baked into
                   // its PNG; the others get a soft outline + radius
                   // applied here to match desktop's per-mock treatment.

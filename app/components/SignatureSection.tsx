@@ -44,8 +44,8 @@ export default function SignatureSection() {
           top: "calc(var(--u) * 175)",
           width: "calc(var(--u) * 565.58)",
           height: "calc(var(--u) * 765)",
-          borderTopLeftRadius: "4px",
-          borderTopRightRadius: "4px",
+          borderTopLeftRadius: "12px",
+          borderTopRightRadius: "12px",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}

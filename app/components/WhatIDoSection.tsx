@@ -71,29 +71,21 @@ export default function WhatIDoSection() {
 
   const handleEnter = (i: number) => {
     // Center the preview vertically on the hovered row, measured
-    // against the rows-wrapper (the preview's offsetParent).
-    // Clamp so the preview never extends above the rows-wrapper top
-    // (or below its bottom) — otherwise the top-most row's hover
-    // clipped the preview's upper edge, and the bottom-most row
-    // would clip its lower edge.
+    // against the rows-wrapper (the preview's offsetParent). No
+    // clamping — the section is `overflow-visible` so the preview
+    // can extend past the section's top or bottom edge for the
+    // first and last rows, keeping the four previews evenly
+    // distributed at row-center positions.
     const row = rowRefs.current[i];
-    const wrapper = row?.offsetParent as HTMLElement | null;
     if (row) {
-      const rawY = row.offsetTop + row.offsetHeight / 2;
-      const wrapperH = wrapper?.offsetHeight ?? Infinity;
-      const halfPreview = PREVIEW_H / 2;
-      const clampedY = Math.min(
-        Math.max(rawY, halfPreview),
-        wrapperH - halfPreview,
-      );
-      setPreviewY(clampedY);
+      setPreviewY(row.offsetTop + row.offsetHeight / 2);
     }
     setHovered(i);
   };
 
   return (
     <section
-      className="relative overflow-hidden text-white"
+      className="relative text-white"
       style={{
         // Hardcoded near-black — no longer tracks --scroll-bg.
         // The dark→cream gradient that previously transitioned this
@@ -260,7 +252,7 @@ export default function WhatIDoSection() {
             })`,
             width: `${PREVIEW_W}px`,
             height: `${PREVIEW_H}px`,
-            borderRadius: "4px",
+            borderRadius: "12px",
             opacity: hovered !== null ? 1 : 0,
             transition:
               "opacity 0.35s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), top 0.45s cubic-bezier(0.2, 0.7, 0.2, 1)",

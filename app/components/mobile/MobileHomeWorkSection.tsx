@@ -201,7 +201,7 @@ function ProjectCardMobile({
           // Unified 813:730 aspect across all four cards — same as
           // WorkPage mobile so cards read at consistent sizes.
           aspectRatio: "813 / 730",
-          borderRadius: "4px",
+          borderRadius: "12px",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
