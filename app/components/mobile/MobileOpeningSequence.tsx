@@ -112,11 +112,11 @@ const SHAPES: Array<{
   // All 5 shapes standardized at w:140 so they read as one size
   // (previous 120 on the accent shape made it look meaningfully
   // smaller than the four corners). Corner offsets stay ±150.
-  { top: 80, centerOffset: -150, w: 170, h: 170, driftDuration: 13 }, // 1 — TOP-LEFT
-  { top: 80, centerOffset: 150, w: 170, h: 170, driftDuration: 9 }, // 2 — TOP-RIGHT
-  { bottomPx: 170, centerOffset: -150, w: 170, h: 170, driftDuration: 11 }, // 3 — BOTTOM-LEFT
-  { bottomPx: 170, centerOffset: 150, w: 170, h: 170, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
-  { top: 200, topCapPx: 220, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Kept at w:140 (smaller than the 170 corners) and moved up to top:200 so it sits in the empty vertical band between the top row (ends ~y:275 on iPhone 16 Pro Max) and the bottom row (starts ~y:426) instead of overlapping the bottom corners. topCapPx:220 keeps it from sliding down on wider mobile viewports.
+  { top: 80, centerOffset: -150, w: 140, h: 140, driftDuration: 13 }, // 1 — TOP-LEFT
+  { top: 80, centerOffset: 150, w: 140, h: 140, driftDuration: 9 }, // 2 — TOP-RIGHT
+  { bottomPx: 130, centerOffset: -150, w: 140, h: 140, driftDuration: 11 }, // 3 — BOTTOM-LEFT
+  { bottomPx: 130, centerOffset: 150, w: 140, h: 140, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
+  { top: 275, topCapPx: 302, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Positioned so its vertical range sits equidistant between the top row (ends ~y:242 on iPhone 16 Pro Max) and the bottom row (starts ~y:516) — top:275 gives ~60px on both sides at that viewport. topCapPx:302 keeps it from sliding lower at wider mobile widths.
 ];
 
 const SHAPE_COLOR = "#c4bcaf";
@@ -405,7 +405,7 @@ export default function MobileOpeningSequence() {
         style={{
           left: "calc(var(--u-m) * 20)",
           right: "calc(var(--u-m) * 20)",
-          bottom: "calc(var(--u-m) * 60)",
+          bottom: "calc(var(--u-m) * 40)",
           color: "var(--color-ink)",
           zIndex: 10,
         }}
@@ -425,8 +425,7 @@ export default function MobileOpeningSequence() {
           products
           <br />
           <span className="font-serif italic" style={{ fontWeight: 400, letterSpacing: 0 }}>
-            (specializing in consumer at the intersection of AI x human
-            flourishing)
+            (specializing in mission-driven consumer brands)
           </span>
         </p>
       </div>

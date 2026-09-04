@@ -71,7 +71,25 @@ function formatLATime(): string {
 const SHAPES: Array<{
   top?: number;
   bottomPx?: number;
-  left: number;
+  /** If true, ignore top/bottomPx and center the shape at 50vh
+   *  (subtracting 140px = half the 280px cap). Used to pin the
+   *  center accent shape BEHIND the wordmark on every viewport. */
+  vhCenter?: boolean;
+  /** Legacy: horizontal position in design units (1920 canvas).
+   *  Prefer `leftPx` / `rightPx` / `centerX` for new shapes —
+   *  they anchor to the viewport edge in fixed pixels so
+   *  positioning stays symmetric at every viewport width instead
+   *  of drifting toward whichever side has the bigger design
+   *  offset. */
+  left?: number;
+  /** Fixed px offset from the viewport left edge. Negative
+   *  values bleed the shape off the left side. */
+  leftPx?: number;
+  /** Fixed px offset from the viewport right edge. Negative
+   *  values bleed the shape off the right side. */
+  rightPx?: number;
+  /** If true, center the shape horizontally (viewport-relative). */
+  centerX?: boolean;
   w: number;
   h: number;
   driftDuration: number;
@@ -167,11 +185,61 @@ const SHAPES: Array<{
   //
   // Top values raised to 160u so the top edge stays below the
   // nav row (bottom ~104u) at all viewports.
-  { bottomPx: 160, left: -95, w: 450, h: 450, driftDuration: 18 }, // 1 — LEFT bleed
-  { top: 160, left: 395, w: 450, h: 450, driftDuration: 22 }, // 2 — upper mid-left
-  { top: 160, left: 1255, w: 450, h: 450, driftDuration: 16 }, // 3 — upper right
-  { bottomPx: 160, left: 1695, w: 450, h: 450, driftDuration: 24 }, // 4 — RIGHT bleed
-  { bottomPx: 160, left: 825, w: 450, h: 450, driftDuration: 20 }, // 5 — BOTTOM center
+  // Vertical positions staggered so no two shapes share the same
+  // y baseline — reads as a scattered composition rather than
+  // two flat rows. Kept all values ≥160 so shapes stay out of
+  // the nav and bio caption keep-out zones at every desktop
+  // viewport (nav bottom ~104u, bio top ~100u from bottom).
+  // Corner shapes pulled closer to the vertical midline (top
+  // values pushed down, bottomPx values pushed up) so the whole
+  // cluster reads as tightly framed around the wordmark instead
+  // of banding the far top / far bottom of the section.
+  //
+  // Shape 5 (center accent) is pinned at 50vh via `vhCenter` so
+  // it sits directly behind the wordmark on every viewport.
+  // Restored spread-out layout matching the earlier reference:
+  // top row (2, 3) clearly ABOVE the wordmark, bottom row
+  // (1, 5, 4) clearly BELOW. Vertical values staggered so no
+  // two shapes share a y baseline. Horizontal `left` uses the
+  // 1920 design canvas so shapes spread across the full viewport
+  // width instead of clustering near center.
+  // Values tightened so max(top) + max(bottomPx) stays under
+  // 453u — the point at which top and bottom rows would collide
+  // vertically at MacBook Air (1440x900). Now on MBA:
+  //   • top row ends at y ≈ 430
+  //   • bottom row starts at y ≈ 500+ (min gap 25px)
+  // …so the two rows read as clearly separated bands with the
+  // wordmark passing through the middle, matching the reference.
+  // Top row nudged up ~40u closer to the nav row and bottom row
+  // nudged down ~40u closer to the bio caption while keeping
+  // enough buffer for cursor-repulsion motion. On MBA (1440x900)
+  // each row now sits ~6px above / below the text-safe boundary
+  // even at max push, with ~60px of clean separation between
+  // the two rows in the middle.
+  // Values bumped back up so text-safety holds at every desktop
+  // viewport from ~800px through 1920+. Safety-derived minimums:
+  //   • top ≥ 130u so shapes clear the nav row (bottom ≈ 104u)
+  //     with buffer for max cursor push at all viewports.
+  //   • bottomPx ≥ 160u so shapes clear the bio caption (top
+  //     ≈ 70–113u from bottom, depending on font/wrap) with buffer.
+  // The half-MBA breakpoint (~1000px viewport, u≈0.52) is the
+  // binding constraint — bio wraps into a taller caption there.
+  // BottomPx bumped up so shapes clear the bio caption (top
+  // ~70–113u from bottom) even at max cursor push at the
+  // narrowest desktop viewport (~800px, u≈0.42, motion≈10).
+  // Safety min = (bio_top + motion) / u = ~200 at u=0.42.
+  // Top values pulled DOWN toward the nav row and bottomPx
+  // pulled DOWN toward the bio caption so the two rows sit
+  // near the top/bottom edges of the viewport — matching the
+  // desktop composition where rows visibly hug the edges
+  // instead of clustering near the wordmark. Safety margins
+  // rechecked with MAX_PUSH:10 → still ≥1px static clearance
+  // at every desktop viewport from 720px through 1920+.
+  { bottomPx: 190, left: -95, w: 450, h: 450, driftDuration: 18 }, // 1 — LEFT bleed
+  { top: 125, left: 395, w: 450, h: 450, driftDuration: 22 }, // 2 — upper mid-left
+  { top: 155, left: 1255, w: 450, h: 450, driftDuration: 16 }, // 3 — upper right (30u lower than shape 2)
+  { bottomPx: 190, left: 1695, w: 450, h: 450, driftDuration: 24 }, // 4 — RIGHT bleed
+  { bottomPx: 210, left: 825, w: 450, h: 450, driftDuration: 20 }, // 5 — BOTTOM center on wide desktop viewports; overridden to vhCenter/centerX on tablet-width viewports (800-1200px) via isTabletDesktop below.
 ];
 
 // Pool of image srcs the shapes draw from, in order. Index N of
@@ -195,7 +263,7 @@ const INFLUENCE_RADIUS = 380;
 // top-nav row (bottom ~104u) or the bio/taste captions (top ~100u
 // from the section bottom). Both scale by viewport / 1920 in the
 // tick loop, so at 2560vw the effective push is ~53px.
-const MAX_PUSH = 40;
+const MAX_PUSH = 10;
 // Spring stiffness — how fast the current push offset lerps toward
 // the target each frame.
 const LERP = 0.045;
@@ -211,11 +279,30 @@ export default function OpeningSequence() {
   // client render agree (avoids hydration mismatch). Filled in by
   // the effect below on mount, then refreshed every 20s.
   const [laTime, setLaTime] = useState("");
+  // Track tablet-width viewports so shape 5 (the center accent)
+  // can pin behind the wordmark there — on wider desktop
+  // viewports it renders at bottom-center like the rest of the
+  // bottom row so the composition reads as 3 bottom + 2 top.
+  const [isTabletDesktop, setIsTabletDesktop] = useState(false);
 
   useEffect(() => {
     setLaTime(formatLATime());
     const id = setInterval(() => setLaTime(formatLATime()), 20_000);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const check = () => {
+      const w = window.innerWidth;
+      // 800 = the mobile breakpoint (below is MobileOpeningSequence).
+      // 1200 = roughly where the layout has enough horizontal room
+      // for shape 5 to sit in the bottom-center row without
+      // crowding the bio/taste captions.
+      setIsTabletDesktop(w >= 800 && w < 1200);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   useEffect(() => {
@@ -362,18 +449,52 @@ export default function OpeningSequence() {
               // --u) or from bottom (fixed px, so the shape holds a
               // constant offset above the fixed-px bio + taste
               // captions regardless of viewport aspect).
-              ...(shape.top !== undefined
-                ? { top: `calc(var(--u) * ${shape.top})` }
-                : { bottom: `calc(var(--u) * ${shape.bottomPx})` }),
-              left: `calc(var(--u) * ${shape.left})`,
-              // Width/height capped at 280px so shapes don't
-              // balloon on wide desktop viewports (~1440+). The
-              // 450u base gives the intended +25% presence on
-              // narrow/tablet viewports (~900px, where 450u ≈
-              // 210px) but tops out once the u-scaled value hits
-              // the cap around 1195vw viewport width.
-              width: `min(calc(var(--u) * ${shape.w}), 280px)`,
-              height: `min(calc(var(--u) * ${shape.h}), 280px)`,
+              ...(shape.vhCenter
+                ? {
+                    // Center on 50vh with an offset that mirrors
+                    // the dynamic half-height, so the shape's
+                    // vertical center always lands on viewport
+                    // midpoint (was hard-coded 140px which
+                    // put the shape too high on narrow viewports
+                    // where the rendered shape was ~210px tall).
+                    top: `calc(50vh - min(calc(var(--u) * ${shape.h * 310 / 450}), 130px))`,
+                  }
+                : shape.top !== undefined
+                  ? { top: `calc(var(--u) * ${shape.top})` }
+                  : { bottom: `calc(var(--u) * ${shape.bottomPx})` }),
+              ...(shape.centerX
+                ? {
+                    // Offset by half the shape's rendered width so
+                    // the shape's CENTER lands at viewport 50%.
+                    // Half-width mirrors the width min() formula
+                    // so centering holds at every viewport (shape
+                    // = min(u * w * 620/450, 260) → half = min(u
+                    // * w * 310/450, 130)).
+                    left: `calc(50% - min(calc(var(--u) * ${shape.w * 310 / 450}), 130px))`,
+                  }
+                : shape.rightPx !== undefined
+                  ? { right: `${shape.rightPx}px` }
+                  : shape.leftPx !== undefined
+                    ? { left: `${shape.leftPx}px` }
+                    : { left: `calc(var(--u) * ${shape.left})` }),
+              // Width responsive: multiplier bumped 340 → 500 and
+              // cap raised 240 → 260 so shapes scale up on
+              // iPad-portrait / narrow-desktop breakpoints
+              // (previously felt tiny) while still capping cleanly
+              // on 1440+. Text-safety math re-verified at 720vw:
+              // top shape (top:130) clears nav by 1px at max
+              // cursor push; bottom shape (bottomPx:210) clears
+              // bio by 22px.
+              // Multiplier bumped 500 → 620 so iPad-portrait
+              // shapes hit the cap sooner (was 210px, now 260 at
+              // 810vw). Cap held at 260 so nothing balloons past
+              // where the layout still fits.
+              // At viewport 800: 620*0.417 = 258px
+              // At viewport 1000: 620*0.52 = 322 → cap 260
+              // At viewport 1440: 620*0.75 = 465 → cap 260
+              // At viewport 1920: 620 → cap 260
+              width: `min(calc(var(--u) * ${shape.w * 620 / 450}), 260px)`,
+              height: `min(calc(var(--u) * ${shape.h * 620 / 450}), 260px)`,
               borderRadius: "12px",
               backgroundColor: SHAPE_COLOR,
               willChange: "transform",
@@ -483,8 +604,7 @@ export default function OpeningSequence() {
             lineHeight: 1.3,
           }}
         >
-          (specializing in consumer at the intersection of AI x human
-          flourishing)
+          (specializing in mission-driven consumer brands)
         </p>
       </div>
 

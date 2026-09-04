@@ -36,6 +36,13 @@ const zalandoSans = Zalando_Sans_SemiExpanded({
   variable: "--font-zalando",
   subsets: ["latin"],
   weight: ["400", "500"],
+  // Silences the "Failed to find font override values for
+  // `Zalando Sans SemiExpanded`" warning at dev-server startup.
+  // Next.js's font-metrics DB doesn't have entries for this
+  // less-common font, so it can't generate an auto-adjusted
+  // fallback — turning that off is fine since the wordmark
+  // is a fixed-size logo where CLS isn't a concern.
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
