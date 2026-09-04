@@ -113,6 +113,28 @@ const NOOM_ONBOARDING_DIAL_VIDEO = `${IMG}/NoomHero1-dial.webm`;
 // desktop and mobile. Filename has a space so URL-encode it.
 const NOOM_DESIGN_SPRINT_IMAGE = `${IMG}/${encodeURIComponent("Noom Design Sprint.png")}`;
 
+// Rewards & gamification screens — folder has a space + ampersand
+// in its name (`Rewards & Gamfication/`, per the actual on-disk
+// path) so it's URL-encoded once as the prefix that every filename
+// below hangs off of.
+const REWARDS_DIR = `${IMG}/${encodeURIComponent("Rewards & Gamfication")}`;
+const STREAK_SCREENS: Array<{ src: string; alt: string }> = [
+  { src: `${REWARDS_DIR}/Streak1.png`, alt: "Noom rewards — 3-day streak counter" },
+  { src: `${REWARDS_DIR}/Streak2.png`, alt: "Noom rewards — 3-day milestone celebration" },
+  { src: `${REWARDS_DIR}/Streak3.png`, alt: "Noom rewards — next milestone preview" },
+  { src: `${REWARDS_DIR}/Streak4.png`, alt: "Noom rewards — streak commitment CTA" },
+];
+
+// Three-row table paired with the "How might we keep users
+// engaged with their program?" intro on the right side of the
+// section. Each row maps a layer of gamification to the user
+// question it answers.
+const REWARDS_LAYERS: Array<{ label: string; question: string }> = [
+  { label: "Streaks", question: "Did I show up today?" },
+  { label: "Daily completion", question: "Did I do the habits in my program?" },
+  { label: "Seeds", question: "What rewards do I get?" },
+];
+
 const SCREEN_IMAGES = {
   // Onboarding row (NoomHero1-4) — bezeled exports, cream backdrops
   onboarding: {
@@ -173,6 +195,7 @@ function NoomDesktop() {
       <HabitLoopsSectionDesktop />
       <ChallengePagesRowDesktop />
       <ChallengeStatSectionDesktop />
+      <RewardsGamificationSectionDesktop />
       <DesignSprintsSectionDesktop />
       <MosaicGridDesktop />
       <ComingSoonSection />
@@ -790,6 +813,158 @@ function DesignSprintsSectionDesktop() {
 }
 
 /* ───────────────────────────────────────────────────────────────
+   Rewards & gamification section — cream chapter after Design
+   sprints. Left column: "How might we keep users engaged with
+   their program?" h2 + supporting copy. Right column: 3-row
+   table pairing each gamification layer (Streaks / Daily
+   completion / Seeds) with the user question it answers. Below:
+   a 4-phone row of the Streak flow. Additional rows (Daily
+   completion, Seeds) can be dropped in as their assets land.
+   ─────────────────────────────────────────────────────────────── */
+
+function RewardsGamificationSectionDesktop() {
+  const introRef = useRef<HTMLDivElement | null>(null);
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const introVisible = useFadeInOnScroll(introRef);
+  const rowVisible = useFadeInOnScroll(rowRef);
+  return (
+    <section
+      style={{
+        backgroundColor: CREAM,
+        color: INK,
+        paddingTop: "calc(var(--u) * 96)",
+        paddingBottom: "calc(var(--u) * 96)",
+        paddingLeft: "calc(var(--u) * 96)",
+        paddingRight: "calc(var(--u) * 96)",
+      }}
+    >
+      {/* Two-column intro row: title + body on the left, layer
+          table on the right. Left column sits flush with the
+          section's 96u paddingLeft so the h2 lines up horizontally
+          with every other section header on the case study. */}
+      <div
+        ref={introRef}
+        className="flex items-start justify-between"
+        style={{ gap: "calc(var(--u) * 96)", ...fadeInStyle(introVisible) }}
+      >
+        <div
+          className="flex flex-col"
+          style={{
+            width: "calc(var(--u) * 620)",
+            gap: "calc(var(--u) * 24)",
+          }}
+        >
+          <h2
+            className="font-serif"
+            style={{
+              fontSize: "max(14px, calc(var(--u) * 56))",
+              letterSpacing: "calc(var(--u) * -1.12)",
+              lineHeight: 1.1,
+              margin: 0,
+              // Match the body copy width below so the header
+              // wraps at the same left/right rules and the two
+              // blocks read as a single column.
+              maxWidth: "calc(var(--u) * 620)",
+            }}
+          >
+            How might we keep users engaged with their program?
+          </h2>
+          <p
+            className="font-sans"
+            style={{
+              fontSize: "max(14px, calc(var(--u) * 24))",
+              letterSpacing: "calc(var(--u) * -0.72)",
+              lineHeight: 1.4,
+              margin: 0,
+              maxWidth: "calc(var(--u) * 620)",
+              opacity: 0.85,
+            }}
+          >
+            I helped to build our rewards system from the ground up,
+            optimizing for 3 layers of gamification.
+          </p>
+        </div>
+
+        {/* 3-row layer table — hairline divider between rows,
+            layer name on the left, user question on the right.
+            Width sized to the widest row's content (label 260u +
+            24u gap + the longest question "Did I do the habits
+            in my program?" at ~310u ≈ 594u total) so each
+            divider stops just past the trailing "?" instead of
+            extending into empty space on the right. */}
+        <div
+          className="flex flex-col"
+          style={{ width: "calc(var(--u) * 594)" }}
+        >
+          {REWARDS_LAYERS.map((layer, i) => (
+            <div
+              key={layer.label}
+              className="flex items-baseline"
+              style={{
+                paddingTop: "calc(var(--u) * 20)",
+                paddingBottom: "calc(var(--u) * 20)",
+                borderTop:
+                  i === 0 ? undefined : "1px solid rgba(0, 0, 0, 0.12)",
+                gap: "calc(var(--u) * 24)",
+              }}
+            >
+              <span
+                className="font-sans"
+                style={{
+                  fontSize: "max(14px, calc(var(--u) * 20))",
+                  letterSpacing: "calc(var(--u) * -0.4)",
+                  lineHeight: 1.3,
+                  fontWeight: 500,
+                  width: "calc(var(--u) * 260)",
+                  flexShrink: 0,
+                }}
+              >
+                {layer.label}
+              </span>
+              <span
+                className="font-sans"
+                style={{
+                  fontSize: "max(14px, calc(var(--u) * 20))",
+                  letterSpacing: "calc(var(--u) * -0.4)",
+                  lineHeight: 1.3,
+                  opacity: 0.7,
+                }}
+              >
+                {layer.question}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Streak flow — 4 phones side by side. Reveals as a group
+          on scroll (per-phone fade suppressed via fadeIn=false).
+          Gap adds a flat 16px on top of the scaled 24u to give
+          each phone more breathing room per the user's request. */}
+      <div
+        ref={rowRef}
+        className="flex items-start justify-center"
+        style={{
+          gap: "calc(var(--u) * 24 + 16px)",
+          marginTop: "calc(var(--u) * 96)",
+          ...fadeInStyle(rowVisible),
+        }}
+      >
+        {STREAK_SCREENS.map(({ src, alt }) => (
+          <PhoneMockDesktop
+            key={src}
+            src={src}
+            alt={alt}
+            width={340}
+            fadeIn={false}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────
    PhoneMockDesktop — shared phone-shaped image card used by all
    three product-screen sections above. Fixed aspect (PHONE_ASPECT)
    per width, fade-in on scroll with a per-row stagger so phones in
@@ -1160,6 +1335,7 @@ function NoomMobile() {
       <HabitLoopsSectionMobile />
       <ChallengePagesRowMobile />
       <ChallengeStatSectionMobile />
+      <RewardsGamificationSectionMobile />
       <DesignSprintsSectionMobile />
 
       {/* Mosaic grid — single column stack on mobile. Each card
@@ -1592,6 +1768,108 @@ function DesignSprintsSectionMobile() {
             }}
           />
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* Mobile counterpart to RewardsGamificationSectionDesktop. Same
+   content stacked in a single column, with the 4 Streak phones
+   flowing through the shared 2-column MobileHorizontalPin grid. */
+function RewardsGamificationSectionMobile() {
+  return (
+    <section
+      style={{
+        backgroundColor: CREAM,
+        color: INK,
+        paddingTop: "calc(var(--u-m) * 64)",
+        paddingBottom: "calc(var(--u-m) * 64)",
+        paddingLeft: "calc(var(--u-m) * 16)",
+        paddingRight: "calc(var(--u-m) * 16)",
+      }}
+    >
+      <div
+        className="flex flex-col"
+        style={{ gap: "calc(var(--u-m) * 20)" }}
+      >
+        <h2
+          className="font-serif"
+          style={{
+            fontSize: "max(12px, calc(var(--u-m) * 32))",
+            letterSpacing: "calc(var(--u-m) * -0.64)",
+            lineHeight: 1.15,
+            margin: 0,
+          }}
+        >
+          How might we keep users engaged with their program?
+        </h2>
+        <p
+          className="font-sans"
+          style={{
+            fontSize: "max(12px, calc(var(--u-m) * 14))",
+            letterSpacing: "calc(var(--u-m) * -0.42)",
+            lineHeight: 1.4,
+            margin: 0,
+            opacity: 0.85,
+          }}
+        >
+          I helped to build our rewards system from the ground up,
+          optimizing for 3 layers of gamification.
+        </p>
+
+        {/* 3-row layer table — reads as a compact list on mobile
+            with the layer name on top and its question below. */}
+        <div
+          className="flex flex-col"
+          style={{ marginTop: "calc(var(--u-m) * 16)" }}
+        >
+          {REWARDS_LAYERS.map((layer, i) => (
+            <div
+              key={layer.label}
+              className="flex flex-col"
+              style={{
+                paddingTop: "calc(var(--u-m) * 16)",
+                paddingBottom: "calc(var(--u-m) * 16)",
+                borderTop:
+                  i === 0 ? undefined : "1px solid rgba(0, 0, 0, 0.12)",
+                gap: "calc(var(--u-m) * 4)",
+              }}
+            >
+              <span
+                className="font-sans"
+                style={{
+                  fontSize: "max(12px, calc(var(--u-m) * 14))",
+                  letterSpacing: "calc(var(--u-m) * -0.28)",
+                  lineHeight: 1.3,
+                  fontWeight: 500,
+                }}
+              >
+                {layer.label}
+              </span>
+              <span
+                className="font-sans"
+                style={{
+                  fontSize: "max(12px, calc(var(--u-m) * 14))",
+                  letterSpacing: "calc(var(--u-m) * -0.28)",
+                  lineHeight: 1.3,
+                  opacity: 0.7,
+                }}
+              >
+                {layer.question}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Streak flow — 4 phones in a 2-column grid, matching the
+          rest of the mobile case-study phone rows. */}
+      <div style={{ marginTop: "calc(var(--u-m) * 32)" }}>
+        <MobileHorizontalPin>
+          {STREAK_SCREENS.map(({ src, alt }) => (
+            <PhoneMockMobile key={src} src={src} alt={alt} />
+          ))}
+        </MobileHorizontalPin>
       </div>
     </section>
   );

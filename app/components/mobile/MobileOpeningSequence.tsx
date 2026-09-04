@@ -112,11 +112,11 @@ const SHAPES: Array<{
   // All 5 shapes standardized at w:140 so they read as one size
   // (previous 120 on the accent shape made it look meaningfully
   // smaller than the four corners). Corner offsets stay ±150.
-  { top: 80, centerOffset: -150, w: 140, h: 140, driftDuration: 13 }, // 1 — TOP-LEFT
-  { top: 80, centerOffset: 150, w: 140, h: 140, driftDuration: 9 }, // 2 — TOP-RIGHT
-  { bottomPx: 170, centerOffset: -150, w: 140, h: 140, driftDuration: 11 }, // 3 — BOTTOM-LEFT
-  { bottomPx: 170, centerOffset: 150, w: 140, h: 140, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
-  { top: 300, topCapPx: 320, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Base 300u-m puts it midway between the top and bottom rows on tall phones like iPhone 16 Pro Max (~430px viewport, ~800px tall) so the 5 shapes read as evenly distributed vertically. topCapPx of 320 stops it from sliding further down on wider mobile viewports (600–800px).
+  { top: 80, centerOffset: -150, w: 170, h: 170, driftDuration: 13 }, // 1 — TOP-LEFT
+  { top: 80, centerOffset: 150, w: 170, h: 170, driftDuration: 9 }, // 2 — TOP-RIGHT
+  { bottomPx: 170, centerOffset: -150, w: 170, h: 170, driftDuration: 11 }, // 3 — BOTTOM-LEFT
+  { bottomPx: 170, centerOffset: 150, w: 170, h: 170, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
+  { top: 200, topCapPx: 220, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Kept at w:140 (smaller than the 170 corners) and moved up to top:200 so it sits in the empty vertical band between the top row (ends ~y:275 on iPhone 16 Pro Max) and the bottom row (starts ~y:426) instead of overlapping the bottom corners. topCapPx:220 keeps it from sliding down on wider mobile viewports.
 ];
 
 const SHAPE_COLOR = "#c4bcaf";
@@ -283,12 +283,14 @@ export default function MobileOpeningSequence() {
               // sides otherwise pushes right-side shapes further
               // from center than left-side ones by w units.
               left: `calc(50% + var(--u-m) * ${shape.centerOffset - shape.w / 2})`,
-              // Size capped at 180px so shapes don't balloon on
-              // wider mobile viewports (600-800px) where u-m *
-              // 140 would push them past 250px and force the top
-              // and bottom rows to overlap.
-              width: `min(calc(var(--u-m) * ${shape.w}), 180px)`,
-              height: `min(calc(var(--u-m) * ${shape.h}), 180px)`,
+              // Size capped at 220px so shapes stay large enough
+              // to fill the empty space on tall phones (like
+              // iPhone 16 Pro Max at ~430vw where 170u-m = 187px)
+              // without ballooning past 220px on wider mobile
+              // viewports (600-800px) where top and bottom rows
+              // would otherwise overlap.
+              width: `min(calc(var(--u-m) * ${shape.w}), 220px)`,
+              height: `min(calc(var(--u-m) * ${shape.h}), 220px)`,
               borderRadius: "8px",
               backgroundColor: SHAPE_COLOR,
               willChange: "transform",
