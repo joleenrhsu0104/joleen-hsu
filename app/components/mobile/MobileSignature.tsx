@@ -89,8 +89,8 @@ export default function MobileSignature() {
           bottom: 0,
           width: "calc(var(--u-m) * 226)",
           height: "calc(var(--u-m) * 305)",
-          borderTopLeftRadius: "12px",
-          borderTopRightRadius: "12px",
+          borderTopLeftRadius: "4px",
+          borderTopRightRadius: "4px",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}

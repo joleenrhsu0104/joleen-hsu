@@ -62,6 +62,17 @@ const LANDING_IMAGES: string[] = [
 const SHAPES: Array<{
   top?: number;
   bottomPx?: number;
+  /** Distance (in px) between the shape's TOP edge and the TOP
+   *  hairline's bottom edge. Overrides `top` — rendered as a
+   *  mixed calc anchored to the hairline (which sits at
+   *  `top: 24u-m + 38px`), so the shape holds a constant px gap
+   *  below the line at every mobile viewport. */
+  topBelowLinePx?: number;
+  /** Distance (in px) between the shape's BOTTOM edge and the
+   *  BOTTOM hairline's top edge. Overrides `bottomPx` — rendered
+   *  as a mixed calc anchored to the hairline (which sits at
+   *  `bottom: 40u-m + 62px`). */
+  bottomAboveLinePx?: number;
   /** Optional px ceiling on `top` — used by the accent shape so
    *  it doesn't drift too far down the viewport on wider mobile
    *  widths where --u-m scales the base value past the visual
@@ -112,10 +123,19 @@ const SHAPES: Array<{
   // All 5 shapes standardized at w:140 so they read as one size
   // (previous 120 on the accent shape made it look meaningfully
   // smaller than the four corners). Corner offsets stay ±150.
-  { top: 80, centerOffset: -150, w: 140, h: 140, driftDuration: 13 }, // 1 — TOP-LEFT
-  { top: 80, centerOffset: 150, w: 140, h: 140, driftDuration: 9 }, // 2 — TOP-RIGHT
-  { bottomPx: 130, centerOffset: -150, w: 140, h: 140, driftDuration: 11 }, // 3 — BOTTOM-LEFT
-  { bottomPx: 130, centerOffset: 150, w: 140, h: 140, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
+  // Corner shapes now anchor to the hairline dividers via
+  // topBelowLinePx / bottomAboveLinePx so the top row sits a fixed
+  // 24px BELOW the top hairline and the bottom row sits a fixed
+  // 24px ABOVE the bottom hairline at every mobile viewport
+  // (previously the u-scaled `top: 100` / `bottomPx: 190` offsets
+  // put the rows too close to the wordmark on wider mobile widths).
+  // Anchor rest gap = 50px so that even under max cursor push
+  // + drift motion (MAX_PUSH=10 + DRIFT=8 = 18px) the shape edges
+  // stay ≥ 32px away from the hairline (50 − 18 = 32).
+  { topBelowLinePx: 50, centerOffset: -150, w: 140, h: 140, driftDuration: 13 }, // 1 — TOP-LEFT
+  { topBelowLinePx: 50, centerOffset: 150, w: 140, h: 140, driftDuration: 9 }, // 2 — TOP-RIGHT
+  { bottomAboveLinePx: 50, centerOffset: -150, w: 140, h: 140, driftDuration: 11 }, // 3 — BOTTOM-LEFT
+  { bottomAboveLinePx: 50, centerOffset: 150, w: 140, h: 140, driftDuration: 15 }, // 4 — BOTTOM-RIGHT
   { top: 275, topCapPx: 302, centerOffset: 0, w: 140, h: 140, driftDuration: 10 }, // 5 — CENTERED ACCENT. Positioned so its vertical range sits equidistant between the top row (ends ~y:242 on iPhone 16 Pro Max) and the bottom row (starts ~y:516) — top:275 gives ~60px on both sides at that viewport. topCapPx:302 keeps it from sliding lower at wider mobile widths.
 ];
 
@@ -128,10 +148,12 @@ const SHAPE_COLOR = "#c4bcaf";
 // proportionally to the actual viewport width.
 const INFLUENCE_RADIUS = 260;
 // Push + drift amplitudes trimmed on mobile so shapes never drift
-// into the LA-time/nav row at the top or the bio caption at the
-// bottom, even at the widest mobile viewports (~800px) where the
-// per-frame amplitude scales up by ~2×.
-const MAX_PUSH = 30;
+// into either hairline divider (top: 24u-m + 38px, bottom: 40u-m
+// + 62px) at any mobile viewport up to 800px. MAX_PUSH=10 matches
+// the desktop value; combined with DRIFT_AMPLITUDE=8 the motion
+// budget is 18px, giving the top+bottom rows ≥20px clearance
+// under max cursor repulsion at u-m=1.
+const MAX_PUSH = 10;
 const LERP = 0.045;
 const MOUSE_LERP = 0.075;
 const DRIFT_AMPLITUDE = 8;
@@ -268,13 +290,28 @@ export default function MobileOpeningSequence() {
             }}
             className="absolute overflow-hidden"
             style={{
-              ...(shape.top !== undefined
+              ...(shape.topBelowLinePx !== undefined
                 ? {
-                    top: shape.topCapPx
-                      ? `min(calc(var(--u-m) * ${shape.top}), ${shape.topCapPx}px)`
-                      : `calc(var(--u-m) * ${shape.top})`,
+                    // Top hairline sits at `top: 24u-m + 32px` and
+                    // renders ~1px tall; +33 puts us at its bottom
+                    // edge, +N sets the desired px gap.
+                    top: `calc(var(--u-m) * 24 + ${33 + shape.topBelowLinePx}px)`,
                   }
-                : { bottom: `${shape.bottomPx}px` }),
+                : shape.bottomAboveLinePx !== undefined
+                  ? {
+                      // Bottom hairline sits at `bottom: 40u-m + 56px`
+                      // and renders ~1px tall; +57 puts us at its
+                      // top edge (from viewport bottom), +N sets the
+                      // desired px gap above it.
+                      bottom: `calc(var(--u-m) * 40 + ${57 + shape.bottomAboveLinePx}px)`,
+                    }
+                  : shape.top !== undefined
+                    ? {
+                        top: shape.topCapPx
+                          ? `min(calc(var(--u-m) * ${shape.top}), ${shape.topCapPx}px)`
+                          : `calc(var(--u-m) * ${shape.top})`,
+                      }
+                    : { bottom: `${shape.bottomPx}px` }),
               // Center-anchored horizontal position — subtract
               // w/2 from the offset so `centerOffset` is the
               // shape's CENTER distance from viewport center (not
@@ -291,7 +328,7 @@ export default function MobileOpeningSequence() {
               // would otherwise overlap.
               width: `min(calc(var(--u-m) * ${shape.w}), 220px)`,
               height: `min(calc(var(--u-m) * ${shape.h}), 220px)`,
-              borderRadius: "8px",
+              borderRadius: "4px",
               backgroundColor: SHAPE_COLOR,
               willChange: "transform",
               zIndex: 0,
@@ -390,6 +427,46 @@ export default function MobileOpeningSequence() {
           // outline rather than a rectangular box.
           filter:
             "drop-shadow(0 0 8px rgba(255, 249, 236, 0.9)) drop-shadow(0 0 4px rgba(255, 249, 236, 0.7))",
+          zIndex: 5,
+        }}
+      />
+
+      {/* Hairline dividers — mirror the desktop OpeningSequence
+          treatment. 24px padding measured from the actual text
+          edge (not the container edge):
+            top line = 24u-m top of nav row + 14px text height + 24px
+            bottom line = 40u-m bottom of bio + 38px text height + 24px
+          Left/right insets match the nav + bio (20u-m).
+          Rendered as height:1px + transform:scaleY(0.75) so both
+          lines antialias identically regardless of their subpixel
+          Y-position (0.75px hairlines otherwise render at slightly
+          different weights depending on where they land on the
+          device pixel grid). */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "calc(var(--u-m) * 20)",
+          right: "calc(var(--u-m) * 20)",
+          top: "calc(var(--u-m) * 24 + 32px)",
+          height: "1px",
+          backgroundColor: "rgb(35, 31, 32)",
+          transform: "scaleY(0.75)",
+          transformOrigin: "center",
+          zIndex: 5,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "calc(var(--u-m) * 20)",
+          right: "calc(var(--u-m) * 20)",
+          bottom: "calc(var(--u-m) * 40 + 56px)",
+          height: "1px",
+          backgroundColor: "rgb(35, 31, 32)",
+          transform: "scaleY(0.75)",
+          transformOrigin: "center",
           zIndex: 5,
         }}
       />

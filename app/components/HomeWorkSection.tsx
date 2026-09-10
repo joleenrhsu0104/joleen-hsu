@@ -268,7 +268,7 @@ function ProjectCardDesktop({ project }: { project: Project }) {
         style={{
           width: "100%",
           height: `calc(var(--u) * ${project.imageHeight})`,
-          borderRadius: "12px",
+          borderRadius: "4px",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -71,6 +71,19 @@ function formatLATime(): string {
 const SHAPES: Array<{
   top?: number;
   bottomPx?: number;
+  /** Distance (in px) between the shape's TOP edge and the TOP
+   *  hairline's bottom edge. When set, overrides `top` — the
+   *  rendered value becomes a mixed calc anchored to the hairline
+   *  (which itself sits at `top: 90u + 24px`), so the shape holds
+   *  a constant px gap below the line at every desktop viewport
+   *  regardless of --u. */
+  topBelowLinePx?: number;
+  /** Distance (in px) between the shape's BOTTOM edge and the
+   *  BOTTOM hairline's top edge. When set, overrides `bottomPx` —
+   *  the rendered value becomes a mixed calc anchored to the
+   *  hairline (which sits at `bottom: 113u + 24px`), so the shape
+   *  holds a constant px gap above the line at every viewport. */
+  bottomAboveLinePx?: number;
   /** If true, ignore top/bottomPx and center the shape at 50vh
    *  (subtracting 140px = half the 280px cap). Used to pin the
    *  center accent shape BEHIND the wordmark on every viewport. */
@@ -235,11 +248,19 @@ const SHAPES: Array<{
   // instead of clustering near the wordmark. Safety margins
   // rechecked with MAX_PUSH:10 → still ≥1px static clearance
   // at every desktop viewport from 720px through 1920+.
-  { bottomPx: 190, left: -95, w: 450, h: 450, driftDuration: 18 }, // 1 — LEFT bleed
-  { top: 125, left: 395, w: 450, h: 450, driftDuration: 22 }, // 2 — upper mid-left
-  { top: 155, left: 1255, w: 450, h: 450, driftDuration: 16 }, // 3 — upper right (30u lower than shape 2)
-  { bottomPx: 190, left: 1695, w: 450, h: 450, driftDuration: 24 }, // 4 — RIGHT bleed
-  { bottomPx: 210, left: 825, w: 450, h: 450, driftDuration: 20 }, // 5 — BOTTOM center on wide desktop viewports; overridden to vhCenter/centerX on tablet-width viewports (800-1200px) via isTabletDesktop below.
+  // Vertical positioning uses `topBelowLinePx` / `bottomAboveLinePx`
+  // — hairline-relative anchors that hold a fixed 24px px gap from
+  // the top/bottom divider at every viewport, instead of the older
+  // u-scaled `top` / `bottomPx` which drifted at narrower widths.
+  // Shapes 2, 3 hug the top line; shapes 1, 4, 5 hug the bottom line.
+  // Anchor rest gap = 50px so that even under max cursor push
+  // + drift motion (MAX_PUSH=10 + DRIFT=8 = 18px) the shape edges
+  // stay ≥ 32px away from the hairline (50 − 18 = 32).
+  { bottomAboveLinePx: 50, left: -95, w: 450, h: 450, driftDuration: 18 }, // 1 — LEFT bleed
+  { topBelowLinePx: 50, left: 395, w: 450, h: 450, driftDuration: 22 }, // 2 — upper mid-left
+  { topBelowLinePx: 50, left: 1255, w: 450, h: 450, driftDuration: 16 }, // 3 — upper right
+  { bottomAboveLinePx: 50, left: 1695, w: 450, h: 450, driftDuration: 24 }, // 4 — RIGHT bleed
+  { bottomAboveLinePx: 50, left: 825, w: 450, h: 450, driftDuration: 20 }, // 5 — BOTTOM center
 ];
 
 // Pool of image srcs the shapes draw from, in order. Index N of
@@ -459,9 +480,27 @@ export default function OpeningSequence() {
                     // where the rendered shape was ~210px tall).
                     top: `calc(50vh - min(calc(var(--u) * ${shape.h * 310 / 450}), 130px))`,
                   }
-                : shape.top !== undefined
-                  ? { top: `calc(var(--u) * ${shape.top})` }
-                  : { bottom: `calc(var(--u) * ${shape.bottomPx})` }),
+                : shape.topBelowLinePx !== undefined
+                  ? {
+                      // Top hairline sits at
+                      // `48u + max(14px, 20u) + 8px` and renders
+                      // ~1px tall; add 1 for its bottom edge, +N
+                      // sets the desired px gap. The extra +8px
+                      // matches the line's shifted position.
+                      top: `calc(var(--u) * 48 + max(14px, calc(var(--u) * 20)) + ${9 + shape.topBelowLinePx}px)`,
+                    }
+                  : shape.bottomAboveLinePx !== undefined
+                    ? {
+                        // Bottom hairline sits at
+                        // `54u + max(36.4px, 46.8u) + 8px` and
+                        // renders ~1px tall; add 1 for its top
+                        // edge (from viewport bottom), +N sets
+                        // desired gap.
+                        bottom: `calc(var(--u) * 54 + max(36.4px, calc(var(--u) * 46.8)) + ${9 + shape.bottomAboveLinePx}px)`,
+                      }
+                    : shape.top !== undefined
+                      ? { top: `calc(var(--u) * ${shape.top})` }
+                      : { bottom: `calc(var(--u) * ${shape.bottomPx})` }),
               ...(shape.centerX
                 ? {
                     // Offset by half the shape's rendered width so
@@ -477,25 +516,22 @@ export default function OpeningSequence() {
                   : shape.leftPx !== undefined
                     ? { left: `${shape.leftPx}px` }
                     : { left: `calc(var(--u) * ${shape.left})` }),
-              // Width responsive: multiplier bumped 340 → 500 and
-              // cap raised 240 → 260 so shapes scale up on
-              // iPad-portrait / narrow-desktop breakpoints
-              // (previously felt tiny) while still capping cleanly
-              // on 1440+. Text-safety math re-verified at 720vw:
-              // top shape (top:130) clears nav by 1px at max
-              // cursor push; bottom shape (bottomPx:210) clears
-              // bio by 22px.
-              // Multiplier bumped 500 → 620 so iPad-portrait
-              // shapes hit the cap sooner (was 210px, now 260 at
-              // 810vw). Cap held at 260 so nothing balloons past
-              // where the layout still fits.
-              // At viewport 800: 620*0.417 = 258px
-              // At viewport 1000: 620*0.52 = 322 → cap 260
-              // At viewport 1440: 620*0.75 = 465 → cap 260
-              // At viewport 1920: 620 → cap 260
-              width: `min(calc(var(--u) * ${shape.w * 620 / 450}), 260px)`,
-              height: `min(calc(var(--u) * ${shape.h * 620 / 450}), 260px)`,
-              borderRadius: "12px",
+              // Width uses a clamp() so wide viewports get MORE
+              // visual presence (300px cap) while narrow tablet
+              // viewports get PROPORTIONALLY SMALLER tiles that
+              // don't overlap each other.
+              //
+              // clamp(160px, 17vw, 300px) resolves to:
+              //   • 1920vw: 300px  (17% clamped at 300 cap)
+              //   • 1600vw: 272px
+              //   • 1440vw: 245px
+              //   • 1200vw: 204px
+              //   • 1000vw: 170px
+              //   •  940vw: 160px (floor kicks in)
+              //   •  800vw: 160px (floor)
+              width: "clamp(160px, 17vw, 300px)",
+              height: "clamp(160px, 17vw, 300px)",
+              borderRadius: "4px",
               backgroundColor: SHAPE_COLOR,
               willChange: "transform",
               zIndex: 0,
@@ -520,7 +556,7 @@ export default function OpeningSequence() {
         className="absolute font-sans"
         style={{
           left: "calc(var(--u) * 70)",
-          top: "calc(var(--u) * 60)",
+          top: "calc(var(--u) * 30)",
           fontSize: "max(14px, calc(var(--u) * 20))",
           fontWeight: 500,
           letterSpacing: "calc(var(--u) * -0.4)",
@@ -539,7 +575,7 @@ export default function OpeningSequence() {
         className="absolute flex items-center font-sans"
         style={{
           right: "calc(var(--u) * 70)",
-          top: "calc(var(--u) * 60)",
+          top: "calc(var(--u) * 30)",
           gap: "calc(var(--u) * 48)",
           fontSize: "max(14px, calc(var(--u) * 20))",
           fontWeight: 500,
@@ -566,6 +602,43 @@ export default function OpeningSequence() {
         </a>
       </nav>
 
+      {/* Hairline dividers — 32px measured from the actual
+          text baseline (not the nav/bio container edge, which
+          has extra centering padding baked in).
+          Top line offset math: nav is at top:57u with height:47u
+          centered on font ~20u → text bottom ≈ 90u. + 32px gap.
+          Bottom line offset math: bio at bottom:60u with 2 lines
+          × 18u font × 1.3 line-height + 6u block margin ≈ 113u
+          from bottom. + 32px gap. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "calc(var(--u) * 70)",
+          right: "calc(var(--u) * 70)",
+          top: "calc(var(--u) * 48 + max(14px, calc(var(--u) * 20)) + 8px)",
+          height: "1px",
+          backgroundColor: "rgb(35, 31, 32)",
+          transform: "scaleY(0.75)",
+          transformOrigin: "center",
+          zIndex: 5,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "calc(var(--u) * 70)",
+          right: "calc(var(--u) * 70)",
+          bottom: "calc(var(--u) * 54 + max(36.4px, calc(var(--u) * 46.8)) + 8px)",
+          height: "1px",
+          backgroundColor: "rgb(35, 31, 32)",
+          transform: "scaleY(0.75)",
+          transformOrigin: "center",
+          zIndex: 5,
+        }}
+      />
+
       {/* Bio caption — bottom-left. Two-line block: sans headline +
           italicized serif parenthetical. Font-size uses design
           units so it scales in step with the rest of the header
@@ -578,7 +651,7 @@ export default function OpeningSequence() {
         className="absolute"
         style={{
           left: "calc(var(--u) * 70)",
-          bottom: "calc(var(--u) * 60)",
+          bottom: "calc(var(--u) * 30)",
           maxWidth: "45vw",
           color: "var(--color-ink)",
           zIndex: 10,
@@ -615,7 +688,7 @@ export default function OpeningSequence() {
         className="absolute text-right"
         style={{
           right: "calc(var(--u) * 70)",
-          bottom: "calc(var(--u) * 60)",
+          bottom: "calc(var(--u) * 30)",
           maxWidth: "45vw",
           color: "var(--color-ink)",
           zIndex: 10,

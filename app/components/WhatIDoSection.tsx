@@ -252,7 +252,7 @@ export default function WhatIDoSection() {
             })`,
             width: `${PREVIEW_W}px`,
             height: `${PREVIEW_H}px`,
-            borderRadius: "12px",
+            borderRadius: "4px",
             opacity: hovered !== null ? 1 : 0,
             transition:
               "opacity 0.35s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), top 0.45s cubic-bezier(0.2, 0.7, 0.2, 1)",

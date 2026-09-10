@@ -118,11 +118,29 @@ const NOOM_DESIGN_SPRINT_IMAGE = `${IMG}/${encodeURIComponent("Noom Design Sprin
 // path) so it's URL-encoded once as the prefix that every filename
 // below hangs off of.
 const REWARDS_DIR = `${IMG}/${encodeURIComponent("Rewards & Gamfication")}`;
-const STREAK_SCREENS: Array<{ src: string; alt: string }> = [
-  { src: `${REWARDS_DIR}/Streak1.png`, alt: "Noom rewards — 3-day streak counter" },
-  { src: `${REWARDS_DIR}/Streak2.png`, alt: "Noom rewards — 3-day milestone celebration" },
-  { src: `${REWARDS_DIR}/Streak3.png`, alt: "Noom rewards — next milestone preview" },
-  { src: `${REWARDS_DIR}/Streak4.png`, alt: "Noom rewards — streak commitment CTA" },
+// Streak flow — mix of motion studies and static screens.
+//   • STREAK_MOTIONSTUDY: animated intro (replaces Streak1.png).
+//   • Streak2Animation:  animated milestone transition
+//     (replaces the paired Streak2.png + Streak3.png stills).
+//   • Streak4.png:       final commitment CTA (unchanged).
+// Entries with `video: true` render as a raw <video>; the rest
+// render through PhoneMock(Desktop|Mobile) as PNGs.
+const STREAK_INTRO_VIDEO = `${REWARDS_DIR}/STREAK_MOTIONSTUDY_2.1A.webm`;
+const STREAK2_ANIMATION_VIDEO = `${REWARDS_DIR}/Streak2Animation.webm`;
+// Seed-drop GIF layered on top of Screen4.png — plays the seed
+// counter's tally-up animation over the static "You earned" screen.
+// Filename has a space, URL-encode it.
+const SEED_DROP_GIF = `${REWARDS_DIR}/${encodeURIComponent("SEED_DROP (5).gif")}`;
+const STREAK_SCREENS: Array<{
+  src: string;
+  alt: string;
+  video?: boolean;
+  gifOverlay?: string;
+}> = [
+  { src: STREAK_INTRO_VIDEO, alt: "Noom rewards — animated 3-day streak counter", video: true },
+  { src: STREAK2_ANIMATION_VIDEO, alt: "Noom rewards — animated milestone transition", video: true },
+  { src: `${REWARDS_DIR}/Screen3.png`, alt: "Noom rewards — streak commitment CTA" },
+  { src: `${REWARDS_DIR}/Screen4.png`, alt: "Noom rewards — seed drop reward screen", gifOverlay: SEED_DROP_GIF },
 ];
 
 // Three-row table paired with the "How might we keep users
@@ -950,14 +968,100 @@ function RewardsGamificationSectionDesktop() {
           ...fadeInStyle(rowVisible),
         }}
       >
-        {STREAK_SCREENS.map(({ src, alt }) => (
-          <PhoneMockDesktop
+        {STREAK_SCREENS.map(({ src, alt, video, gifOverlay }) => (
+          // Every streak tile — video OR PNG — locked to a shared
+          // width + 1022/1920 aspect ratio so the whole row reads
+          // at exactly the same size. object-fit: cover crops any
+          // tile whose native aspect differs from the shared one
+          // (Streak2Animation at 1044/1920, Streak4.png at
+          // 1125/2436) without letterboxing.
+          <div
             key={src}
-            src={src}
-            alt={alt}
-            width={340}
-            fadeIn={false}
-          />
+            style={{
+              width: "calc(var(--u) * 340)",
+              // All tiles share the PNG's iPhone-screen aspect
+              // (1125 / 2436) so the row reads at a uniform size.
+              // position: relative so the border overlay below
+              // absolutely-positions against this container.
+              aspectRatio: "1125 / 2436",
+              overflow: "hidden",
+              borderRadius: "20px",
+              position: "relative",
+            }}
+          >
+            {video ? (
+              <video
+                src={src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                aria-label={alt}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  // scale(1.12) zooms enough to crop the baked-in
+                  // cream padding around the phone screen so the
+                  // screen extends edge-to-edge like Streak4.png,
+                  // while still leaving the iOS status bar and CTA
+                  // (which sit ~44px inside the phone screen edge)
+                  // visible with their natural breathing room.
+                  transform: "scale(1.12)",
+                  transformOrigin: "center center",
+                  display: "block",
+                }}
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={src}
+                alt={alt}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            )}
+            {/* Optional GIF overlay — layered on top of the base
+                PNG for animated elements (Screen4's seed drop). The
+                GIF is 375 × 337 pixels; we anchor it to the top of
+                the tile at 100% width so its natural aspect drives
+                the height (~90% of tile width). */}
+            {gifOverlay ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={gifOverlay}
+                alt=""
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "auto",
+                  display: "block",
+                  pointerEvents: "none",
+                }}
+              />
+            ) : null}
+            {/* Border overlay — absolute layer above the video/img
+                so the 1px stroke is uniform on every tile
+                (scale/transform on the video was rendering ABOVE
+                any wrapper border, hiding it on video tiles). */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                inset: 0,
+                border: "1px solid #B8B2B2",
+                borderRadius: "20px",
+                pointerEvents: "none",
+              }}
+            />
+          </div>
         ))}
       </div>
     </section>
@@ -999,6 +1103,7 @@ function PhoneMockDesktop({
         transitionDelay: `${stagger * 80}ms`,
       }
     : {};
+  const isVideo = /\.(webm|mp4|mov)$/i.test(src);
   return (
     <div
       ref={ref}
@@ -1013,19 +1118,63 @@ function PhoneMockDesktop({
         ...fadeStyles,
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        style={{
-          width: "100%",
-          height: "auto",
-          display: "block",
-        }}
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).style.display = "none";
-        }}
-      />
+      {isVideo ? (
+        // Aspect-locked wrapper matches the streak PNG aspect
+        // (1125 × 2436) so the video renders at exactly the same
+        // rendered height as its sibling phone screens. object-fit:
+        // cover crops the baked-in bezel + drop-shadow gutter (the
+        // source webm is 1022 × 1920, 15% wider than iPhone screen
+        // aspect) so only the app UI remains visible. 1px hairline
+        // border + 4px radius supply the outline the user asked for.
+        <div
+          style={{
+            width: "100%",
+            aspectRatio: "1125 / 2436",
+            overflow: "hidden",
+            border: "1px solid rgba(35, 31, 32, 0.2)",
+            borderRadius: "4px",
+            display: "block",
+          }}
+        >
+          <video
+            src={src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label={alt}
+            style={{
+              width: "100%",
+              height: "100%",
+              // Scale the video content up so the actual phone
+              // screen fills the full wrapper edge-to-edge, cropping
+              // out the drop-shadow gutter that's baked into the
+              // source webm. 1.18× zoom + object-fit: cover puts
+              // the screen artwork flush against every side of the
+              // rounded container (overflow: hidden clips the
+              // shadow excess).
+              objectFit: "cover",
+              transform: "scale(1.18)",
+              transformOrigin: "center center",
+              display: "block",
+            }}
+          />
+        </div>
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt}
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+          }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -1866,8 +2015,90 @@ function RewardsGamificationSectionMobile() {
           rest of the mobile case-study phone rows. */}
       <div style={{ marginTop: "calc(var(--u-m) * 32)" }}>
         <MobileHorizontalPin>
-          {STREAK_SCREENS.map(({ src, alt }) => (
-            <PhoneMockMobile key={src} src={src} alt={alt} />
+          {STREAK_SCREENS.map(({ src, alt, video, gifOverlay }) => (
+            // Same aspect-locked wrapper as desktop so video +
+            // PNG tiles in the row render at identical sizes on
+            // mobile too. object-fit: cover crops any tile whose
+            // native aspect differs from the shared 1022/1920.
+            <div
+              key={src}
+              style={{
+                width: "min(calc(var(--u-m) * 220), 100%)",
+                // Match desktop: bordered aspect-locked tile.
+                aspectRatio: "1125 / 2436",
+                overflow: "hidden",
+                borderRadius: "16px",
+                position: "relative",
+              }}
+            >
+              {video ? (
+                <video
+                  src={src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-label={alt}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    // Match desktop: scale zooms enough to crop the
+                    // video's baked-in cream padding around the
+                    // phone screen so the screen extends edge-to-
+                    // edge like the sibling PNG tiles.
+                    transform: "scale(1.12)",
+                    transformOrigin: "center center",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={src}
+                  alt={alt}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                  draggable={false}
+                />
+              )}
+              {/* Optional GIF overlay — see desktop version. Layered
+                  above the base PNG at the top of the tile at 100%
+                  width; natural aspect drives the height. */}
+              {gifOverlay ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={gifOverlay}
+                  alt=""
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "auto",
+                    display: "block",
+                    pointerEvents: "none",
+                  }}
+                />
+              ) : null}
+              {/* Border overlay — see desktop version. Absolute layer
+                  above the video/img so the stroke stays consistent. */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  border: "1px solid #B8B2B2",
+                  borderRadius: "16px",
+                  pointerEvents: "none",
+                }}
+              />
+            </div>
           ))}
         </MobileHorizontalPin>
       </div>
@@ -1882,22 +2113,63 @@ function RewardsGamificationSectionMobile() {
    natural aspect — see PhoneMockDesktop / SCREEN_IMAGES for why no
    aspectRatio wrapper. */
 function PhoneMockMobile({ src, alt }: { src: string; alt: string }) {
+  const isVideo = /\.(webm|mp4|mov)$/i.test(src);
   return (
     <div style={{ width: "min(calc(var(--u-m) * 220), 100%)" }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        style={{
-          width: "100%",
-          height: "auto",
-          display: "block",
-        }}
-        draggable={false}
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).style.display = "none";
-        }}
-      />
+      {isVideo ? (
+        // Aspect-locked wrapper + cover-fit crop the bezel/shadow
+        // baked into the webm so the video matches the streak PNG
+        // size at 220u-m. Border supplies the outline.
+        <div
+          style={{
+            width: "100%",
+            aspectRatio: "1125 / 2436",
+            overflow: "hidden",
+            border: "1px solid rgba(35, 31, 32, 0.2)",
+            borderRadius: "4px",
+            display: "block",
+          }}
+        >
+          <video
+            src={src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label={alt}
+            style={{
+              width: "100%",
+              height: "100%",
+              // Scale the video content up so the actual phone
+              // screen fills the full wrapper edge-to-edge, cropping
+              // out the drop-shadow gutter that's baked into the
+              // source webm. 1.18× zoom + object-fit: cover puts
+              // the screen artwork flush against every side of the
+              // rounded container (overflow: hidden clips the
+              // shadow excess).
+              objectFit: "cover",
+              transform: "scale(1.18)",
+              transformOrigin: "center center",
+              display: "block",
+            }}
+          />
+        </div>
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt}
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+          }}
+          draggable={false}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+          }}
+        />
+      )}
     </div>
   );
 }

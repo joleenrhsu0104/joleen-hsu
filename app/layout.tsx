@@ -7,6 +7,7 @@ import {
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import ScrollUpNav from "./components/ScrollUpNav";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -84,6 +85,11 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${instrumentSans.variable} ${b612Mono.variable} ${zalandoSans.variable} antialiased`}
     >
       <body>
+        {/* Fixed nav that reveals on scroll-up, hides on scroll-
+            down or at the top of the page (where the in-page nav
+            in OpeningSequence / other pages' own headers is
+            already visible). */}
+        <ScrollUpNav />
         {children}
         {/* Vercel Analytics + Speed Insights — auto-report page
             views and Core Web Vitals to the Vercel dashboard.
